@@ -1,26 +1,110 @@
 @import "tailwindcss";
 
+@theme {
+  /* Vaitech Design System Colors */
+  --color-surface: #101415;
+  --color-surface-dim: #101415;
+  --color-surface-bright: #363a3b;
+  --color-surface-container-lowest: #0b0f10;
+  --color-surface-container-low: #191c1e;
+  --color-surface-container: #1d2022;
+  --color-surface-container-high: #272a2c;
+  --color-surface-container-highest: #323537;
+  --color-on-surface: #e0e3e5;
+  --color-on-surface-variant: #c7c6cd;
+  --color-inverse-surface: #e0e3e5;
+  --color-inverse-on-surface: #2d3133;
+  --color-outline: #909097;
+  --color-outline-variant: #46464c;
+  --color-surface-tint: #c2c6db;
+  --color-primary: #c2c6db;
+  --color-on-primary: #2b3040;
+  --color-primary-container: #0a0f1e;
+  --color-on-primary-container: #777b8e;
+  --color-inverse-primary: #595e70;
+  --color-secondary: #c8c6c5;
+  --color-on-secondary: #313030;
+  --color-secondary-container: #4a4949;
+  --color-on-secondary-container: #bab8b7;
+  --color-tertiary: #dfc1a7;
+  --color-on-tertiary: #3f2d1a;
+  --color-tertiary-container: #1a0c01;
+  --color-on-tertiary-container: #907760;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-background: #101415;
+  --color-on-background: #e0e3e5;
+  --color-surface-variant: #323537;
+
+  /* Typography */
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Montserrat', sans-serif;
+
+  /* Border Radius */
+  --radius-sm: 0.125rem;
+  --radius: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Spacing */
+  --spacing-gutter: 24px;
+  --spacing-section-gap: 120px;
+  --spacing-margin-desktop: 64px;
+  --spacing-margin-mobile: 24px;
+  --spacing-container-max: 1280px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #101415;
+  --foreground: #e0e3e5;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #101415;
+  color: #e0e3e5;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 255, 255, 0.15);
+  border-left-color: rgba(255, 255, 255, 0.15);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(194, 198, 219, 0.267);
+  transform: translateY(-8px);
+}
+
+.electric-glow {
+  box-shadow: 0 0 40px -10px rgba(194, 198, 219, 0.15);
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(194, 198, 219, 0.08) 0%, transparent 70%);
+}
+
+.transition-heavy {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

@@ -537,7 +537,17 @@ function TemplatePreview({ t, device }: { t: Template; device: DeviceType }) {
 
 function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
   const [device, setDevice] = useState<DeviceType>('desktop')
+  const [loaded, setLoaded] = useState(false)
   const current = DEVICES.find(d => d.key === device)!
+
+  // Khi đổi template reset loaded
+  const iframeKey = `${t.id}-${device}`
+
+  const deviceWidth: Record<DeviceType, string> = {
+    desktop: '100%',
+    tablet: '768px',
+    mobile: '390px',
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-6" onClick={onClose}>
@@ -557,9 +567,10 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: t.accentColor }} />
             <span className="text-[11px] text-white/40 truncate font-mono">vai-tech.asia{t.demoHref}</span>
           </div>
+          {/* Device switcher */}
           <div className="flex items-center gap-1 bg-white/5 border border-white/8 rounded-lg p-1">
             {DEVICES.map(({ key, label, Icon }) => (
-              <button key={key} onClick={() => setDevice(key)} title={label}
+              <button key={key} onClick={() => { setDevice(key); setLoaded(false) }} title={label}
                 className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${device === key ? 'bg-white/15 text-white' : 'text-white/35 hover:text-white/70'}`}>
                 <Icon size={13} />
                 <span className="hidden sm:inline">{label}</span>
@@ -574,9 +585,29 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
           </Link>
         </div>
 
-        {/* ── Preview ── */}
-        <div className="flex-1 min-h-0 overflow-hidden" style={{ height: '520px' }}>
-          <TemplatePreview t={t} device={device} />
+        {/* ── iframe Preview ── */}
+        <div className="flex-1 min-h-0 bg-[#161b22] flex items-start justify-center overflow-auto p-3" style={{ height: '560px' }}>
+          <div
+            className="relative transition-all duration-400 ease-out rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-white flex-shrink-0"
+            style={{ width: deviceWidth[device], maxWidth: '100%', height: '100%', minHeight: '500px' }}
+          >
+            {/* Loading skeleton */}
+            {!loaded && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0d1117]">
+                <div className="w-8 h-8 border-2 border-white/15 border-t-white/60 rounded-full animate-spin" />
+                <p className="text-white/35 text-xs">Đang tải {current.label} preview...</p>
+              </div>
+            )}
+            <iframe
+              key={iframeKey}
+              src={t.demoHref}
+              className="w-full h-full border-0"
+              style={{ minHeight: '500px' }}
+              onLoad={() => setLoaded(true)}
+              title={`${t.title} preview`}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            />
+          </div>
         </div>
 
         {/* ── Bottom bar ── */}

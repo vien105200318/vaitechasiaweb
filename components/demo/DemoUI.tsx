@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
+import { CheckCircle2, XCircle, Info } from 'lucide-react'
 import type { ToastType } from '@/hooks/useDemo'
 
 // ─── Toast container ──────────────────────────────────────────────────────────
@@ -16,9 +17,7 @@ export function ToastContainer({ toasts }: { toasts: ToastItem[] }) {
             ${t.type === 'success' ? 'bg-green-900/90 border-green-500/40 text-green-200'
               : t.type === 'error' ? 'bg-red-900/90 border-red-500/40 text-red-200'
               : 'bg-slate-900/90 border-white/20 text-white'}`}>
-          <span className="material-symbols-outlined text-base" style={{fontVariationSettings:"'FILL' 1"}}>
-            {t.type === 'success' ? 'check_circle' : t.type === 'error' ? 'error' : 'info'}
-          </span>
+          {t.type === 'success' ? <CheckCircle2 size={16} /> : t.type === 'error' ? <XCircle size={16} /> : <Info size={16} />}
           {t.message}
         </div>
       ))}

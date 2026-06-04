@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import { Award, BookOpen, Clock, Laptop, MapPin, Plane, ShieldPlus } from 'lucide-react'
 import { PageHeader, Section, GlassCard, CtaBanner } from '@/components/ui/PageComponents'
+import type { LucideIcon } from 'lucide-react'
 
 const openings = [
   { dept: 'Kỹ thuật', title: 'Senior Frontend Engineer', type: 'Toàn thời gian', location: 'Hà Nội / Remote', tags: ['React', 'Next.js', 'TypeScript'] },
@@ -10,13 +12,13 @@ const openings = [
   { dept: 'Marketing', title: 'Content & SEO Specialist', type: 'Toàn thời gian', location: 'Remote', tags: ['SEO', 'Copywriting', 'Analytics'] },
 ]
 
-const perks = [
-  { icon: 'monetization_on', title: 'Lương cạnh tranh', desc: 'Mức lương top 20% thị trường, review 2 lần/năm' },
-  { icon: 'flight', title: 'Team building quốc tế', desc: 'Chuyến đi team building trong và ngoài nước hàng năm' },
-  { icon: 'school', title: 'Đào tạo & phát triển', desc: 'Ngân sách học tập 5 triệu/năm và mentor 1-1 hàng tuần' },
-  { icon: 'health_and_safety', title: 'Bảo hiểm sức khỏe', desc: 'Bảo hiểm sức khỏe cao cấp cho cả gia đình' },
-  { icon: 'schedule', title: 'Giờ làm linh hoạt', desc: 'Tự chọn giờ làm, remote 3 ngày/tuần' },
-  { icon: 'laptop_mac', title: 'Thiết bị cao cấp', desc: 'MacBook Pro và màn hình 4K cho tất cả nhân viên' },
+const perks: { Icon: LucideIcon; title: string; desc: string }[] = [
+  { Icon: Award, title: 'Lương cạnh tranh', desc: 'Mức lương top 20% thị trường, review 2 lần/năm' },
+  { Icon: Plane, title: 'Team building quốc tế', desc: 'Chuyến đi team building trong và ngoài nước hàng năm' },
+  { Icon: BookOpen, title: 'Đào tạo & phát triển', desc: 'Ngân sách học tập 5 triệu/năm và mentor 1-1 hàng tuần' },
+  { Icon: ShieldPlus, title: 'Bảo hiểm sức khỏe', desc: 'Bảo hiểm sức khỏe cao cấp cho cả gia đình' },
+  { Icon: Clock, title: 'Giờ làm linh hoạt', desc: 'Tự chọn giờ làm, remote 3 ngày/tuần' },
+  { Icon: Laptop, title: 'Thiết bị cao cấp', desc: 'MacBook Pro và màn hình 4K cho tất cả nhân viên' },
 ]
 
 export default function CareersPage() {
@@ -35,7 +37,7 @@ export default function CareersPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {perks.map((p) => (
             <GlassCard key={p.title} className="flex gap-4 !p-6">
-              <span className="material-symbols-outlined text-[#c2c6db] text-2xl flex-shrink-0">{p.icon}</span>
+              <p.Icon size={16} />
               <div>
                 <h3 className="font-semibold text-[#e0e3e5] mb-1 text-sm">{p.title}</h3>
                 <p className="text-xs text-[#c7c6cd] leading-relaxed">{p.desc}</p>
@@ -60,8 +62,8 @@ export default function CareersPage() {
                   ))}
                 </div>
                 <div className="flex gap-4 text-xs text-[#909097]">
-                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">schedule</span>{job.type}</span>
-                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">location_on</span>{job.location}</span>
+                  <span className="flex items-center gap-1"><Clock size={16} />{job.type}</span>
+                  <span className="flex items-center gap-1"><MapPin size={16} />{job.location}</span>
                 </div>
               </div>
               <Link href="/contact" className="flex-shrink-0 px-6 py-2.5 border border-[#c2c6db]/40 text-[#c2c6db] rounded-lg text-sm font-semibold hover:bg-[#c2c6db] hover:text-[#2b3040] transition-all duration-300">

@@ -1,11 +1,12 @@
+import { BadgeCheck, Handshake, Lightbulb, User, Users } from 'lucide-react'
 import Image from 'next/image'
 import { PageHeader, Section, GlassCard, CtaBanner } from '@/components/ui/PageComponents'
 
 const values = [
-  { icon: 'lightbulb', title: 'Đổi Mới Liên Tục', desc: 'Chúng tôi không ngừng nghiên cứu và ứng dụng công nghệ mới nhất để mang lại giải pháp tiên phong.' },
-  { icon: 'handshake', title: 'Đối Tác Đồng Hành', desc: 'Không chỉ là nhà cung cấp dịch vụ — chúng tôi là đối tác chiến lược trong hành trình phát triển của bạn.' },
-  { icon: 'verified', title: 'Chất Lượng Không Thỏa Hiệp', desc: 'Mỗi dự án đều được kiểm duyệt kỹ lưỡng theo tiêu chuẩn quốc tế trước khi bàn giao.' },
-  { icon: 'people', title: 'Con Người Là Trung Tâm', desc: 'Mọi quyết định thiết kế đều xuất phát từ nhu cầu thực tế của người dùng cuối.' },
+  { Icon: Lightbulb, title: 'Đổi Mới Liên Tục', desc: 'Chúng tôi không ngừng nghiên cứu và ứng dụng công nghệ mới nhất để mang lại giải pháp tiên phong.' },
+  { Icon: Handshake, title: 'Đối Tác Đồng Hành', desc: 'Không chỉ là nhà cung cấp dịch vụ — chúng tôi là đối tác chiến lược trong hành trình phát triển của bạn.' },
+  { Icon: BadgeCheck, title: 'Chất Lượng Không Thỏa Hiệp', desc: 'Mỗi dự án đều được kiểm duyệt kỹ lưỡng theo tiêu chuẩn quốc tế trước khi bàn giao.' },
+  { Icon: Users, title: 'Con Người Là Trung Tâm', desc: 'Mọi quyết định thiết kế đều xuất phát từ nhu cầu thực tế của người dùng cuối.' },
 ]
 
 const stats = [
@@ -79,7 +80,7 @@ export default function AboutPage() {
           {values.map((v) => (
             <GlassCard key={v.title} className="flex gap-5 !p-8">
               <div className="w-12 h-12 rounded-lg bg-[#0a0f1e] flex items-center justify-center flex-shrink-0">
-                <span className="material-symbols-outlined text-[#c2c6db] text-2xl">{v.icon}</span>
+                <v.Icon size={16} />
               </div>
               <div>
                 <h3 className="font-bold text-[#e0e3e5] mb-2">{v.title}</h3>
@@ -97,7 +98,7 @@ export default function AboutPage() {
           {team.map((member) => (
             <div key={member.name} className="glass-card rounded-xl p-6 text-center">
               <div className="w-16 h-16 rounded-2xl bg-[#c2c6db]/10 border border-[#c2c6db]/20 flex items-center justify-center mx-auto mb-4">
-                <span className="material-symbols-outlined text-[#c2c6db] text-3xl">{member.avatar}</span>
+                <User size={24} className="text-[#c2c6db]" />
               </div>
               <h3 className="font-semibold text-[#e0e3e5] text-sm mb-1">{member.name}</h3>
               <p className="text-xs text-[#c7c6cd]">{member.role}</p>

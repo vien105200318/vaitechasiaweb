@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { ArrowRight, Search, SearchX } from 'lucide-react'
 import Link from 'next/link'
 import { posts, categories } from '@/lib/blog-data'
 
@@ -32,7 +33,7 @@ export default function BlogPage() {
             <p className="text-[#c7c6cd] mt-3">{posts.length} bài viết từ những người đang làm thực tế.</p>
           </div>
           <div className="relative w-full md:w-72">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#909097] text-lg">search</span>
+            <Search size={16} />
             <input
               value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Tìm bài viết..."
@@ -86,7 +87,7 @@ export default function BlogPage() {
                     </div>
                   </div>
                   <span className="text-xs text-[#c2c6db] font-semibold flex items-center gap-1">
-                    Đọc bài <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    Đọc bài <ArrowRight size={16} />
                   </span>
                 </div>
               </div>
@@ -99,7 +100,7 @@ export default function BlogPage() {
       <div className="px-6 md:px-16 max-w-[1280px] mx-auto">
         {filtered.length === 0 ? (
           <div className="text-center py-20">
-            <span className="material-symbols-outlined text-4xl text-[#46464c] block mb-3">search_off</span>
+            <SearchX size={16} />
             <p className="text-[#c7c6cd]">Không tìm thấy bài viết phù hợp.</p>
           </div>
         ) : (
@@ -129,7 +130,7 @@ export default function BlogPage() {
                       </div>
                     </div>
                     <span className="text-[10px] text-[#c2c6db] font-semibold flex items-center gap-1">
-                      Đọc <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                      Đọc <ArrowRight size={16} />
                     </span>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { posts } from '@/lib/blog-data'
 
@@ -44,7 +45,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       {/* Back */}
       <div className="px-6 md:px-16 max-w-[1280px] mx-auto mb-8">
         <Link href="/blog" className="inline-flex items-center gap-2 text-[#c7c6cd] hover:text-[#c2c6db] transition-colors text-sm">
-          <span className="material-symbols-outlined text-base">arrow_back</span>
+          <ArrowLeft size={16} />
           Tất cả bài viết
         </Link>
       </div>

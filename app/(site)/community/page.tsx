@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Heart, MessageCircle } from 'lucide-react'
 import { PageHeader, Section, GlassCard, CtaBanner } from '@/components/ui/PageComponents'
 
 const discussions = [
@@ -63,8 +64,8 @@ export default function CommunityPage() {
                     </div>
                     <p className="text-sm font-semibold text-[#e0e3e5] truncate">{d.title}</p>
                     <div className="flex gap-4 mt-2 text-xs text-[#909097]">
-                      <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">comment</span>{d.replies}</span>
-                      <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">favorite</span>{d.likes}</span>
+                      <span className="flex items-center gap-1"><MessageCircle size={16} />{d.replies}</span>
+                      <span className="flex items-center gap-1"><Heart size={16} />{d.likes}</span>
                     </div>
                   </div>
                 </Link>

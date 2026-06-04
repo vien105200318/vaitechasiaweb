@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowRight, Download, FileText, ImageIcon, Images, User, type LucideIcon } from 'lucide-react'
 import { PageHeader, Section, CtaBanner } from '@/components/ui/PageComponents'
 
 const news = [
@@ -26,10 +27,10 @@ const news = [
 ]
 
 const mediaKitItems = [
-  { icon: 'image', title: 'Logo & Brand Assets', desc: 'Bộ nhận diện thương hiệu đầy đủ (.SVG, .PNG)' },
-  { icon: 'description', title: 'Thông cáo báo chí', desc: 'Tất cả thông cáo báo chí từ trước đến nay' },
-  { icon: 'photo_library', title: 'Thư viện ảnh', desc: 'Ảnh sản phẩm và đội ngũ chất lượng cao' },
-  { icon: 'person', title: 'Hồ sơ lãnh đạo', desc: 'Tiểu sử và ảnh đại diện chính thức' },
+  { Icon: ImageIcon, title: 'Logo & Brand Assets', desc: 'Bộ nhận diện thương hiệu đầy đủ (.SVG, .PNG)' },
+  { Icon: FileText, title: 'Thông cáo báo chí', desc: 'Tất cả thông cáo báo chí từ trước đến nay' },
+  { Icon: Images, title: 'Thư viện ảnh', desc: 'Ảnh sản phẩm và đội ngũ chất lượng cao' },
+  { Icon: User, title: 'Hồ sơ lãnh đạo', desc: 'Tiểu sử và ảnh đại diện chính thức' },
 ]
 
 export default function PressPage() {
@@ -56,7 +57,7 @@ export default function PressPage() {
               <h3 className="text-xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">{item.title}</h3>
               <p className="text-sm text-[#c7c6cd] leading-relaxed mb-4">{item.desc}</p>
               <Link href="#" className="text-sm text-[#c2c6db] font-semibold hover:underline flex items-center gap-1">
-                Đọc thêm <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                Đọc thêm <ArrowRight size={16} />
               </Link>
             </div>
           ))}
@@ -71,14 +72,14 @@ export default function PressPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {mediaKitItems.map((item) => (
               <div key={item.title} className="bg-[#1d2022] rounded-xl p-5 border border-white/5">
-                <span className="material-symbols-outlined text-[#c2c6db] text-2xl mb-3 block">{item.icon}</span>
+                <item.Icon size={16} />
                 <h3 className="font-semibold text-[#e0e3e5] text-sm mb-1">{item.title}</h3>
                 <p className="text-xs text-[#c7c6cd]">{item.desc}</p>
               </div>
             ))}
           </div>
           <Link href="#" className="inline-flex items-center gap-2 bg-[#c2c6db] text-[#2b3040] px-8 py-3 rounded-lg font-bold text-sm hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all duration-300">
-            <span className="material-symbols-outlined text-base">download</span>
+            <Download size={16} />
             Tải Media Kit (.zip)
           </Link>
         </div>

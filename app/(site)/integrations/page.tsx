@@ -1,25 +1,26 @@
+import { BarChart2, Briefcase, type LucideIcon, CreditCard, Mail, MessageSquare, MousePointerClick, ShoppingCart, Store, Wallet, Zap } from 'lucide-react'
 import { PageHeader, Section, GlassCard, CtaBanner } from '@/components/ui/PageComponents'
 
 const integrations = [
   { category: 'Thanh toán', items: [
-    { name: 'VNPay', icon: 'payments', desc: 'Cổng thanh toán nội địa phổ biến nhất Việt Nam.' },
-    { name: 'MoMo', icon: 'account_balance_wallet', desc: 'Ví điện tử với 30 triệu người dùng.' },
-    { name: 'Stripe', icon: 'credit_card', desc: 'Thanh toán quốc tế đa tiền tệ.' },
+    { name: 'VNPay', Icon: CreditCard, desc: 'Cổng thanh toán nội địa phổ biến nhất Việt Nam.' },
+    { name: 'MoMo', Icon: Wallet, desc: 'Ví điện tử với 30 triệu người dùng.' },
+    { name: 'Stripe', Icon: CreditCard, desc: 'Thanh toán quốc tế đa tiền tệ.' },
   ]},
   { category: 'Marketing', items: [
-    { name: 'Google Analytics', icon: 'analytics', desc: 'Theo dõi hành vi người dùng chi tiết.' },
-    { name: 'Meta Pixel', icon: 'ads_click', desc: 'Tối ưu quảng cáo Facebook & Instagram.' },
-    { name: 'Mailchimp', icon: 'email', desc: 'Gửi email marketing tự động.' },
+    { name: 'Google Analytics', Icon: BarChart2, desc: 'Theo dõi hành vi người dùng chi tiết.' },
+    { name: 'Meta Pixel', Icon: MousePointerClick, desc: 'Tối ưu quảng cáo Facebook & Instagram.' },
+    { name: 'Mailchimp', Icon: Mail, desc: 'Gửi email marketing tự động.' },
   ]},
   { category: 'Vận hành', items: [
-    { name: 'Google Workspace', icon: 'work', desc: 'Đồng bộ lịch, Drive và email doanh nghiệp.' },
-    { name: 'Slack', icon: 'chat', desc: 'Thông báo thời gian thực về dự án.' },
-    { name: 'Zapier', icon: 'bolt', desc: 'Tự động hóa quy trình với 5000+ ứng dụng.' },
+    { name: 'Google Workspace', Icon: Briefcase, desc: 'Đồng bộ lịch, Drive và email doanh nghiệp.' },
+    { name: 'Slack', Icon: MessageSquare, desc: 'Thông báo thời gian thực về dự án.' },
+    { name: 'Zapier', Icon: Zap, desc: 'Tự động hóa quy trình với 5000+ ứng dụng.' },
   ]},
   { category: 'Thương mại điện tử', items: [
-    { name: 'WooCommerce', icon: 'shopping_cart', desc: 'Tích hợp cửa hàng WordPress.' },
-    { name: 'Shopify', icon: 'storefront', desc: 'Đồng bộ sản phẩm và đơn hàng.' },
-    { name: 'Haravan', icon: 'inventory', desc: 'Nền tảng TMĐT hàng đầu Việt Nam.' },
+    { name: 'WooCommerce', Icon: ShoppingCart, desc: 'Tích hợp cửa hàng WordPress.' },
+    { name: 'Shopify', Icon: Store, desc: 'Đồng bộ sản phẩm và đơn hàng.' },
+    { name: 'Haravan', Icon: Store, desc: 'Nền tảng TMĐT hàng đầu Việt Nam.' },
   ]},
 ]
 
@@ -45,7 +46,7 @@ export default function IntegrationsPage() {
                 {group.items.map((item) => (
                   <GlassCard key={item.name} className="flex items-start gap-4 !p-6">
                     <div className="w-10 h-10 rounded-lg bg-[#0a0f1e] flex items-center justify-center flex-shrink-0">
-                      <span className="material-symbols-outlined text-[#c2c6db] text-xl">{item.icon}</span>
+                      <item.Icon size={16} />
                     </div>
                     <div>
                       <h3 className="font-semibold text-[#e0e3e5] mb-1">{item.name}</h3>

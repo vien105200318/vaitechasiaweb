@@ -1,12 +1,13 @@
 'use client'
+import { CheckCircle2, Globe, Mail, MapPin, Phone, Share2 } from 'lucide-react'
 
 import { useState } from 'react'
 import { PageHeader } from '@/components/ui/PageComponents'
 
 const contactMethods = [
-  { icon: 'email', title: 'Email', value: 'vaistudio.world@gmail.com', desc: 'Phản hồi trong vòng 24 giờ' },
-  { icon: 'phone', title: 'Điện thoại', value: '0796 716 811', desc: 'Thứ 2–7, 8:00–18:00' },
-  { icon: 'location_on', title: 'Địa chỉ', value: '29 Bùi Xuân Phái, Thuận Phước, Đà Nẵng', desc: 'Ghé thăm văn phòng chúng tôi' },
+  { Icon: Mail, title: 'Email', value: 'vaistudio.world@gmail.com', desc: 'Phản hồi trong vòng 24 giờ' },
+  { Icon: Phone, title: 'Điện thoại', value: '0796 716 811', desc: 'Thứ 2–7, 8:00–18:00' },
+  { Icon: MapPin, title: 'Địa chỉ', value: '29 Bùi Xuân Phái, Thuận Phước, Đà Nẵng', desc: 'Ghé thăm văn phòng chúng tôi' },
 ]
 
 export default function ContactPage() {
@@ -38,7 +39,7 @@ export default function ContactPage() {
             {contactMethods.map((m) => (
               <div key={m.title} className="glass-card rounded-xl p-6 flex gap-4">
                 <div className="w-10 h-10 rounded-lg bg-[#0a0f1e] flex items-center justify-center flex-shrink-0">
-                  <span className="material-symbols-outlined text-[#c2c6db] text-xl">{m.icon}</span>
+                  <m.Icon size={16} />
                 </div>
                 <div>
                   <p className="text-xs text-[#909097] uppercase tracking-wider font-semibold mb-1">{m.title}</p>
@@ -51,9 +52,9 @@ export default function ContactPage() {
             <div className="glass-card rounded-xl p-6">
               <p className="text-xs text-[#909097] uppercase tracking-wider font-semibold mb-4">Theo dõi chúng tôi</p>
               <div className="flex gap-3">
-                {['public', 'hub', 'mail'].map((icon) => (
-                  <a key={icon} href="#" className="w-9 h-9 rounded-lg bg-[#1d2022] border border-white/5 flex items-center justify-center text-[#c7c6cd] hover:text-[#c2c6db] hover:border-[#c2c6db]/30 transition-all">
-                    <span className="material-symbols-outlined text-base">{icon}</span>
+                {[Globe, Share2, Mail].map((Icon, i) => (
+                  <a key={i} href="#" className="w-9 h-9 rounded-lg bg-[#1d2022] border border-white/5 flex items-center justify-center text-[#c7c6cd] hover:text-[#c2c6db] hover:border-[#c2c6db]/30 transition-all">
+                    <Icon size={16} />
                   </a>
                 ))}
               </div>
@@ -65,7 +66,7 @@ export default function ContactPage() {
             {sent ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-10">
                 <div className="w-16 h-16 rounded-2xl bg-[#c2c6db]/10 flex items-center justify-center mb-4">
-                  <span className="material-symbols-outlined text-[#c2c6db] text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                  <CheckCircle2 size={32} className="text-[#c2c6db]" />
                 </div>
                 <h3 className="text-2xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">Đã gửi thành công!</h3>
                 <p className="text-[#c7c6cd]">Chúng tôi sẽ liên hệ lại với bạn trong vòng 24 giờ.</p>

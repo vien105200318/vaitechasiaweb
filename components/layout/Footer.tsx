@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Globe, Share2, Cloud } from 'lucide-react'
 import { getUrl } from '@/lib/subdomains'
 
 const platformLinks = [
@@ -35,13 +36,10 @@ export default function Footer() {
             Kiến tạo giải pháp công nghệ dẫn đầu xu hướng cho các thương hiệu toàn cầu.
           </p>
           <div className="flex gap-3">
-            {['public', 'hub', 'cloud'].map((icon) => (
-              <a
-                key={icon}
-                href="#"
-                className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#1d2022] hover:bg-[#c2c6db]/10 text-[#c7c6cd] hover:text-[#c2c6db] transition-all duration-300 border border-white/5"
-              >
-                <span className="material-symbols-outlined text-lg">{icon}</span>
+            {[Globe, Share2, Cloud].map((Icon, i) => (
+              <a key={i} href="#"
+                className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#1d2022] hover:bg-[#c2c6db]/10 text-[#c7c6cd] hover:text-[#c2c6db] transition-all duration-300 border border-white/5">
+                <Icon size={16} />
               </a>
             ))}
           </div>

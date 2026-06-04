@@ -1,24 +1,25 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { ArrowRight, Brain, CheckCircle2, Database, Sparkles, Zap } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
 const features = [
   {
-    icon: 'psychology',
+    Icon: Brain,
     title: 'Xây Dựng Bằng AI',
     desc: 'Hệ thống tự động hóa thông minh giúp xây dựng hạ tầng số một cách nhanh chóng và chính xác tuyệt đối.',
     cta: 'Khám phá',
   },
   {
-    icon: 'auto_awesome',
+    Icon: Sparkles,
     title: 'Hiệu Ứng Thị Giác',
     desc: 'Trải nghiệm thị giác cao cấp với hiệu ứng 3D và tương tác mượt mà, tạo ấn tượng mạnh mẽ từ cái nhìn đầu tiên.',
     cta: 'Trải nghiệm',
   },
   {
-    icon: 'speed',
+    Icon: Zap,
     title: 'Tối Ưu Hiệu Suất',
     desc: 'Tối ưu hóa quy trình vận hành và chuyển đổi số toàn diện, giúp doanh nghiệp bứt phá doanh thu.',
     cta: 'Tìm hiểu',
@@ -96,7 +97,7 @@ export default function HomePage() {
 
         <div className="hidden lg:block absolute right-[10%] top-[40%] w-64 h-80 glass-card rounded-xl p-6 rotate-6 electric-glow">
           <div className="flex flex-col h-full justify-between">
-            <span className="material-symbols-outlined text-[#c2c6db] text-4xl">database</span>
+            <Database size={16} />
             <div className="space-y-2">
               <div className="h-1 w-12 bg-[#c2c6db] rounded-full" />
               <p className="text-xs tracking-widest uppercase text-[#c7c6cd] font-semibold">OPTIMIZING SYSTEMS</p>
@@ -126,14 +127,14 @@ export default function HomePage() {
           {features.map((f, i) => (
             <div key={f.title} ref={ref(i + 1)} className="reveal glass-card p-10 rounded-xl group">
               <div className="mb-8 w-14 h-14 rounded-lg bg-[#0a0f1e] flex items-center justify-center text-[#c2c6db] group-hover:scale-110 transition-transform duration-500">
-                <span className="material-symbols-outlined text-3xl">{f.icon}</span>
+                <f.Icon size={16} />
               </div>
               <h3 className="text-2xl font-semibold font-[family-name:var(--font-montserrat)] mb-4 text-[#e0e3e5]">
                 {f.title}
               </h3>
               <p className="text-[#c7c6cd] text-sm leading-relaxed mb-6">{f.desc}</p>
               <div className="flex items-center gap-2 text-[#c2c6db] font-bold cursor-pointer hover:gap-4 transition-all text-sm">
-                {f.cta} <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                {f.cta} <ArrowRight size={16} />
               </div>
             </div>
           ))}
@@ -156,9 +157,7 @@ export default function HomePage() {
                 <ul className="space-y-4 mb-10">
                   {['Thiết kế tùy chỉnh 100%', 'Tốc độ tải trang dưới 1s', 'Bảo mật đa lớp AI'].map((item) => (
                     <li key={item} className="flex items-center gap-3">
-                      <span className="material-symbols-outlined text-[#c2c6db] text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        check_circle
-                      </span>
+                      <CheckCircle2 size={20} className="text-[#c2c6db] flex-shrink-0" />
                       <span className="text-sm text-[#e0e3e5]">{item}</span>
                     </li>
                   ))}
@@ -167,7 +166,7 @@ export default function HomePage() {
                   href="/templates"
                   className="inline-flex items-center gap-2 bg-[#c2c6db] text-[#2b3040] px-8 py-3 rounded-lg font-bold text-sm hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all duration-300"
                 >
-                  Xem Templates <span className="material-symbols-outlined text-base">arrow_forward</span>
+                  Xem Templates <ArrowRight size={16} />
                 </Link>
               </div>
             </div>

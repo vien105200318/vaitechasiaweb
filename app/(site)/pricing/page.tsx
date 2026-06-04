@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Brain, CheckCircle2, Globe, HelpCircle, LayoutDashboard, MinusCircle, Receipt } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageComponents'
 
 const plans = [
@@ -157,12 +158,12 @@ export default function PricingPage() {
       <section className="px-6 md:px-16 max-w-[1280px] mx-auto mb-10">
         <div className="flex flex-wrap items-center justify-center gap-6 bg-[#c2c6db]/5 border border-[#c2c6db]/15 rounded-2xl py-4 px-6">
           {[
-            { icon: 'psychology', text: 'Mọi gói đều có AI tích hợp' },
-            { icon: 'receipt_long', text: 'Hoá đơn điện tử chuẩn NĐ 123' },
-            { icon: 'language', text: 'Tên miền tuỳ chỉnh từ gói Pro' },
+            { Icon: Brain, text: 'Mọi gói đều có AI tích hợp' },
+            { Icon: Receipt, text: 'Hoá đơn điện tử chuẩn NĐ 123' },
+            { Icon: Globe, text: 'Tên miền tuỳ chỉnh từ gói Pro' },
           ].map(item => (
             <div key={item.text} className="flex items-center gap-2 text-sm text-[#c7c6cd]">
-              <span className="material-symbols-outlined text-[#c2c6db] text-lg">{item.icon}</span>
+              <item.Icon size={16} />
               {item.text}
             </div>
           ))}
@@ -201,7 +202,7 @@ export default function PricingPage() {
                   ? 'bg-[#c2c6db]/8 border-[#c2c6db]/25'
                   : 'bg-white/3 border-white/8'
               }`}>
-                <span className="material-symbols-outlined text-sm text-[#c7c6cd]">language</span>
+                <Globe size={16} />
                 <div>
                   <p className={`text-xs font-semibold ${plan.domainType === 'custom' ? 'text-[#c2c6db]' : 'text-[#909097]'}`}>
                     {plan.domainLabel}
@@ -212,13 +213,13 @@ export default function PricingPage() {
 
               {/* Invoice */}
               <div className="flex items-center gap-1.5 bg-white/3 border border-white/8 rounded-lg px-3 py-2 mb-4">
-                <span className="material-symbols-outlined text-sm text-[#c7c6cd]">receipt_long</span>
+                <Receipt size={16} />
                 <p className="text-xs text-[#c7c6cd] font-semibold">HĐ điện tử: {plan.invoice}</p>
               </div>
 
               {/* AI */}
               <div className="flex items-center gap-1.5 bg-[#c2c6db]/5 border border-[#c2c6db]/15 rounded-lg px-3 py-2 mb-5">
-                <span className="material-symbols-outlined text-[#c2c6db] text-sm">psychology</span>
+                <Brain size={16} />
                 <span className="text-xs text-[#c2c6db] font-semibold">{plan.aiNote}</span>
               </div>
 
@@ -229,14 +230,10 @@ export default function PricingPage() {
                     (f as {highlight?: boolean}).highlight ? 'text-[#c2c6db] font-semibold' :
                     'text-[#e0e3e5]'
                   }`}>
-                    <span
-                      className={`material-symbols-outlined text-sm flex-shrink-0 mt-0.5 ${
-                        !f.ok ? 'text-[#46464c]' : 'text-[#c2c6db]'
-                      }`}
-                      style={{ fontVariationSettings: f.ok ? "'FILL' 1" : "'FILL' 0" }}
-                    >
-                      {f.ok ? 'check_circle' : 'remove_circle'}
-                    </span>
+                    {f.ok
+                      ? <CheckCircle2 size={14} className={`flex-shrink-0 mt-0.5 ${(f as {highlight?:boolean}).highlight ? 'text-[#c2c6db]' : 'text-[#c2c6db]'}`} />
+                      : <MinusCircle size={14} className="flex-shrink-0 mt-0.5 text-[#46464c]" />
+                    }
                     {f.text}
                   </li>
                 ))}
@@ -263,7 +260,7 @@ export default function PricingPage() {
       <section className="px-6 md:px-16 max-w-[1280px] mx-auto py-8">
         <div className="glass-card rounded-2xl p-6 md:p-8 overflow-x-auto">
           <h3 className="text-lg font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-6 flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#c2c6db]">compare</span>
+            <LayoutDashboard size={16} />
             So Sánh Chi Tiết
           </h3>
           <table className="w-full text-sm min-w-[600px]">
@@ -310,7 +307,7 @@ export default function PricingPage() {
           {faqs.map(faq => (
             <div key={faq.q} className="glass-card rounded-xl p-6">
               <h3 className="font-semibold text-[#e0e3e5] mb-3 flex items-start gap-2">
-                <span className="material-symbols-outlined text-[#c2c6db] text-base flex-shrink-0 mt-0.5">help_outline</span>
+                <HelpCircle size={16} />
                 {faq.q}
               </h3>
               <p className="text-sm text-[#c7c6cd] leading-relaxed pl-6">{faq.a}</p>

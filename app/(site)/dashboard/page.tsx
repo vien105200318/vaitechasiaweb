@@ -1,15 +1,16 @@
 'use client'
 
 import { useEffect } from 'react'
+import { ArrowRight, Award, Bookmark, Brain, FolderOpen, Globe, Headphones, LayoutGrid, LogIn, LogOut, PlusCircle, Receipt, Settings, Store } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
 
 const quickActions = [
-  { icon: 'add_circle', label: 'Tạo dự án mới', href: '/templates' },
-  { icon: 'grid_view', label: 'Xem mẫu website', href: '/templates' },
-  { icon: 'support_agent', label: 'Liên hệ hỗ trợ', href: '/contact' },
-  { icon: 'settings', label: 'Cài đặt tài khoản', href: '#' },
+  { Icon: PlusCircle, label: 'Tạo dự án mới', href: '/templates' },
+  { Icon: LayoutGrid, label: 'Xem mẫu website', href: '/templates' },
+  { Icon: Headphones, label: 'Liên hệ hỗ trợ', href: '/contact' },
+  { Icon: Settings, label: 'Cài đặt tài khoản', href: '#' },
 ]
 
 const planLabel: Record<string, string> = {
@@ -84,7 +85,7 @@ export default function DashboardPage() {
           onClick={logout}
           className="flex items-center gap-2 border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300"
         >
-          <span className="material-symbols-outlined text-base">logout</span>
+          <LogOut size={16} />
           Đăng xuất
         </button>
       </div>
@@ -92,13 +93,13 @@ export default function DashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {[
-          { label: 'Dự án đang hoạt động', value: '0', icon: 'folder_open' },
-          { label: 'Mẫu đã lưu', value: '0', icon: 'bookmark' },
-          { label: 'Gói dịch vụ', value: planLabel[plan], icon: 'workspace_premium' },
-          { label: 'Đăng nhập qua', value: provider, icon: 'login' },
+          { label: 'Dự án đang hoạt động', value: '0', Icon: FolderOpen },
+          { label: 'Mẫu đã lưu', value: '0', Icon: Bookmark },
+          { label: 'Gói dịch vụ', value: planLabel[plan], Icon: Award },
+          { label: 'Đăng nhập qua', value: provider, Icon: LogIn },
         ].map((s) => (
           <div key={s.label} className="glass-card p-6 rounded-xl">
-            <span className="material-symbols-outlined text-[#c2c6db] text-2xl mb-3 block">{s.icon}</span>
+            <s.Icon size={16} />
             <div className="text-xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-1 truncate">{s.value}</div>
             <div className="text-xs text-[#c7c6cd]">{s.label}</div>
           </div>
@@ -113,9 +114,9 @@ export default function DashboardPage() {
             {quickActions.map((action) => (
               <Link key={action.label} href={action.href}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-[#c7c6cd] hover:text-[#e0e3e5] transition-all duration-300 group">
-                <span className="material-symbols-outlined text-[#c2c6db] text-xl group-hover:scale-110 transition-transform">{action.icon}</span>
+                <action.Icon size={16} />
                 <span className="text-sm font-medium">{action.label}</span>
-                <span className="material-symbols-outlined text-xs ml-auto opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                <ArrowRight size={16} />
               </Link>
             ))}
           </div>
@@ -139,13 +140,13 @@ export default function DashboardPage() {
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs text-[#c7c6cd]">
               {[
-                { icon: 'psychology', text: plan === 'free' ? 'AI Builder: 10 lần/ngày' : plan === 'standard' ? 'AI Builder: 30 lần/ngày' : plan === 'lite' ? 'AI Builder: 100 lần/ngày' : 'AI Builder: Không giới hạn' },
-                { icon: 'language', text: plan === 'pro' || plan === 'ultra' ? 'Tên miền tuỳ chỉnh' : 'Subdomain Vaitech' },
-                { icon: 'storefront', text: plan === 'free' ? 'Không có cửa hàng' : plan === 'standard' ? '1 cửa hàng' : plan === 'ultra' ? 'Không giới hạn cửa hàng' : '5 cửa hàng' },
-                { icon: 'receipt_long', text: plan === 'free' ? 'Hoá đơn: 1/tháng' : plan === 'standard' ? 'Hoá đơn: 3/tháng' : plan === 'lite' ? 'Hoá đơn: 10/tháng' : plan === 'pro' ? 'Hoá đơn: 50/tháng' : 'Hoá đơn: Không giới hạn' },
+                { Icon: Brain, text: plan === 'free' ? 'AI Builder: 10 lần/ngày' : plan === 'standard' ? 'AI Builder: 30 lần/ngày' : plan === 'lite' ? 'AI Builder: 100 lần/ngày' : 'AI Builder: Không giới hạn' },
+                { Icon: Globe, text: plan === 'pro' || plan === 'ultra' ? 'Tên miền tuỳ chỉnh' : 'Subdomain Vaitech' },
+                { Icon: Store, text: plan === 'free' ? 'Không có cửa hàng' : plan === 'standard' ? '1 cửa hàng' : plan === 'ultra' ? 'Không giới hạn cửa hàng' : '5 cửa hàng' },
+                { Icon: Receipt, text: plan === 'free' ? 'Hoá đơn: 1/tháng' : plan === 'standard' ? 'Hoá đơn: 3/tháng' : plan === 'lite' ? 'Hoá đơn: 10/tháng' : plan === 'pro' ? 'Hoá đơn: 50/tháng' : 'Hoá đơn: Không giới hạn' },
               ].map(f => (
                 <div key={f.text} className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#c2c6db] text-sm">{f.icon}</span>
+                  <f.Icon size={16} />
                   {f.text}
                 </div>
               ))}

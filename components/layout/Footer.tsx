@@ -90,7 +90,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-20 px-6 md:px-16 max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 border-t border-white/5 pt-8">
-        <p className="text-[#c7c6cd] text-sm">© 2025 Vaitech. Architects of the Future.</p>
+        <p className="text-[#c7c6cd] text-sm">© 2026 Vaitech. Architects of the Future.</p>
         <div className="flex gap-8 text-xs text-[#909097]">
           <Link href="#" className="hover:text-[#e0e3e5] transition-colors">Privacy</Link>
           <Link href="#" className="hover:text-[#e0e3e5] transition-colors">Terms</Link>

@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
 } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
@@ -17,6 +19,19 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // Xử lý kết quả redirect sau khi quay lại từ Google
+  useEffect(() => {
+    const checkRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth)
+        if (result?.user) router.push('/dashboard')
+      } catch {
+        // không có redirect result, bình thường
+      }
+    }
+    checkRedirect()
+  }, [router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,14 +51,19 @@ export default function LoginPage() {
   const handleGoogle = async () => {
     setError('')
     setLoading(true)
+    const provider = new GoogleAuthProvider()
     try {
-      const provider = new GoogleAuthProvider()
       await signInWithPopup(auth, provider)
       router.push('/dashboard')
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Đăng nhập Google thất bại'
-      setError(msg)
-    } finally {
+      const msg = err instanceof Error ? err.message : ''
+      // Popup bị block → fallback sang redirect
+      if (msg.includes('popup-blocked') || msg.includes('popup-closed') || msg.includes('cancelled-popup-request')) {
+        await signInWithRedirect(auth, provider)
+        // trang sẽ redirect, không cần setLoading(false)
+        return
+      }
+      setError('Đăng nhập Google thất bại. Vui lòng thử lại.')
       setLoading(false)
     }
   }

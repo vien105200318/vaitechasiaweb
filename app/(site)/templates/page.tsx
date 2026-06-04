@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { IconClose, IconOpenNew, IconRocket, IconPreview, IconArrowForward, IconBrush } from '@/components/ui/Icons'
+import { X, ExternalLink, Rocket, Eye, Zap, Smartphone, Brain, Paintbrush } from 'lucide-react'
 
 // Map icon name → emoji (không phụ thuộc font CDN)
 const ICON_EMOJI: Record<string, string> = {
@@ -63,7 +63,7 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
       <div className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d1117] shadow-2xl" onClick={e => e.stopPropagation()}>
         <button onClick={onClose} className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-          <IconClose size={18} className="text-white" />
+          <X size={18} />
         </button>
 
         {/* Preview */}
@@ -95,11 +95,11 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
               <Link href={t.demoHref} target="_blank"
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#2b3040] transition-all hover:scale-105 whitespace-nowrap"
                 style={{ background: t.accentColor }}>
-                <IconOpenNew size={16} />Xem Demo
+                <ExternalLink size={16} />Xem Demo
               </Link>
               <Link href="/register"
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] transition-all whitespace-nowrap">
-                <IconRocket size={16} />Dùng mẫu này
+                <Rocket size={16} />Dùng mẫu này
               </Link>
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function TemplatesPage() {
                 {/* Hover CTA */}
                 <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${hovered === t.id ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm" style={{ background: t.accentColor, color: '#fff' }}>
-                    <IconPreview size={16} />Xem chi tiết
+                    <Eye size={16} />Xem chi tiết
                   </div>
                 </div>
 
@@ -218,7 +218,7 @@ export default function TemplatesPage() {
           <h2 className="text-3xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">Không tìm thấy mẫu phù hợp?</h2>
           <p className="text-[#c7c6cd] mb-6">Vaitech nhận thiết kế custom theo yêu cầu — từ landing page đến hệ thống web phức tạp.</p>
           <Link href="/contact" className="inline-flex items-center gap-2 bg-[#c2c6db] text-[#2b3040] px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all duration-300">
-            <IconBrush size={16} />Yêu cầu thiết kế custom
+            <Paintbrush size={16} />Yêu cầu thiết kế custom
           </Link>
         </div>
       </div>

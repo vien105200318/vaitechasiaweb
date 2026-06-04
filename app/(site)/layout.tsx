@@ -5,14 +5,18 @@ import Footer from '@/components/layout/Footer'
 
 const montserrat = Montserrat({
   subsets: ['latin', 'vietnamese'],
-  weight: ['400', '600', '700'],
+  weight: ['600', '700'],
   variable: '--font-montserrat',
+  display: 'swap',
+  preload: true,
 })
 
 const inter = Inter({
   subsets: ['latin', 'vietnamese'],
   weight: ['400', '500', '600'],
   variable: '--font-inter',
+  display: 'swap',
+  preload: true,
 })
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {

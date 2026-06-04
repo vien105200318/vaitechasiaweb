@@ -49,7 +49,7 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
 
         {/* Preview */}
         <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-2xl">
-          <Image src={t.image} alt={t.title} fill className="object-cover" unoptimized />
+          <Image src={t.image} alt={t.title} fill className="object-cover" />
           <div className="absolute top-0 left-0 right-0 h-8 bg-[#1a1a2e]/90 flex items-center gap-2 px-4">
             <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-500/70" /><div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" /><div className="w-2.5 h-2.5 rounded-full bg-green-500/70" /></div>
             <div className="flex-1 mx-4 h-4 bg-white/10 rounded text-[10px] text-white/30 flex items-center px-2">demo.vaitech.vn{t.demoHref}</div>
@@ -147,7 +147,7 @@ export default function TemplatesPage() {
               {/* Thumbnail */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image src={t.image} alt={t.title} fill
-                  className={`object-cover transition-all duration-700 ${hovered === t.id ? 'scale-105 brightness-50' : 'scale-100 brightness-90'}`} unoptimized />
+                  className={`object-cover transition-all duration-700 ${hovered === t.id ? 'scale-105 brightness-50' : 'scale-100 brightness-90'}`} />
 
                 {/* Browser chrome */}
                 <div className="absolute top-0 left-0 right-0 h-7 bg-[#1a1a2e]/80 flex items-center gap-1.5 px-3">

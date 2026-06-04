@@ -53,7 +53,7 @@ export default function AboutPage() {
               alt="Vaitech Team"
               fill
               className="object-cover"
-              unoptimized
+             
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#101415]/60 to-transparent" />
           </div>

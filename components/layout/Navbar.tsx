@@ -50,7 +50,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2" onClick={() => handleClick('/')}>
           <div className="px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm">
-            <Image src="/logo.svg" alt="Vaitech" width={72} height={40} priority />
+            <Image src="/logo.svg" alt="Vaitech" width={72} height={40} priority sizes="72px" />
           </div>
         </Link>
 

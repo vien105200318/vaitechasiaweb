@@ -62,7 +62,8 @@ export default function HomePage() {
             fill
             className="object-cover opacity-30 mix-blend-luminosity"
             priority
-            unoptimized
+            sizes="100vw"
+            quality={75}
           />
         </div>
 
@@ -178,7 +179,8 @@ export default function HomePage() {
                   alt="Vaitech Workspace"
                   fill
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
-                  unoptimized
+                  sizes="(max-width: 1024px) 100vw, 58vw"
+                  quality={80}
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#191c1e] to-transparent opacity-60" />
               </div>

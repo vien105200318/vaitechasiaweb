@@ -5,11 +5,19 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   X, ExternalLink, Rocket, Eye, Paintbrush,
+  Monitor, Tablet, Smartphone,
   Building2, Coffee, Layers, Bean, Hotel, UtensilsCrossed,
   Stethoscope, Home, Shirt, Dumbbell, Palette, ShoppingCart,
-  Dices, Gamepad2, Zap, Smartphone, BrainCircuit,
+  Dices, Gamepad2,
   type LucideIcon,
 } from 'lucide-react'
+
+type DeviceType = 'desktop' | 'tablet' | 'mobile'
+const DEVICES: { key: DeviceType; label: string; Icon: typeof Monitor; maxW: string }[] = [
+  { key: 'desktop', label: 'Desktop', Icon: Monitor,   maxW: '100%'  },
+  { key: 'tablet',  label: 'Tablet',  Icon: Tablet,    maxW: '768px' },
+  { key: 'mobile',  label: 'Mobile',  Icon: Smartphone, maxW: '390px' },
+]
 
 const templates: {
   id: number; category: string; title: string; subtitle: string
@@ -50,61 +58,113 @@ const categories = [
 type Template = typeof templates[number]
 
 function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-      <div className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d1117] shadow-2xl" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-          <X size={18} />
-        </button>
+  const [device, setDevice] = useState<DeviceType>('desktop')
+  const [iframeLoaded, setIframeLoaded] = useState(false)
 
-        {/* Preview */}
-        <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-2xl">
-          <Image src={t.image} alt={t.title} fill className="object-cover" />
-          <div className="absolute top-0 left-0 right-0 h-8 bg-[#1a1a2e]/90 flex items-center gap-2 px-4">
-            <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-500/70" /><div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" /><div className="w-2.5 h-2.5 rounded-full bg-green-500/70" /></div>
-            <div className="flex-1 mx-4 h-4 bg-white/10 rounded text-[10px] text-white/30 flex items-center px-2">demo.vaitech.vn{t.demoHref}</div>
+  const current = DEVICES.find(d => d.key === device)!
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-6" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
+      <div
+        className="relative z-10 w-full max-w-6xl max-h-[95vh] flex flex-col rounded-2xl border border-white/10 bg-[#0d1117] shadow-2xl overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* ── Top bar ── */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8 bg-[#0a0d12] flex-shrink-0">
+          {/* Browser dots */}
+          <div className="flex gap-1.5">
+            <button onClick={onClose} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+            <div className="w-3 h-3 rounded-full bg-green-500/50" />
           </div>
-          <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(circle at 80% 20%, ${t.accentColor}50, transparent 60%)` }} />
+
+          {/* URL bar */}
+          <div className="flex-1 flex items-center gap-2 bg-white/6 border border-white/8 rounded-lg px-3 h-7 min-w-0">
+            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: t.accentColor }} />
+            <span className="text-[11px] text-white/40 truncate font-mono">vai-tech.asia{t.demoHref}</span>
+          </div>
+
+          {/* Device switcher */}
+          <div className="flex items-center gap-1 bg-white/5 border border-white/8 rounded-lg p-1">
+            {DEVICES.map(({ key, label, Icon }) => (
+              <button
+                key={key}
+                onClick={() => { setDevice(key); setIframeLoaded(false) }}
+                title={label}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
+                  device === key
+                    ? 'bg-white/15 text-white'
+                    : 'text-white/35 hover:text-white/70'
+                }`}
+              >
+                <Icon size={13} />
+                <span className="hidden sm:inline">{label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Open in new tab */}
+          <Link href={t.demoHref} target="_blank"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#2b3040] transition-all hover:scale-105 flex-shrink-0"
+            style={{ background: t.accentColor }}>
+            <ExternalLink size={12} />
+            <span className="hidden sm:inline">Mở tab mới</span>
+          </Link>
         </div>
 
-        <div className="p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-            <div className="flex-1">
-              <span className="text-xs font-bold uppercase tracking-widest mb-2 block" style={{ color: t.accentColor }}>{t.subtitle}</span>
-              <h2 className="text-2xl md:text-3xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">{t.title}</h2>
-              <p className="text-[#c7c6cd] text-sm leading-relaxed mb-5 max-w-xl">{t.longDesc}</p>
-              <div className="flex flex-wrap gap-2">
-                {t.tags.map(tag => (
-                  <span key={tag} className="text-xs px-3 py-1.5 rounded-full border font-semibold"
-                    style={{ borderColor: `${t.accentColor}40`, color: t.accentColor, background: `${t.accentColor}12` }}>
-                    {tag}
-                  </span>
-                ))}
+        {/* ── Preview area ── */}
+        <div className="flex-1 overflow-hidden bg-[#161b22] flex items-start justify-center p-3 min-h-0">
+          <div
+            className="relative h-full transition-all duration-500 ease-out rounded-lg overflow-hidden border border-white/10 shadow-2xl bg-white"
+            style={{
+              width: current.maxW,
+              maxWidth: '100%',
+              minHeight: device === 'mobile' ? '500px' : device === 'tablet' ? '500px' : '500px',
+            }}
+          >
+            {/* Loading skeleton */}
+            {!iframeLoaded && (
+              <div className="absolute inset-0 bg-[#0d1117] flex flex-col items-center justify-center gap-3 z-10">
+                <div className="w-8 h-8 border-2 border-white/20 border-t-white/70 rounded-full animate-spin" />
+                <p className="text-white/40 text-xs">Đang tải {current.label} view...</p>
               </div>
+            )}
+            <iframe
+              src={t.demoHref}
+              className="w-full h-full border-0"
+              style={{ minHeight: device === 'mobile' ? '600px' : '600px' }}
+              onLoad={() => setIframeLoaded(true)}
+              title={`${t.title} - ${current.label} preview`}
+            />
+          </div>
+        </div>
+
+        {/* ── Bottom info bar ── */}
+        <div className="flex items-center justify-between gap-4 px-5 py-3 border-t border-white/8 bg-[#0a0d12] flex-shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${t.accentColor}20` }}>
+              <t.Icon size={14} style={{ color: t.accentColor }} />
             </div>
-            <div className="flex flex-row md:flex-col gap-3 flex-shrink-0">
-              <Link href={t.demoHref} target="_blank"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#2b3040] transition-all hover:scale-105 whitespace-nowrap"
-                style={{ background: t.accentColor }}>
-                <ExternalLink size={16} />Xem Demo
-              </Link>
-              <Link href="/register"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] transition-all whitespace-nowrap">
-                <Rocket size={16} />Dùng mẫu này
-              </Link>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-[#e0e3e5] truncate">{t.title}</p>
+              <p className="text-[10px] text-[#909097] truncate">{t.subtitle}</p>
             </div>
           </div>
-          <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-3 gap-4">
-            {[
-              { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>, label:'Tải dưới 1s' },
-              { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>, label:'Responsive 100%' },
-              { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>, label:'AI tích hợp' },
-            ].map(f => (
-              <div key={f.label} className="flex items-center gap-2 text-xs text-[#c7c6cd]">
-                <span style={{ color: t.accentColor }}>{f.icon}</span>{f.label}
-              </div>
-            ))}
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="hidden md:flex gap-1.5">
+              {t.tags.slice(0, 2).map(tag => (
+                <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full border font-semibold"
+                  style={{ borderColor: `${t.accentColor}35`, color: t.accentColor, background: `${t.accentColor}10` }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <Link href="/register"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-xs border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] transition-all whitespace-nowrap">
+              <Rocket size={12} />Dùng mẫu này
+            </Link>
           </div>
         </div>
       </div>

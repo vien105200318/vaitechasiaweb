@@ -3,6 +3,25 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { IconClose, IconOpenNew, IconRocket, IconPreview, IconArrowForward, IconBrush } from '@/components/ui/Icons'
+
+// Map icon name → emoji (không phụ thuộc font CDN)
+const ICON_EMOJI: Record<string, string> = {
+  corporate_fare: '🏢',
+  local_cafe: '☕',
+  layers: '🗂️',
+  temp_preferences_custom: '🫘',
+  hotel: '🏨',
+  restaurant: '🍽️',
+  local_hospital: '🏥',
+  home_work: '🏠',
+  checkroom: '👗',
+  fitness_center: '💪',
+  palette: '🎨',
+  storefront: '🛒',
+  sports_billiards: '🎱',
+  videogame_asset: '🎮',
+}
 
 const templates = [
   { id:1, category:'doanh-nghiep', title:'Doanh Nghiệp Chuyên Nghiệp', subtitle:'CORPORATE', desc:'Dark navy, split-screen, data-driven cho doanh nghiệp B2B.', longDesc:'Bố cục hướng dữ liệu với case studies, team grid, form liên hệ đầy đủ và metrics live. Thiết kế dark navy hiện đại.', tags:['Tối ưu SEO','Đa ngôn ngữ','Dark mode'], icon:'corporate_fare', demoHref:'/demo/corporate', accentColor:'#3b82f6', image:'https://lh3.googleusercontent.com/aida-public/AB6AXuDO04BddMbSNQ6NeNP_QB43WinFa9-X2-jIGHegvTybTvFK5PIFe9SG43Vr_oas5GO4SeWyzKSC3G3gAQ2FhTXWCnmwDhBVYMgiPPZXTueFkeE-DBICLX3c7DY-gRLYzuDc_yjhY1uIevWCOLLtQXVMlro_Xm5uxrCfDmFxm4ZDh-DY2-bVVxhCEae82O3o5W2u-YFElzBsVEBgSrfVMJlfkximi6ApsbkHGg3vwDr_CyCFJOaUcTbfPUSTw9EsixJitb0QxhMaayVg' },
@@ -44,7 +63,7 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
       <div className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d1117] shadow-2xl" onClick={e => e.stopPropagation()}>
         <button onClick={onClose} className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-          <span className="material-symbols-outlined text-white text-xl">close</span>
+          <IconClose size={18} className="text-white" />
         </button>
 
         {/* Preview */}
@@ -76,18 +95,22 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
               <Link href={t.demoHref} target="_blank"
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#2b3040] transition-all hover:scale-105 whitespace-nowrap"
                 style={{ background: t.accentColor }}>
-                <span className="material-symbols-outlined text-base">open_in_new</span>Xem Demo
+                <IconOpenNew size={16} />Xem Demo
               </Link>
               <Link href="/register"
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] transition-all whitespace-nowrap">
-                <span className="material-symbols-outlined text-base">rocket_launch</span>Dùng mẫu này
+                <IconRocket size={16} />Dùng mẫu này
               </Link>
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-3 gap-4">
-            {[{icon:'speed',label:'Tải dưới 1s'},{icon:'phone_iphone',label:'Responsive 100%'},{icon:'psychology',label:'AI tích hợp'}].map(f => (
+            {[
+              { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>, label:'Tải dưới 1s' },
+              { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>, label:'Responsive 100%' },
+              { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>, label:'AI tích hợp' },
+            ].map(f => (
               <div key={f.label} className="flex items-center gap-2 text-xs text-[#c7c6cd]">
-                <span className="material-symbols-outlined text-base" style={{ color: t.accentColor }}>{f.icon}</span>{f.label}
+                <span style={{ color: t.accentColor }}>{f.icon}</span>{f.label}
               </div>
             ))}
           </div>
@@ -158,7 +181,7 @@ export default function TemplatesPage() {
                 {/* Hover CTA */}
                 <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${hovered === t.id ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm" style={{ background: t.accentColor, color: '#fff' }}>
-                    <span className="material-symbols-outlined text-base">preview</span>Xem chi tiết
+                    <IconPreview size={16} />Xem chi tiết
                   </div>
                 </div>
 
@@ -174,7 +197,7 @@ export default function TemplatesPage() {
                   <p className="text-xs text-[#909097] mt-1 line-clamp-1">{t.desc}</p>
                 </div>
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ml-3 transition-transform group-hover:scale-110 duration-300" style={{ background: `${t.accentColor}20` }}>
-                  <span className="material-symbols-outlined text-xl" style={{ color: t.accentColor }}>{t.icon}</span>
+                  <span className="text-lg leading-none">{ICON_EMOJI[t.icon] ?? '📄'}</span>
                 </div>
               </div>
 
@@ -195,7 +218,7 @@ export default function TemplatesPage() {
           <h2 className="text-3xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">Không tìm thấy mẫu phù hợp?</h2>
           <p className="text-[#c7c6cd] mb-6">Vaitech nhận thiết kế custom theo yêu cầu — từ landing page đến hệ thống web phức tạp.</p>
           <Link href="/contact" className="inline-flex items-center gap-2 bg-[#c2c6db] text-[#2b3040] px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all duration-300">
-            <span className="material-symbols-outlined text-base">brush</span>Yêu cầu thiết kế custom
+            <IconBrush size={16} />Yêu cầu thiết kế custom
           </Link>
         </div>
       </div>

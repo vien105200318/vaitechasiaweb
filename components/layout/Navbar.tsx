@@ -14,7 +14,7 @@ const navLinks = [
 ]
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
+  const { user, profile, logout } = useAuth()
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -80,10 +80,15 @@ export default function Navbar() {
                 href="/dashboard"
                 className="text-[#c7c6cd] hover:text-[#c2c6db] text-sm transition-all duration-300 flex items-center gap-2"
               >
-                <span className="w-7 h-7 rounded-full bg-[#c2c6db]/20 flex items-center justify-center text-xs font-bold text-[#c2c6db]">
-                  {user.displayName ? user.displayName[0].toUpperCase() : user.email?.[0].toUpperCase()}
-                </span>
-                {user.displayName || user.email?.split('@')[0]}
+                {user.photoURL ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
+                ) : (
+                  <span className="w-7 h-7 rounded-full bg-[#c2c6db]/20 flex items-center justify-center text-xs font-bold text-[#c2c6db]">
+                    {(profile?.displayName || user.displayName || user.email || 'U')[0].toUpperCase()}
+                  </span>
+                )}
+                {profile?.displayName || user.displayName || user.email?.split('@')[0]}
               </Link>
               <button
                 onClick={logout}

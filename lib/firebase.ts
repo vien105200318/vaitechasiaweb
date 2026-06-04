@@ -11,7 +11,11 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
+// Chỉ init trên client side
+const app = typeof window !== 'undefined'
+  ? (getApps().length === 0 ? initializeApp(firebaseConfig) : getApp())
+  : (getApps().length === 0 ? initializeApp(firebaseConfig) : getApp())
+
 export const auth = getAuth(app)
 export const db = getFirestore(app)
 export default app

@@ -57,10 +57,186 @@ const categories = [
 
 type Template = typeof templates[number]
 
+// Mini hero preview cho từng template — render trực tiếp không cần iframe
+function TemplatePreview({ t, device }: { t: Template; device: DeviceType }) {
+  const containerCls = device === 'mobile'
+    ? 'w-[390px] max-w-full'
+    : device === 'tablet'
+    ? 'w-[768px] max-w-full'
+    : 'w-full'
+
+  // Mỗi template có preview hero riêng theo style của nó
+  const previews: Record<number, React.ReactNode> = {
+    // Corporate — dark navy
+    1: (
+      <div className="w-full h-full bg-[#050a14] text-white overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <div className="h-10 flex items-center px-6 border-b border-white/8 bg-[#050a14]/90">
+          <div className="flex items-center gap-2 mr-auto"><div className="w-6 h-6 bg-blue-600 rounded text-[10px] font-black flex items-center justify-center">NX</div><span className="text-sm font-black">NEXTECH<span className="text-blue-400">.</span></span></div>
+          <div className="hidden md:flex gap-5 text-[11px] text-white/50 mr-6">{['Dịch Vụ','Case Study','Đội Ngũ','Liên Hệ'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded">Tư Vấn</div>
+        </div>
+        <div className="px-8 pt-10 pb-6">
+          <div className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/25 text-blue-300 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1 h-1 bg-blue-400 rounded-full"/>#1 Chuyển Đổi Số Việt Nam</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3">Kiến Tạo<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Tương Lai</span><br/>Doanh Nghiệp</h1>
+          <p className="text-white/50 text-sm mb-5 max-w-xs">18 năm đồng hành cùng 400+ doanh nghiệp hàng đầu Việt Nam.</p>
+          <div className="flex gap-3"><div className="bg-blue-600 text-white text-xs font-bold px-5 py-2 rounded-lg">Bắt Đầu Ngay</div><div className="border border-white/20 text-white text-xs px-5 py-2 rounded-lg">▶ Xem Case Study</div></div>
+        </div>
+        <div className="mx-8 grid grid-cols-4 gap-3 mt-2">
+          {[['18+','Năm KN'],['400+','Dự án'],['98%','Hài lòng'],['12','VP']].map(([v,l])=>(
+            <div key={l} className="bg-blue-600/8 border border-blue-500/15 rounded-xl p-3 text-center"><div className="text-xl font-black text-blue-400">{v}</div><div className="text-[9px] text-white/40">{l}</div></div>
+          ))}
+        </div>
+      </div>
+    ),
+    // Café — warm amber
+    2: (
+      <div className="w-full h-full bg-[#1a1008] text-[#f5e6d0] overflow-hidden" style={{fontFamily:"Georgia,serif"}}>
+        <div className="h-10 flex items-center px-6 border-b border-[#f5e6d0]/8 bg-[#1a1008]/85">
+          <span className="text-lg font-bold tracking-widest text-[#d4a855] mr-auto">LUNA CAFÉ</span>
+          <div className="hidden md:flex gap-5 text-[10px] text-[#f5e6d0]/50 uppercase tracking-widest mr-5">{['Thực Đơn','Đặt Bàn','Gallery'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-[#d4a855] text-[#1a1008] text-[10px] font-bold px-3 py-1 rounded uppercase tracking-widest">Đặt Bàn</div>
+        </div>
+        <div className="relative h-48 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1008] via-[#1a1008]/40 to-transparent z-10"/>
+          <div className="absolute inset-0 bg-[#2a1a08]"/>
+          <div className="absolute inset-0 flex items-center justify-center opacity-20"><span style={{fontSize:'120px'}}>☕</span></div>
+          <div className="absolute bottom-4 left-6 z-20">
+            <p className="text-[#d4a855] text-[10px] font-bold uppercase tracking-[0.3em] mb-1">Specialty Coffee · 2018</p>
+            <h1 className="text-4xl font-bold leading-none">Nơi Mỗi<br/><span className="italic text-[#d4a855]">Ngụm Cà Phê</span><br/>Là Ký Ức</h1>
+          </div>
+        </div>
+        <div className="px-6 py-3 flex gap-2">
+          <div className="bg-[#d4a855] text-[#1a1008] text-[10px] font-bold px-4 py-2 rounded uppercase tracking-widest">Xem Thực Đơn</div>
+          <div className="border border-[#f5e6d0]/25 text-[#f5e6d0] text-[10px] px-4 py-2 rounded uppercase tracking-widest">Đặt Bàn</div>
+        </div>
+        <div className="px-6 flex gap-3 text-[10px] text-[#f5e6d0]/50 font-sans">
+          <span>⭐ 4.9 · 2,847 đánh giá</span><span>📍 47 Phố Cổ</span><span>🕐 07:00–22:00</span>
+        </div>
+      </div>
+    ),
+    // SaaS — purple
+    3: (
+      <div className="w-full h-full bg-[#06040f] text-white overflow-hidden font-sans">
+        <div className="absolute inset-0 pointer-events-none"><div className="absolute top-0 left-1/3 w-64 h-64 bg-purple-600/15 rounded-full blur-[80px]"/></div>
+        <div className="h-10 flex items-center px-6 border-b border-white/5">
+          <div className="flex items-center gap-1.5 mr-auto"><div className="w-5 h-5 rounded bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center"><span className="text-[8px] font-black">⚡</span></div><span className="text-sm font-black">flow<span className="text-purple-400">AI</span></span></div>
+          <div className="hidden md:flex gap-4 text-[10px] text-white/45 mr-5">{['Tính năng','Demo','Pricing'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-lg">Miễn phí</div>
+        </div>
+        <div className="px-6 pt-8 text-center relative z-10">
+          <div className="inline-flex items-center gap-1.5 bg-purple-500/10 border border-purple-500/25 text-purple-300 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1 h-1 bg-purple-400 rounded-full animate-pulse"/>v3.0 — AI Agent nhanh hơn 5x</div>
+          <h1 className="text-3xl md:text-4xl font-black leading-tight mb-3">Tự Động Hóa Toàn Bộ<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Quy Trình Kinh Doanh</span></h1>
+          <p className="text-white/45 text-xs mb-5 max-w-xs mx-auto">Kết nối mọi công cụ, tự động hóa, ra quyết định bằng AI.</p>
+          <div className="flex gap-2 justify-center">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-bold px-5 py-2 rounded-xl">Dùng thử miễn phí</div>
+            <div className="border border-white/15 text-white text-[10px] px-5 py-2 rounded-xl">Xem demo</div>
+          </div>
+        </div>
+        <div className="mx-6 mt-4 bg-white/3 border border-white/8 rounded-xl p-3">
+          <div className="grid grid-cols-4 gap-2">
+            {[['2.4M','Users'],['847K','API/min'],['43ms','Latency'],['99.99%','Uptime']].map(([v,l])=>(
+              <div key={l} className="bg-white/4 rounded-lg p-2 text-center"><div className="text-sm font-black text-purple-400">{v}</div><div className="text-[8px] text-white/35">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    // Gym — dark orange
+    10: (
+      <div className="w-full h-full bg-[#0c0c0c] text-white overflow-hidden font-sans">
+        <div className="absolute inset-0 pointer-events-none"><div className="absolute top-0 right-0 w-64 h-32 bg-orange-600/8 blur-[80px]"/></div>
+        <div className="h-10 flex items-center px-5 border-b border-white/5">
+          <span className="font-black text-sm mr-auto">IRON<span className="text-orange-500">PEAK</span></span>
+          <div className="hidden md:flex gap-4 text-[10px] text-white/45 mr-4">{['Lịch Tập','HLV','Gói Tập'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-xl">Tập Thử</div>
+        </div>
+        <div className="px-6 pt-7 relative z-10">
+          <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/25 text-orange-300 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1 h-1 bg-orange-500 rounded-full animate-pulse"/>Chi Nhánh 3 khai trương T7/2026</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3">FORGE<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400">YOUR</span><br/>LIMITS</h1>
+          <p className="text-white/50 text-sm mb-5 max-w-xs">Hơn 2,000 hội viên đã thay đổi cuộc sống.</p>
+          <div className="flex gap-3"><div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-black px-5 py-2 rounded-xl">TẬP THỬ MIỄN PHÍ</div><div className="border border-white/20 text-white text-xs px-5 py-2 rounded-xl">Xem Lịch Tập</div></div>
+        </div>
+        <div className="px-6 mt-4 flex gap-6">
+          {[['2000+','Hội viên'],['50+','Lớp/tuần'],['12','HLV'],['3','Chi nhánh']].map(([v,l])=>(
+            <div key={l}><div className="text-lg font-black text-orange-400">{v}</div><div className="text-[9px] text-white/35">{l}</div></div>
+          ))}
+        </div>
+      </div>
+    ),
+    // E-commerce — clean white
+    12: (
+      <div className="w-full h-full bg-[#f8f9fb] text-[#111] overflow-hidden font-sans">
+        <div className="h-10 flex items-center px-4 border-b border-gray-200 bg-white/95">
+          <div className="flex items-center gap-1.5 mr-auto"><div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center"><span className="text-white text-[9px] font-black">VT</span></div><span className="text-sm font-black">TechShop<span className="text-blue-600">.</span></span></div>
+          <div className="flex-1 max-w-48 mx-4 border border-gray-200 rounded-lg px-3 py-1 text-[10px] text-gray-400 bg-gray-50">🔍 Tìm sản phẩm...</div>
+          <div className="bg-blue-600 text-white text-[10px] font-semibold px-3 py-1 rounded-xl">Giỏ hàng</div>
+        </div>
+        <div className="mx-4 mt-3 bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-4 flex items-center">
+          <div>
+            <p className="text-blue-300 text-[10px] font-semibold mb-1">⚡ Flash Sale hôm nay</p>
+            <h2 className="text-xl font-black text-white mb-1">Giảm Đến <span className="text-yellow-400">50%</span></h2>
+            <p className="text-white/60 text-[9px]">Phụ kiện Tech · Số lượng có hạn</p>
+            <div className="bg-yellow-400 text-[#111] text-[10px] font-black px-3 py-1 rounded-lg inline-block mt-2">Mua Ngay →</div>
+          </div>
+        </div>
+        <div className="px-4 mt-3 grid grid-cols-4 gap-2">
+          {[{n:'Headphones',p:'2.490K',d:'-22%'},{n:'Smart Watch',p:'5.990K',d:'-20%'},{n:'Keyboard',p:'1.890K',d:'-14%'},{n:'Webcam 4K',p:'1.290K',d:'-19%'}].map(item=>(
+            <div key={item.n} className="bg-white rounded-xl p-2 border border-gray-100 shadow-sm">
+              <div className="h-12 bg-gray-50 rounded-lg mb-2 flex items-center justify-center text-lg">📦</div>
+              <p className="text-[9px] font-semibold truncate">{item.n}</p>
+              <p className="text-blue-600 font-black text-[10px]">{item.p}đ</p>
+              <span className="text-[8px] bg-red-500 text-white px-1 rounded">{item.d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  }
+
+  const defaultPreview = (
+    <div className="w-full h-full overflow-hidden font-sans" style={{background: `linear-gradient(135deg, ${t.accentColor}15, #0d1117 60%)`}}>
+      <div className="h-10 flex items-center px-5 bg-black/30 border-b border-white/8">
+        <div className="flex items-center gap-2 mr-auto">
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{background:t.accentColor}}>
+            <t.Icon size={12} color="#fff" />
+          </div>
+          <span className="text-sm font-bold text-white">{t.title}</span>
+        </div>
+        <div className="flex gap-2">{['Nav','Features','Contact'].map(n=><span key={n} className="text-[10px] text-white/40">{n}</span>)}</div>
+      </div>
+      <div className="px-8 pt-10">
+        <span className="text-[10px] font-bold uppercase tracking-widest block mb-3" style={{color:t.accentColor}}>{t.subtitle}</span>
+        <h1 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">{t.title}</h1>
+        <p className="text-white/50 text-sm max-w-sm mb-6">{t.longDesc.split('·')[0]}</p>
+        <div className="flex gap-3">
+          <div className="text-xs font-bold px-5 py-2 rounded-xl" style={{background:t.accentColor, color:'#fff'}}>Khám Phá</div>
+          <div className="text-xs font-bold px-5 py-2 rounded-xl border border-white/20 text-white">Tìm hiểu thêm</div>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-6">
+          {t.tags.map(tag=><span key={tag} className="text-[10px] px-2 py-1 rounded-full border font-semibold" style={{borderColor:`${t.accentColor}40`,color:t.accentColor,background:`${t.accentColor}15`}}>{tag}</span>)}
+        </div>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="w-full h-full flex items-start justify-center overflow-auto bg-[#161b22] p-3">
+      <div
+        className="transition-all duration-400 ease-out rounded-xl overflow-hidden border border-white/10 shadow-2xl relative bg-[#0d1117] flex-shrink-0"
+        style={{
+          width: containerCls === 'w-full' ? '100%' : containerCls === 'w-[768px] max-w-full' ? '768px' : '390px',
+          maxWidth: '100%',
+          minHeight: '480px',
+        }}
+      >
+        {previews[t.id] ?? defaultPreview}
+      </div>
+    </div>
+  )
+}
+
 function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
   const [device, setDevice] = useState<DeviceType>('desktop')
-  const [iframeLoaded, setIframeLoaded] = useState(false)
-
   const current = DEVICES.find(d => d.key === device)!
 
   return (
@@ -72,39 +248,24 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
       >
         {/* ── Top bar ── */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8 bg-[#0a0d12] flex-shrink-0">
-          {/* Browser dots */}
           <div className="flex gap-1.5">
             <button onClick={onClose} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
             <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
             <div className="w-3 h-3 rounded-full bg-green-500/50" />
           </div>
-
-          {/* URL bar */}
           <div className="flex-1 flex items-center gap-2 bg-white/6 border border-white/8 rounded-lg px-3 h-7 min-w-0">
             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: t.accentColor }} />
             <span className="text-[11px] text-white/40 truncate font-mono">vai-tech.asia{t.demoHref}</span>
           </div>
-
-          {/* Device switcher */}
           <div className="flex items-center gap-1 bg-white/5 border border-white/8 rounded-lg p-1">
             {DEVICES.map(({ key, label, Icon }) => (
-              <button
-                key={key}
-                onClick={() => { setDevice(key); setIframeLoaded(false) }}
-                title={label}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
-                  device === key
-                    ? 'bg-white/15 text-white'
-                    : 'text-white/35 hover:text-white/70'
-                }`}
-              >
+              <button key={key} onClick={() => setDevice(key)} title={label}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${device === key ? 'bg-white/15 text-white' : 'text-white/35 hover:text-white/70'}`}>
                 <Icon size={13} />
                 <span className="hidden sm:inline">{label}</span>
               </button>
             ))}
           </div>
-
-          {/* Open in new tab */}
           <Link href={t.demoHref} target="_blank"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#2b3040] transition-all hover:scale-105 flex-shrink-0"
             style={{ background: t.accentColor }}>
@@ -113,34 +274,12 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
           </Link>
         </div>
 
-        {/* ── Preview area ── */}
-        <div className="flex-1 overflow-hidden bg-[#161b22] flex items-start justify-center p-3 min-h-0">
-          <div
-            className="relative h-full transition-all duration-500 ease-out rounded-lg overflow-hidden border border-white/10 shadow-2xl bg-white"
-            style={{
-              width: current.maxW,
-              maxWidth: '100%',
-              minHeight: device === 'mobile' ? '500px' : device === 'tablet' ? '500px' : '500px',
-            }}
-          >
-            {/* Loading skeleton */}
-            {!iframeLoaded && (
-              <div className="absolute inset-0 bg-[#0d1117] flex flex-col items-center justify-center gap-3 z-10">
-                <div className="w-8 h-8 border-2 border-white/20 border-t-white/70 rounded-full animate-spin" />
-                <p className="text-white/40 text-xs">Đang tải {current.label} view...</p>
-              </div>
-            )}
-            <iframe
-              src={t.demoHref}
-              className="w-full h-full border-0"
-              style={{ minHeight: device === 'mobile' ? '600px' : '600px' }}
-              onLoad={() => setIframeLoaded(true)}
-              title={`${t.title} - ${current.label} preview`}
-            />
-          </div>
+        {/* ── Preview ── */}
+        <div className="flex-1 min-h-0 overflow-hidden" style={{ height: '520px' }}>
+          <TemplatePreview t={t} device={device} />
         </div>
 
-        {/* ── Bottom info bar ── */}
+        {/* ── Bottom bar ── */}
         <div className="flex items-center justify-between gap-4 px-5 py-3 border-t border-white/8 bg-[#0a0d12] flex-shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${t.accentColor}20` }}>
@@ -148,10 +287,9 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-[#e0e3e5] truncate">{t.title}</p>
-              <p className="text-[10px] text-[#909097] truncate">{t.subtitle}</p>
+              <p className="text-[10px] text-[#909097]">{t.subtitle}</p>
             </div>
           </div>
-
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="hidden md:flex gap-1.5">
               {t.tags.slice(0, 2).map(tag => (
@@ -171,7 +309,6 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
     </div>
   )
 }
-
 export default function TemplatesPage() {
   const [active, setActive] = useState('all')
   const [selected, setSelected] = useState<Template | null>(null)

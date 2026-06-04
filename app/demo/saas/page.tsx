@@ -1,285 +1,345 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
+import { useToast, useTyped, useLocalCart } from '@/hooks/useDemo'
 
-const features = [
-  { icon: 'psychology', title: 'AI Tự Động Hóa', desc: 'Phân tích dữ liệu và ra quyết định thông minh 24/7 không cần can thiệp thủ công.' },
-  { icon: 'hub', title: 'Kết Nối Đa Nền Tảng', desc: '200+ tích hợp native với Slack, Notion, Jira, Salesforce và hơn thế nữa.' },
-  { icon: 'speed', title: 'Hiệu Suất Cực Cao', desc: 'Xử lý 10 triệu yêu cầu/giây, độ trễ trung bình 43ms trên toàn cầu.' },
-  { icon: 'shield_locked', title: 'Bảo Mật Enterprise', desc: 'SOC 2 Type II, ISO 27001, mã hoá AES-256 và zero-trust architecture.' },
-  { icon: 'analytics', title: 'Real-time Analytics', desc: 'Dashboard thời gian thực với 50+ metric có thể tuỳ chỉnh và alert thông minh.' },
-  { icon: 'code', title: 'API-first Design', desc: 'REST & GraphQL API, SDK cho 12 ngôn ngữ, Webhook và event streaming.' },
+const FEATURES = [
+  { icon: 'psychology', title: 'AI Tự Động Hóa', desc: 'Phân tích dữ liệu và ra quyết định thông minh 24/7.' },
+  { icon: 'hub', title: '200+ Tích Hợp', desc: 'Slack, Notion, Jira, Salesforce và hơn thế nữa.' },
+  { icon: 'speed', title: '<50ms Độ Trễ', desc: 'Xử lý 10 triệu request/giây trên toàn cầu.' },
+  { icon: 'shield_locked', title: 'SOC 2 Type II', desc: 'Mã hoá AES-256, zero-trust architecture.' },
+  { icon: 'analytics', title: 'Real-time Analytics', desc: '50+ metric có thể tuỳ chỉnh, alert thông minh.' },
+  { icon: 'code', title: 'API-first', desc: 'REST & GraphQL, SDK 12 ngôn ngữ, Webhooks.' },
 ]
 
-const pricingPlans = [
-  { name: 'Starter', price: 0, unit: '/tháng', features: ['5 workspace', '10K API calls', '1GB storage', 'Community support'], cta: 'Bắt đầu miễn phí' },
-  { name: 'Pro', price: 49, unit: '/tháng', features: ['Unlimited workspace', '1M API calls', '100GB storage', 'Priority support', 'Advanced analytics'], cta: 'Dùng thử 14 ngày', hot: true },
-  { name: 'Enterprise', price: null, unit: '', features: ['Custom limits', 'Dedicated infra', 'SLA 99.99%', 'On-premise option', 'Custom contract'], cta: 'Liên hệ Sales' },
+const PLANS = [
+  { name: 'Starter', price: 0, mo: '/tháng', features: ['5 workspace', '10K API calls/tháng', '1GB storage', 'Community support'], cta: 'Bắt đầu miễn phí' },
+  { name: 'Pro', price: 49, mo: '/tháng', features: ['Unlimited workspace', '1M API calls/tháng', '100GB storage', 'Priority support 24/7', 'Advanced analytics'], cta: 'Dùng thử 14 ngày', hot: true },
+  { name: 'Enterprise', price: null, mo: '', features: ['Custom limits', 'Dedicated infra', 'SLA 99.99%', 'On-premise', 'Custom contract'], cta: 'Liên hệ Sales' },
 ]
 
-const metrics = [
-  { label: 'Người dùng hoạt động', value: '2.4M', change: '+18%', color: 'text-green-400' },
-  { label: 'API calls / phút', value: '847K', change: '+32%', color: 'text-blue-400' },
-  { label: 'Thời gian phản hồi', value: '43ms', change: '-12%', color: 'text-purple-400' },
-  { label: 'Uptime tháng này', value: '99.99%', change: '→', color: 'text-cyan-400' },
+const FAQS = [
+  { q: 'flowAI có hỗ trợ on-premise không?', a: 'Có, gói Enterprise hỗ trợ triển khai on-premise hoặc private cloud theo yêu cầu riêng.' },
+  { q: 'Giới hạn API call tính thế nào?', a: 'Mỗi request đến server là 1 API call. Batch request tính theo số item trong batch.' },
+  { q: 'Có thể nâng cấp gói giữa chừng không?', a: 'Được, nâng cấp ngay lập tức. Phần chênh lệch tính theo tỷ lệ ngày còn lại.' },
+  { q: 'Dữ liệu của tôi có an toàn không?', a: 'Dữ liệu được mã hoá AES-256 in-transit và at-rest. Chúng tôi không bán dữ liệu cho bên thứ ba.' },
 ]
 
-const faqs = [
-  { q: 'flowAI có hỗ trợ on-premise không?', a: 'Có, gói Enterprise hỗ trợ triển khai on-premise hoặc private cloud theo yêu cầu.' },
-  { q: 'Giới hạn API call tính như thế nào?', a: 'Mỗi request đến server được tính là 1 API call. Batch request tính theo số item trong batch.' },
-  { q: 'Tôi có thể nâng cấp gói giữa chừng không?', a: 'Có, nâng cấp ngay lập tức, phần chênh lệch được tính theo tỷ lệ ngày còn lại.' },
+const PIPELINE = [
+  { name: 'Sync CRM → Notion', status: 'active', runs: '2.4K/ngày' },
+  { name: 'Email auto-reply AI', status: 'active', runs: '847/ngày' },
+  { name: 'Invoice generation', status: 'active', runs: '156/ngày' },
+  { name: 'Weekly report', status: 'paused', runs: '0' },
 ]
 
-const testimonials = [
-  { company: 'TechCorp VN', person: 'CTO · Nguyễn Văn Nam', quote: 'flowAI giảm 70% thời gian xử lý dữ liệu thủ công của chúng tôi.', avatar: 'N' },
-  { company: 'Startup Hub', person: 'CEO · Trần Thị Mai', quote: 'API cực kỳ ổn định, 6 tháng chưa có downtime nào. Đội support phản hồi nhanh.', avatar: 'M' },
-]
+function DashboardPreview() {
+  const [metrics, setMetrics] = useState([2400000, 847000, 43, 99.99])
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setMetrics([
+        2400000 + Math.floor(Math.random() * 5000),
+        847000 + Math.floor(Math.random() * 2000),
+        40 + Math.floor(Math.random() * 8),
+        99.95 + Math.random() * 0.05,
+      ])
+    }, 3000)
+    return () => clearInterval(iv)
+  }, [])
+
+  const bars = [40,65,45,80,60,90,75,95,70,88,78,100]
+
+  return (
+    <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-[#0d0a1f] overflow-hidden shadow-[0_0_80px_rgba(139,92,246,0.2)]">
+      {/* Browser chrome */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/2">
+        <div className="w-3 h-3 rounded-full bg-red-500/60" /><div className="w-3 h-3 rounded-full bg-yellow-500/60" /><div className="w-3 h-3 rounded-full bg-green-500/60" />
+        <div className="flex-1 mx-4 h-5 bg-white/5 rounded-md flex items-center px-3 text-[11px] text-white/25">app.flowai.vn/dashboard</div>
+        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+      </div>
+      <div className="p-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          {[
+            { label: 'Users', val: `${(metrics[0]/1000000).toFixed(1)}M`, c: 'text-purple-400', trend: '+18%' },
+            { label: 'API calls/min', val: `${(metrics[1]/1000).toFixed(0)}K`, c: 'text-blue-400', trend: '+32%' },
+            { label: 'Latency', val: `${metrics[2]}ms`, c: 'text-cyan-400', trend: '-12%' },
+            { label: 'Uptime', val: `${metrics[3].toFixed(2)}%`, c: 'text-green-400', trend: '→' },
+          ].map(m => (
+            <div key={m.label} className="bg-white/4 rounded-xl p-3.5 border border-white/5 transition-all">
+              <p className="text-white/35 text-xs mb-1.5">{m.label}</p>
+              <p className={`text-2xl font-black ${m.c} transition-all duration-1000`}>{m.val}</p>
+              <p className="text-xs text-white/30 mt-0.5">{m.trend}</p>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          {/* Chart */}
+          <div className="md:col-span-3 bg-white/3 rounded-xl p-4 border border-white/5">
+            <p className="text-white/40 text-xs mb-3">API Requests (24h)</p>
+            <div className="flex items-end gap-1 h-20">
+              {bars.map((h,i)=>(
+                <div key={i} className="flex-1 rounded-t transition-all duration-1000" style={{height:`${h}%`,background:`rgba(139,92,246,${0.3+h*0.005})`}} />
+              ))}
+            </div>
+          </div>
+          {/* Pipeline */}
+          <div className="md:col-span-2 bg-white/3 rounded-xl p-4 border border-white/5">
+            <p className="text-white/40 text-xs mb-3">Active Pipelines</p>
+            <div className="space-y-2">
+              {PIPELINE.map(p => (
+                <div key={p.name} className="flex items-center gap-2">
+                  <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${p.status === 'active' ? 'bg-green-400 animate-pulse' : 'bg-white/20'}`} />
+                  <span className="text-[11px] text-white/55 flex-1 truncate">{p.name}</span>
+                  <span className="text-[10px] text-white/30">{p.runs}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function SaasDemo() {
-  const [activeTab, setActiveTab] = useState<'monthly'|'yearly'>('monthly')
+  const { toasts, add } = useToast()
+  const typed = useTyped(['Quy trình kinh doanh', 'Tác vụ lặp lại', 'Workflow thủ công', 'Báo cáo định kỳ'], 60)
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
+  const [faqOpen, setFaqOpen] = useState<number | null>(null)
   const [demoInput, setDemoInput] = useState('')
-  const [demoResult, setDemoResult] = useState<string|null>(null)
-  const [faqOpen, setFaqOpen] = useState<number|null>(null)
-  const [trialSent, setTrialSent] = useState(false)
+  const [demoResult, setDemoResult] = useState<string | null>(null)
+  const [demoLoading, setDemoLoading] = useState(false)
   const [email, setEmail] = useState('')
+  const [trialSent, setTrialSent] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
-  const runDemo = () => {
-    if (!demoInput.trim()) return
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', h, { passive: true })
+    return () => window.removeEventListener('scroll', h)
+  }, [])
+
+  const runDemo = useCallback(async () => {
+    if (!demoInput.trim()) { add('Vui lòng nhập mô tả quy trình', 'error'); return }
+    setDemoLoading(true)
     setDemoResult(null)
-    setTimeout(() => {
-      setDemoResult(`✓ Đã phân tích "${demoInput}": Phát hiện 3 điểm tối ưu · Tiết kiệm ước tính 12h/tuần · Độ chính xác 97.3%`)
-    }, 800)
-  }
+    await new Promise(r => setTimeout(r, 900))
+    setDemoResult(`✓ Phân tích "${demoInput}": Phát hiện 4 bước có thể tự động hoá · Tiết kiệm ước tính 14h/tuần · Độ chính xác AI 97.3% · Cần 2 integration`)
+    setDemoLoading(false)
+    add('Phân tích hoàn tất!', 'success')
+  }, [demoInput, add])
 
   return (
     <div className="min-h-screen bg-[#06040f] text-white overflow-x-hidden font-sans">
-      {/* Gradient orbs */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-600/12 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-600/8 rounded-full blur-[100px]" />
+      <ToastContainer toasts={toasts} />
+      <DemoBackButton />
+
+      {/* Fixed orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[140px] animate-glow" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-indigo-600/8 rounded-full blur-[100px] animate-glow" style={{animationDelay:'1.5s'}} />
       </div>
 
-      <div className="fixed top-4 right-4 z-50">
-        <Link href="/templates" className="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-white/20 transition-all">
-          <span className="material-symbols-outlined text-sm">arrow_back</span> Templates
-        </Link>
-      </div>
-
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-40 border-b border-white/5 bg-[#06040f]/80 backdrop-blur-xl">
-        <div className="max-w-[1280px] mx-auto px-8 h-16 flex items-center justify-between">
+      {/* ── Nav ── */}
+      <nav className={`fixed top-0 w-full z-40 transition-all duration-400 ${scrolled ? 'bg-[#06040f]/95 backdrop-blur-xl border-b border-white/6' : 'bg-transparent'}`}>
+        <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-              <span className="material-symbols-outlined text-xs">bolt</span>
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+              <span className="material-symbols-outlined text-xs text-white font-black">bolt</span>
             </div>
-            <span className="font-bold text-lg">flow<span className="text-purple-400">AI</span></span>
+            <span className="font-black text-lg">flow<span className="text-purple-400">AI</span></span>
           </div>
-          <div className="hidden md:flex gap-8 text-sm text-white/50">
-            {['Tính năng','Demo','Pricing','Tài liệu','Blog'].map(n=>(
-              <a key={n} href="#" className="hover:text-white transition-colors">{n}</a>
+          <div className="hidden md:flex gap-7 text-sm text-white/50">
+            {['Tính năng', 'Live Demo', 'Pricing', 'Docs'].map(n => (
+              <a key={n} href="#" className="hover:text-white transition-colors relative group">
+                {n}
+                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-purple-400 group-hover:w-full transition-all duration-300" />
+              </a>
             ))}
           </div>
           <div className="flex gap-3">
             <button className="text-white/60 hover:text-white text-sm transition-colors">Đăng nhập</button>
-            <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-opacity">
+            <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white text-sm font-bold px-5 py-2 rounded-lg transition-opacity active:scale-95">
               Bắt đầu miễn phí
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="min-h-screen flex flex-col items-center justify-center text-center px-8 pt-16 relative">
-        <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold px-4 py-2 rounded-full mb-8">
-          <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
-          v3.0 vừa ra mắt — AI Agent mới, nhanh hơn 5x
-          <span className="material-symbols-outlined text-xs">arrow_forward</span>
-        </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight tracking-tight max-w-5xl mb-6">
-          Tự Động Hóa Toàn Bộ<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
-            Quy Trình Kinh Doanh
-          </span>
-        </h1>
-        <p className="text-white/50 text-xl max-w-2xl mb-8 leading-relaxed">
-          flowAI kết nối mọi công cụ, tự động hóa tác vụ lặp đi lặp lại, và ra quyết định thông minh nhờ AI.
-        </p>
-        {/* CTA */}
-        {!trialSent ? (
-          <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md mb-16">
-            <input type="email" placeholder="Email doanh nghiệp của bạn" value={email} onChange={e=>setEmail(e.target.value)}
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-purple-400 outline-none" />
-            <button onClick={()=>setTrialSent(true)} className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold px-6 py-3.5 rounded-xl hover:opacity-90 whitespace-nowrap">
-              Dùng thử miễn phí
-            </button>
+      {/* ── Hero ── */}
+      <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16 pb-10 relative">
+        <Reveal>
+          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/25 text-purple-300 text-xs font-semibold px-4 py-2 rounded-full mb-8">
+            <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
+            v3.0 mới ra mắt — AI Agent nhanh hơn 5x
+            <span className="material-symbols-outlined text-xs">arrow_forward</span>
           </div>
-        ) : (
-          <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/30 text-green-300 px-6 py-3 rounded-xl mb-16">
-            <span className="material-symbols-outlined" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
-            Kiểm tra email để kích hoạt tài khoản!
-          </div>
-        )}
-
-        {/* Dashboard preview */}
-        <div className="w-full max-w-5xl rounded-2xl border border-white/10 bg-[#0d0a1f] shadow-[0_0_80px_rgba(139,92,246,0.15)] overflow-hidden">
-          <div className="flex items-center gap-2 px-5 py-3 border-b border-white/5 bg-white/2">
-            <div className="w-3 h-3 rounded-full bg-red-500/60" /><div className="w-3 h-3 rounded-full bg-yellow-500/60" /><div className="w-3 h-3 rounded-full bg-green-500/60" />
-            <div className="flex-1 mx-4 h-5 bg-white/5 rounded flex items-center px-3 text-xs text-white/20">app.flowai.vn/dashboard</div>
-          </div>
-          <div className="p-5">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-              {metrics.map(m=>(
-                <div key={m.label} className="bg-white/3 rounded-xl p-4 border border-white/5">
-                  <p className="text-white/40 text-xs mb-2">{m.label}</p>
-                  <p className={`text-2xl font-bold ${m.color}`}>{m.value}</p>
-                  <p className="text-green-400 text-xs mt-1">{m.change}</p>
-                </div>
-              ))}
+        </Reveal>
+        <Reveal delay={80}>
+          <h1 className="text-5xl md:text-7xl font-black leading-[0.9] tracking-tight mb-6 max-w-4xl">
+            Tự Động Hóa<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-300 to-indigo-400">
+              {typed}<span className="animate-pulse">|</span>
+            </span>
+          </h1>
+        </Reveal>
+        <Reveal delay={160}>
+          <p className="text-white/45 text-xl max-w-2xl mb-10 leading-relaxed">
+            flowAI kết nối mọi công cụ, tự động hóa tác vụ lặp lại, và ra quyết định thông minh bằng AI.
+          </p>
+        </Reveal>
+        <Reveal delay={240}>
+          {!trialSent ? (
+            <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md mb-6">
+              <input type="email" placeholder="Email doanh nghiệp của bạn" value={email} onChange={e => setEmail(e.target.value)}
+                className="flex-1 bg-white/6 border border-white/12 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-purple-400 focus:bg-white/8 outline-none transition-all" />
+              <button onClick={() => { if (!email.includes('@')) { add('Email không hợp lệ', 'error'); return } setTrialSent(true); add('Kiểm tra email để kích hoạt!', 'success') }}
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold px-6 py-3.5 rounded-xl transition-opacity whitespace-nowrap active:scale-95">
+                Dùng thử miễn phí
+              </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="bg-white/3 rounded-xl p-4 border border-white/5 h-28 flex items-end gap-1.5">
-                {[40,65,45,80,60,90,75,95,70,88,78,100].map((h,i)=>(
-                  <div key={i} className="flex-1 rounded-t" style={{height:`${h}%`,background:`rgba(139,92,246,${0.3+h*0.005})`}} />
-                ))}
-              </div>
-              <div className="bg-white/3 rounded-xl p-4 border border-white/5">
-                <p className="text-white/50 text-xs mb-3">Pipeline hoạt động</p>
-                {['Sync CRM → Notion','Email auto-reply','Invoice generation','Report weekly'].map((task,i)=>(
-                  <div key={task} className="flex items-center gap-2 mb-2">
-                    <div className={`w-1.5 h-1.5 rounded-full ${i<2?'bg-green-400':'bg-yellow-400'}`} />
-                    <span className="text-xs text-white/60 flex-1">{task}</span>
-                    <span className={`text-[10px] font-semibold ${i<2?'text-green-400':'text-yellow-400'}`}>{i<2?'Active':'Pending'}</span>
-                  </div>
-                ))}
-              </div>
+          ) : (
+            <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/25 text-green-300 px-6 py-3 rounded-xl mb-6 animate-scale-in">
+              <span className="material-symbols-outlined text-base" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+              Kiểm tra email để kích hoạt tài khoản!
             </div>
-          </div>
-        </div>
+          )}
+        </Reveal>
+        <Reveal delay={280} className="w-full flex justify-center mt-6">
+          <DashboardPreview />
+        </Reveal>
       </section>
 
-      {/* Live demo */}
-      <section className="py-24 px-8 max-w-[1280px] mx-auto">
-        <div className="text-center mb-10">
-          <span className="text-purple-400 text-xs font-semibold uppercase tracking-widest block mb-3">Thử Ngay</span>
-          <h2 className="text-4xl font-bold mb-3">Trải Nghiệm AI Thực Tế</h2>
-          <p className="text-white/50">Nhập mô tả quy trình của bạn, AI sẽ phân tích và đề xuất tối ưu hoá</p>
-        </div>
-        <div className="max-w-2xl mx-auto">
+      {/* ── Live Demo ── */}
+      <section className="py-20 px-6 max-w-[900px] mx-auto">
+        <Reveal className="text-center mb-10">
+          <span className="text-purple-400 text-xs font-bold uppercase tracking-widest block mb-3">Thử Ngay</span>
+          <h2 className="text-4xl font-black mb-3">Trải Nghiệm AI Thực Tế</h2>
+          <p className="text-white/40">Nhập mô tả quy trình — AI phân tích và đề xuất tự động hoá trong giây lát</p>
+        </Reveal>
+        <Reveal>
           <div className="flex gap-3 mb-4">
-            <input value={demoInput} onChange={e=>setDemoInput(e.target.value)} placeholder='Ví dụ: "Xử lý đơn hàng từ email → cập nhật CRM → gửi xác nhận"'
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:border-purple-400 outline-none" />
-            <button onClick={runDemo} className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold px-6 py-3.5 rounded-xl transition-opacity whitespace-nowrap">
+            <input value={demoInput} onChange={e => setDemoInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && runDemo()}
+              placeholder='Ví dụ: "Xử lý đơn hàng từ email → CRM → gửi xác nhận"'
+              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/25 focus:border-purple-400 focus:bg-white/7 outline-none transition-all" />
+            <button onClick={runDemo} disabled={demoLoading}
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 disabled:opacity-50 text-white font-bold px-6 py-3.5 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 active:scale-95">
+              {demoLoading ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg> : <span className="material-symbols-outlined text-base">psychology</span>}
               Phân tích AI
             </button>
           </div>
           {demoResult && (
-            <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5 text-sm text-purple-200">
+            <div className="bg-purple-500/8 border border-purple-500/25 rounded-xl p-5 text-sm text-purple-200 leading-relaxed animate-slide-in-up">
               {demoResult}
             </div>
           )}
-        </div>
+        </Reveal>
       </section>
 
-      {/* Features */}
-      <section className="py-16 px-8 max-w-[1280px] mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-purple-400 text-xs font-semibold uppercase tracking-widest block mb-3">Tính Năng</span>
-          <h2 className="text-4xl font-bold">Mọi Thứ Bạn Cần</h2>
-        </div>
+      {/* ── Features ── */}
+      <section className="py-16 px-6 max-w-[1280px] mx-auto">
+        <Reveal className="text-center mb-12">
+          <span className="text-purple-400 text-xs font-bold uppercase tracking-widest block mb-3">Tính Năng</span>
+          <h2 className="text-4xl font-black">Mọi Thứ Bạn Cần</h2>
+        </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {features.map(f=>(
-            <div key={f.title} className="bg-white/3 border border-white/8 hover:border-purple-500/40 rounded-2xl p-7 transition-all hover:-translate-y-1 duration-300 group">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/15 flex items-center justify-center mb-5">
+          {FEATURES.map((f, i) => (
+            <Reveal key={f.title} delay={i * 70}
+              className="group bg-white/3 border border-white/8 hover:border-purple-500/40 rounded-2xl p-7 transition-all hover:-translate-y-1 duration-300 cursor-pointer">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/12 group-hover:bg-purple-500/20 flex items-center justify-center mb-5 transition-colors">
                 <span className="material-symbols-outlined text-xl text-purple-300">{f.icon}</span>
               </div>
               <h3 className="font-bold text-lg mb-2">{f.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
-            </div>
+              <p className="text-white/45 text-sm leading-relaxed">{f.desc}</p>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-24 px-8 max-w-[1280px] mx-auto">
-        <div className="text-center mb-8">
-          <span className="text-purple-400 text-xs font-semibold uppercase tracking-widest block mb-3">Pricing</span>
-          <h2 className="text-4xl font-bold mb-4">Bảng Giá Đơn Giản</h2>
+      {/* ── Pricing ── */}
+      <section className="py-20 px-6 max-w-[1280px] mx-auto">
+        <Reveal className="text-center mb-10">
+          <span className="text-purple-400 text-xs font-bold uppercase tracking-widest block mb-3">Pricing</span>
+          <h2 className="text-4xl font-black mb-4">Bảng Giá Đơn Giản</h2>
           <div className="inline-flex bg-white/5 rounded-xl p-1">
-            {(['monthly','yearly'] as const).map(t=>(
-              <button key={t} onClick={()=>setActiveTab(t)} className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab===t?'bg-purple-600 text-white':'text-white/50 hover:text-white'}`}>
-                {t==='monthly'?'Hàng tháng':'Hàng năm (–20%)'}
+            {(['monthly', 'yearly'] as const).map(t => (
+              <button key={t} onClick={() => setBilling(t)}
+                className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${billing === t ? 'bg-purple-600 text-white' : 'text-white/45 hover:text-white'}`}>
+                {t === 'monthly' ? 'Hàng tháng' : <span>Hàng năm <span className="text-purple-300 text-xs">−20%</span></span>}
               </button>
             ))}
           </div>
-        </div>
+        </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
-          {pricingPlans.map(p=>(
-            <div key={p.name} className={`rounded-2xl p-7 border flex flex-col relative ${p.hot?'border-purple-500/60 bg-gradient-to-b from-purple-900/30 to-indigo-900/20':'border-white/8 bg-white/3'}`}>
-              {p.hot && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap">Phổ biến nhất</div>}
-              <h3 className="font-bold text-lg mb-2">{p.name}</h3>
+          {PLANS.map((p, i) => (
+            <Reveal key={p.name} delay={i * 100}
+              className={`rounded-2xl p-7 border flex flex-col relative ${p.hot ? 'border-purple-500/55 bg-gradient-to-b from-purple-900/25 to-indigo-900/15' : 'border-white/8 bg-white/3'}`}>
+              {p.hot && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-black px-4 py-1 rounded-full whitespace-nowrap">⭐ Phổ biến nhất</div>}
+              <h3 className="font-black text-xl mb-2">{p.name}</h3>
               <div className="flex items-end gap-1 mb-5">
-                {p.price === null ? <span className="text-3xl font-extrabold text-purple-300">Liên hệ</span> : (
-                  <><span className="text-4xl font-extrabold">${activeTab==='yearly'?Math.round(p.price*0.8):p.price}</span><span className="text-white/40 mb-1">{p.unit}</span></>
+                {p.price === null ? <span className="text-3xl font-black text-purple-300">Liên hệ</span> : (
+                  <><span className="text-4xl font-black">${billing === 'yearly' ? Math.round(p.price * 0.8) : p.price}</span><span className="text-white/35 mb-1">{p.mo}</span></>
                 )}
               </div>
-              <ul className="space-y-2 mb-6 flex-1">
-                {p.features.map(f=>(
-                  <li key={f} className="flex items-center gap-2 text-sm text-white/70">
+              <ul className="space-y-2.5 mb-7 flex-1">
+                {p.features.map(f => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-white/65">
                     <span className="material-symbols-outlined text-purple-400 text-base" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>{f}
                   </li>
                 ))}
               </ul>
-              <button className={`w-full py-3 rounded-xl font-semibold text-sm transition-all ${p.hot?'bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90':'border border-white/20 hover:border-purple-400 hover:text-purple-300'}`}>
+              <button className={`w-full py-3.5 rounded-xl font-black text-sm transition-all active:scale-95 ${p.hot ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white' : 'border border-white/15 hover:border-purple-400/60 hover:text-purple-300 text-white/60'}`}>
                 {p.cta}
               </button>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 px-8 max-w-[1280px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {testimonials.map(t=>(
-            <div key={t.company} className="bg-white/3 border border-white/8 rounded-2xl p-7">
-              <div className="flex gap-0.5 mb-4">{Array.from({length:5}).map((_,i)=><span key={i} className="text-purple-400">★</span>)}</div>
-              <p className="text-white/80 italic mb-5">"{t.quote}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-purple-600/40 flex items-center justify-center font-bold text-sm">{t.avatar}</div>
-                <div>
-                  <p className="font-semibold text-sm">{t.person}</p>
-                  <p className="text-white/40 text-xs">{t.company}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-16 px-8 max-w-[900px] mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-10">FAQ</h2>
+      {/* ── FAQ ── */}
+      <section className="py-16 px-6 max-w-[760px] mx-auto">
+        <Reveal className="text-center mb-10">
+          <h2 className="text-3xl font-black">Câu Hỏi Thường Gặp</h2>
+        </Reveal>
         <div className="space-y-3">
-          {faqs.map((faq,i)=>(
-            <div key={faq.q} className="bg-white/3 border border-white/8 rounded-xl overflow-hidden">
-              <button className="w-full flex justify-between items-center p-5 text-left" onClick={()=>setFaqOpen(faqOpen===i?null:i)}>
-                <span className="font-semibold">{faq.q}</span>
-                <span className="material-symbols-outlined text-white/50 transition-transform" style={{transform:faqOpen===i?'rotate(180deg)':''}}>expand_more</span>
+          {FAQS.map((f, i) => (
+            <Reveal key={f.q} delay={i * 60}>
+              <button onClick={() => setFaqOpen(faqOpen === i ? null : i)}
+                className="w-full bg-white/3 border border-white/8 hover:border-purple-500/30 rounded-xl overflow-hidden transition-all">
+                <div className="flex justify-between items-center p-5 text-left">
+                  <span className="font-semibold text-sm">{f.q}</span>
+                  <span className="material-symbols-outlined text-white/40 transition-transform flex-shrink-0 ml-3"
+                    style={{ transform: faqOpen === i ? 'rotate(180deg)' : '' }}>expand_more</span>
+                </div>
+                {faqOpen === i && (
+                  <div className="px-5 pb-5 text-white/50 text-sm leading-relaxed border-t border-white/5 pt-3 animate-slide-in-up">
+                    {f.a}
+                  </div>
+                )}
               </button>
-              {faqOpen===i && <div className="px-5 pb-5 text-white/60 text-sm leading-relaxed">{faq.a}</div>}
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      <footer className="border-t border-white/5 py-10 px-8">
-        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="font-bold text-lg">flow<span className="text-purple-400">AI</span></span>
-          <p className="text-white/30 text-sm">© 2025 flowAI Inc. · Mẫu bởi <span className="text-purple-400">Vaitech</span></p>
-          <div className="flex gap-5 text-sm text-white/40">
-            {['Privacy','Terms','Security','Status'].map(l=><a key={l} href="#" className="hover:text-white transition-colors">{l}</a>)}
+      {/* ── CTA ── */}
+      <section className="py-16 px-6 max-w-[900px] mx-auto">
+        <Reveal>
+          <div className="bg-gradient-to-r from-purple-900/40 to-indigo-900/30 border border-purple-500/20 rounded-3xl p-12 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(139,92,246,0.2),transparent_70%)]" />
+            <h2 className="text-4xl font-black mb-4 relative">Bắt Đầu Hôm Nay</h2>
+            <p className="text-white/45 mb-8 relative">14 ngày miễn phí. Không cần thẻ tín dụng.</p>
+            <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-black px-12 py-4 rounded-xl text-lg transition-all hover:scale-105 active:scale-95 relative">
+              Dùng thử miễn phí
+            </button>
           </div>
-        </div>
+        </Reveal>
+      </section>
+
+      <footer className="border-t border-white/5 py-10 px-6 text-center">
+        <span className="font-black text-lg">flow<span className="text-purple-400">AI</span></span>
+        <p className="text-white/25 text-sm mt-2">© 2026 flowAI Inc. · Mẫu bởi <span className="text-purple-400">Vaitech</span></p>
       </footer>
     </div>
   )

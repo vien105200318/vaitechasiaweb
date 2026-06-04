@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { BadgeCheck, Droplets, Flame, Leaf, Package, ShoppingBag, Truck, X, type LucideIcon } from 'lucide-react'
 import Image from 'next/image'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
 import { useToast } from '@/hooks/useDemo'
@@ -15,13 +16,13 @@ const COFFEES = [
 
 const GRIND_OPTIONS = ['Nguyên hạt', 'Xay Moka', 'Xay Pour Over', 'Xay French Press', 'Xay Espresso']
 
-const PROCESS_STEPS = [
-  { icon:'agriculture', title:'Thu Hoạch', desc:'Hái tay, chỉ quả chín đỏ.' },
-  { icon:'water', title:'Sơ Chế', desc:'Washed / Natural / Honey.' },
-  { icon:'local_fire_department', title:'Rang Nhỏ Lẻ', desc:'Profile riêng, batch ≤5kg.' },
-  { icon:'verified', title:'Q-Grade', desc:'Cupping bởi Q-Grader SCA.' },
-  { icon:'inventory_2', title:'Đóng Gói', desc:'Valve 1 chiều, 48h sau rang.' },
-  { icon:'local_shipping', title:'Giao Hàng', desc:'Miễn phí, 24h nội địa.' },
+const PROCESS_STEPS: { Icon: LucideIcon; title: string; desc: string }[] = [
+  { Icon: Leaf, title:'Thu Hoạch', desc:'Hái tay, chỉ quả chín đỏ.' },
+  { Icon: Droplets, title:'Sơ Chế', desc:'Washed / Natural / Honey.' },
+  { Icon: Flame, title:'Rang Nhỏ Lẻ', desc:'Profile riêng, batch ≤5kg.' },
+  { Icon: BadgeCheck, title:'Q-Grade', desc:'Cupping bởi Q-Grader SCA.' },
+  { Icon: Package, title:'Đóng Gói', desc:'Valve 1 chiều, 48h sau rang.' },
+  { Icon: Truck, title:'Giao Hàng', desc:'Miễn phí, 24h nội địa.' },
 ]
 
 const SUBS = [
@@ -69,7 +70,7 @@ export default function RoasteryDemo() {
           <div className="relative w-80 bg-white h-full flex flex-col shadow-2xl animate-slide-in-right">
             <div className="flex justify-between items-center px-6 py-4 border-b border-[#1a1008]/8">
               <h3 className="font-bold text-lg">Giỏ hàng ({totalItems})</h3>
-              <button onClick={() => setCartOpen(false)} className="text-[#1a1008]/40 hover:text-[#1a1008]"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setCartOpen(false)} className="text-[#1a1008]/40 hover:text-[#1a1008]"><X size={16} /></button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
               {cart.length === 0 ? <p className="text-center text-[#1a1008]/35 font-sans text-sm py-8">☕ Chưa có sản phẩm</p> :
@@ -104,7 +105,7 @@ export default function RoasteryDemo() {
       {totalItems > 0 && (
         <button onClick={() => setCartOpen(true)}
           className="fixed bottom-6 right-6 z-40 bg-[#1a1008] hover:bg-[#3d2c1a] text-[#f8f4ef] rounded-full w-14 h-14 flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 font-sans">
-          <span className="material-symbols-outlined">shopping_bag</span>
+          <ShoppingBag size={16} />
           <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#8b7355] rounded-full text-white text-[10px] font-black flex items-center justify-center">{totalItems}</span>
         </button>
       )}
@@ -244,7 +245,7 @@ export default function RoasteryDemo() {
           {PROCESS_STEPS.map((step, i) => (
             <Reveal key={step.title} delay={i * 80} className="text-center group">
               <div className="w-14 h-14 rounded-2xl bg-[#1a1008] flex items-center justify-center mx-auto mb-4 group-hover:bg-[#8b7355] transition-colors duration-300">
-                <span className="material-symbols-outlined text-[#f8f4ef] text-2xl">{step.icon}</span>
+                <step.Icon size={16} />
               </div>
               <p className="text-[#8b7355]/40 font-sans text-xs mb-1">{String(i + 1).padStart(2, '0')}</p>
               <h3 className="font-bold text-sm mb-1">{step.title}</h3>

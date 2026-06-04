@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { CheckCircle2, Heart, Search, ShoppingBag, Trash2, X } from 'lucide-react'
 import Image from 'next/image'
 import { DemoBackButton, Reveal, ToastContainer } from '@/components/demo/DemoUI'
 import { useToast } from '@/hooks/useDemo'
@@ -62,7 +63,7 @@ export default function FashionDemo() {
           <div className="relative w-88 md:w-96 bg-white h-full flex flex-col shadow-2xl animate-slide-in-right">
             <div className="flex justify-between items-center px-6 py-4 border-b">
               <div><h3 className="font-bold text-lg">Giỏ hàng</h3><p className="text-xs text-[#1a1714]/40">{cart.length} sản phẩm</p></div>
-              <button onClick={() => setCartOpen(false)} className="text-[#1a1714]/40 hover:text-[#1a1714]"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setCartOpen(false)} className="text-[#1a1714]/40 hover:text-[#1a1714]"><X size={16} /></button>
             </div>
 
             {checkoutStep === 0 ? (
@@ -70,7 +71,7 @@ export default function FashionDemo() {
                 <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
                   {cart.length === 0 ? (
                     <div className="text-center py-12">
-                      <span className="material-symbols-outlined text-4xl text-gray-200 block mb-3">shopping_bag</span>
+                      <ShoppingBag size={16} />
                       <p className="text-[#1a1714]/35 text-sm">Chưa có sản phẩm</p>
                     </div>
                   ) : cart.map((item, i) => (
@@ -84,7 +85,7 @@ export default function FashionDemo() {
                         <p className="font-bold text-sm mt-1">{item.price.toLocaleString()}đ</p>
                       </div>
                       <button onClick={() => setCart(c => c.filter((_, j) => j !== i))} className="text-gray-300 hover:text-red-500 transition-colors">
-                        <span className="material-symbols-outlined text-base">delete_outline</span>
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   ))}
@@ -131,7 +132,7 @@ export default function FashionDemo() {
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-green-600 text-3xl" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+                  <CheckCircle2 size={16} />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Đặt hàng thành công!</h3>
                 <p className="text-gray-500 text-sm mb-4">Mã đơn: <strong>#AU{Math.floor(Math.random()*90000+10000)}</strong></p>
@@ -155,13 +156,13 @@ export default function FashionDemo() {
             ))}
           </div>
           <div className="flex items-center gap-4 text-[#1a1714]/55">
-            <button className="hover:text-[#1a1714] transition-colors"><span className="material-symbols-outlined text-xl">search</span></button>
+            <button className="hover:text-[#1a1714] transition-colors"><Search size={16} /></button>
             <button className="hover:text-[#1a1714] transition-colors relative" onClick={() => setWishlist(w => w)}>
-              <span className="material-symbols-outlined text-xl">favorite_border</span>
+              <Heart size={16} />
               {wishlist.length > 0 && <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 rounded-full text-white text-[9px] flex items-center justify-center">{wishlist.length}</span>}
             </button>
             <button className="hover:text-[#1a1714] transition-colors relative" onClick={() => setCartOpen(true)}>
-              <span className="material-symbols-outlined text-xl">shopping_bag</span>
+              <ShoppingBag size={16} />
               {cart.length > 0 && <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#1a1714] rounded-full text-white text-[9px] flex items-center justify-center">{cart.length}</span>}
             </button>
           </div>
@@ -222,10 +223,8 @@ export default function FashionDemo() {
                 )}
                 {/* Wishlist */}
                 <button onClick={() => toggleWish(item.id)} className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-sm">
-                  <span className="material-symbols-outlined text-base transition-all"
-                    style={{fontVariationSettings: wishlist.includes(item.id) ? "'FILL' 1" : "'FILL' 0", color: wishlist.includes(item.id) ? '#ef4444' : '#9ca3af'}}>
-                    favorite
-                  </span>
+                  <Heart size={16} className="transition-all"
+                    style={{ color: wishlist.includes(item.id) ? '#ef4444' : '#9ca3af', fill: wishlist.includes(item.id) ? '#ef4444' : 'none' }} />
                 </button>
                 {/* Hover overlay — size picker */}
                 <div className={`absolute inset-x-0 bottom-0 bg-[#1a1714] p-4 transition-transform duration-300 ${hovered === item.id ? 'translate-y-0' : 'translate-y-full'}`}>

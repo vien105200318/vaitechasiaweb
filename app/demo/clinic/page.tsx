@@ -1,16 +1,17 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { AlertCircle, Baby, Brain, Check, CheckCircle2, Cross, Heart, Phone, ShieldPlus, TestTube, Video, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
 import { useToast } from '@/hooks/useDemo'
 
-const SERVICES = [
-  { icon:'healing', title:'Khám Tổng Quát', price:'500.000đ', dur:'60 phút', desc:'Kiểm tra sức khoẻ toàn diện, xét nghiệm máu, tư vấn dinh dưỡng.' },
-  { icon:'favorite', title:'Tim Mạch', price:'800.000đ', dur:'90 phút', desc:'Điện tâm đồ, siêu âm tim, đánh giá nguy cơ toàn diện.' },
-  { icon:'psychology', title:'Tâm Lý Lâm Sàng', price:'650.000đ', dur:'75 phút', desc:'Đánh giá stress, lo âu, trầm cảm và tư vấn chuyên sâu.' },
-  { icon:'child_care', title:'Nhi Khoa', price:'450.000đ', dur:'45 phút', desc:'Theo dõi phát triển toàn diện cho trẻ 0–15 tuổi.' },
-  { icon:'pregnant_woman', title:'Sản Phụ Khoa', price:'600.000đ', dur:'60 phút', desc:'Siêu âm, tư vấn thai kỳ, tầm soát ung thư cổ tử cung.' },
-  { icon:'biotech', title:'Xét Nghiệm', price:'200.000đ+', dur:'30 phút', desc:'Máu, nước tiểu, hormon và các chỉ số sinh hoá.' },
+const SERVICES: { Icon: LucideIcon; title: string; price: string; dur: string; desc: string }[] = [
+  { Icon: Heart, title:'Khám Tổng Quát', price:'500.000đ', dur:'60 phút', desc:'Kiểm tra sức khoẻ toàn diện, xét nghiệm máu, tư vấn dinh dưỡng.' },
+  { Icon: Heart, title:'Tim Mạch', price:'800.000đ', dur:'90 phút', desc:'Điện tâm đồ, siêu âm tim, đánh giá nguy cơ toàn diện.' },
+  { Icon: Brain, title:'Tâm Lý Lâm Sàng', price:'650.000đ', dur:'75 phút', desc:'Đánh giá stress, lo âu, trầm cảm và tư vấn chuyên sâu.' },
+  { Icon: Baby, title:'Nhi Khoa', price:'450.000đ', dur:'45 phút', desc:'Theo dõi phát triển toàn diện cho trẻ 0–15 tuổi.' },
+  { Icon: Heart, title:'Sản Phụ Khoa', price:'600.000đ', dur:'60 phút', desc:'Siêu âm, tư vấn thai kỳ, tầm soát ung thư cổ tử cung.' },
+  { Icon: TestTube, title:'Xét Nghiệm', price:'200.000đ+', dur:'30 phút', desc:'Máu, nước tiểu, hormon và các chỉ số sinh hoá.' },
 ]
 
 const DOCTORS = [
@@ -74,7 +75,7 @@ export default function ClinicDemo() {
         <div className="max-w-[1280px] mx-auto px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-xl" style={{fontVariationSettings:"'FILL' 1"}}>local_hospital</span>
+              <Cross size={16} />
             </div>
             <div>
               <p className="font-bold text-base leading-none text-blue-700">MedCare</p>
@@ -114,7 +115,7 @@ export default function ClinicDemo() {
                 Đặt Lịch Ngay
               </a>
               <a href="tel:02836789999" className="border border-[#0d1b2e]/15 hover:border-blue-500 text-[#0d1b2e] font-semibold px-8 py-4 rounded-xl transition-all flex items-center gap-2 hover:bg-blue-50">
-                <span className="material-symbols-outlined text-blue-600 text-base">call</span>028 3678 9999
+                <Phone size={16} />028 3678 9999
               </a>
             </div>
             <div className="flex flex-wrap gap-8">
@@ -128,14 +129,14 @@ export default function ClinicDemo() {
           </Reveal>
           <Reveal delay={100} className="grid grid-cols-2 gap-4">
             <div className="col-span-2 bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-8 text-white">
-              <span className="material-symbols-outlined text-4xl mb-4 block" style={{fontVariationSettings:"'FILL' 1"}}>health_and_safety</span>
+              <ShieldPlus size={16} />
               <h3 className="text-xl font-bold mb-2">Gói Khám Sức Khoẻ 2026</h3>
               <p className="text-blue-100 text-sm mb-4">Kiểm tra 40+ chỉ số quan trọng</p>
               <p className="text-2xl font-bold">1.200.000đ <span className="text-sm font-normal line-through text-blue-300">2.400.000đ</span></p>
             </div>
-            {[{icon:'emergency',l:'Cấp Cứu 24/7',s:'Phản hồi 5 phút'},{icon:'video_call',l:'Khám Online',s:'Qua video call'}].map(c=>(
+            {[{Icon: AlertCircle,l:'Cấp Cứu 24/7',s:'Phản hồi 5 phút'},{Icon: Video,l:'Khám Online',s:'Qua video call'}].map(c=>(
               <div key={c.l} className="bg-white border border-[#0d1b2e]/8 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                <span className="material-symbols-outlined text-blue-600 text-2xl mb-2 block">{c.icon}</span>
+                <c.Icon size={16} />
                 <p className="font-bold text-sm">{c.l}</p>
                 <p className="text-xs text-[#0d1b2e]/40 mt-0.5">{c.s}</p>
               </div>
@@ -156,7 +157,7 @@ export default function ClinicDemo() {
               <Reveal key={s.title} delay={i * 60}
                 className="border border-[#0d1b2e]/8 rounded-2xl p-6 hover:border-blue-400 hover:shadow-lg transition-all group cursor-pointer bg-white">
                 <div className="w-12 h-12 rounded-2xl bg-blue-50 group-hover:bg-blue-600 flex items-center justify-center mb-4 transition-colors">
-                  <span className="material-symbols-outlined text-blue-600 group-hover:text-white text-2xl transition-colors">{s.icon}</span>
+                  <s.Icon size={16} />
                 </div>
                 <h3 className="font-bold text-lg mb-1">{s.title}</h3>
                 <p className="text-[#0d1b2e]/45 text-sm mb-4 leading-relaxed">{s.desc}</p>
@@ -205,7 +206,7 @@ export default function ClinicDemo() {
           {apptDone ? (
             <Reveal>
               <div className="bg-green-50 border-2 border-green-400 rounded-3xl p-10 text-center animate-scale-in">
-                <span className="material-symbols-outlined text-green-500 text-5xl block mb-4" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+                <CheckCircle2 size={16} />
                 <h3 className="text-2xl font-bold text-green-700 mb-2">Đặt lịch thành công!</h3>
                 <p className="text-green-600">Nhân viên sẽ gọi xác nhận trong 30 phút.</p>
               </div>
@@ -218,7 +219,7 @@ export default function ClinicDemo() {
                   <div key={s} className="flex items-center flex-1 last:flex-none">
                     <div className={`flex items-center gap-2 ${i <= step ? 'text-blue-600' : 'text-[#0d1b2e]/30'}`}>
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${i < step ? 'bg-blue-600 text-white' : i === step ? 'bg-blue-600 text-white ring-4 ring-blue-100' : 'border-2 border-current'}`}>
-                        {i < step ? <span className="material-symbols-outlined text-sm" style={{fontVariationSettings:"'FILL' 1"}}>check</span> : i + 1}
+                        {i < step ? <Check size={16} /> : i + 1}
                       </div>
                       <span className="text-xs font-semibold hidden sm:block">{s}</span>
                     </div>
@@ -234,7 +235,7 @@ export default function ClinicDemo() {
                     {SERVICES.map(s => (
                       <button key={s.title} onClick={() => setAppt({ ...appt, service: s.title })}
                         className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${appt.service === s.title ? 'border-blue-500 bg-blue-50' : 'border-[#0d1b2e]/8 bg-white hover:border-blue-300'}`}>
-                        <span className="material-symbols-outlined text-blue-600 text-xl">{s.icon}</span>
+                        <s.Icon size={16} />
                         <div>
                           <p className="font-semibold text-sm">{s.title}</p>
                           <p className="text-xs text-[#0d1b2e]/40">{s.price} · {s.dur}</p>

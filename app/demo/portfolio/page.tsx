@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -29,7 +30,7 @@ export default function PortfolioDemo() {
     <div className="min-h-screen bg-[#0d0d0d] text-white overflow-x-hidden font-sans">
       <div className="fixed top-4 right-4 z-50">
         <Link href="/templates" className="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-white/20 transition-all">
-          <span className="material-symbols-outlined text-sm">arrow_back</span> Templates
+          <ArrowLeft size={16} /> Templates
         </Link>
       </div>
 

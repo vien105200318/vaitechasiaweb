@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { CheckCircle2, Headphones, Heart, RefreshCw, Search, Shield, ShoppingCart, Trash2, Truck, X } from 'lucide-react'
 import Image from 'next/image'
 import { DemoBackButton, Reveal, ToastContainer } from '@/components/demo/DemoUI'
 import { useToast } from '@/hooks/useDemo'
@@ -79,7 +80,7 @@ export default function EcommerceDemo() {
             <div className="flex justify-between items-center p-5 border-b bg-gray-50">
               <div><h3 className="font-bold text-lg">Giỏ hàng</h3><p className="text-xs text-gray-400">{totalItems} sản phẩm</p></div>
               <button onClick={() => setCartOpen(false)} className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors">
-                <span className="material-symbols-outlined text-base">close</span>
+                <X size={16} />
               </button>
             </div>
 
@@ -88,7 +89,7 @@ export default function EcommerceDemo() {
                 <div className="flex-1 overflow-y-auto p-5 space-y-3">
                   {cart.length === 0 ? (
                     <div className="text-center py-12">
-                      <span className="material-symbols-outlined text-4xl text-gray-200 block mb-3">shopping_cart</span>
+                      <ShoppingCart size={16} />
                       <p className="text-gray-400 text-sm">Giỏ hàng trống</p>
                     </div>
                   ) : cart.map(item => (
@@ -106,7 +107,7 @@ export default function EcommerceDemo() {
                         </div>
                       </div>
                       <button onClick={() => setCart(c => c.filter(i => i.id !== item.id))} className="text-gray-300 hover:text-red-500 transition-colors self-start">
-                        <span className="material-symbols-outlined text-base">delete_outline</span>
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   ))}
@@ -153,7 +154,7 @@ export default function EcommerceDemo() {
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <span className="material-symbols-outlined text-green-500 text-3xl" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+                  <CheckCircle2 size={16} />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Đặt hàng thành công!</h3>
                 <p className="text-gray-500 text-sm mb-1">Mã đơn: <strong>#VT{Math.floor(Math.random()*90000+10000)}</strong></p>
@@ -177,17 +178,17 @@ export default function EcommerceDemo() {
             </div>
             {/* Search */}
             <div className="flex-1 max-w-md mx-8 hidden md:block relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+              <Search size={16} />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Tìm sản phẩm..."
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:border-blue-500 outline-none bg-gray-50 transition-all" />
             </div>
             <div className="flex items-center gap-3">
               <button className="text-gray-400 hover:text-gray-600 transition-colors relative">
-                <span className="material-symbols-outlined">favorite_border</span>
+                <Heart size={16} />
                 {wishlist.length > 0 && <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[9px] flex items-center justify-center">{wishlist.length}</span>}
               </button>
               <button onClick={() => setCartOpen(true)} className="relative bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-colors active:scale-95">
-                <span className="material-symbols-outlined text-base">shopping_cart</span>
+                <ShoppingCart size={16} />
                 Giỏ hàng
                 {totalItems > 0 && <span className="bg-white text-blue-600 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center">{totalItems}</span>}
               </button>
@@ -245,10 +246,8 @@ export default function EcommerceDemo() {
                 <Image src={IMG} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500 p-3" sizes="(max-width:768px) 50vw, 25vw" />
                 {p.tag && <span className={`absolute top-2 left-2 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${tagColor(p.tag)}`}>{p.tag}</span>}
                 <button onClick={() => toggleWish(p.id)} className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-base"
-                    style={{fontVariationSettings: wishlist.includes(p.id) ? "'FILL' 1" : "'FILL' 0", color: wishlist.includes(p.id) ? '#ef4444' : '#d1d5db'}}>
-                    favorite
-                  </span>
+                  <Heart size={14} className="transition-all"
+                    style={{ color: wishlist.includes(p.id) ? '#ef4444' : '#d1d5db', fill: wishlist.includes(p.id) ? '#ef4444' : 'none' }} />
                 </button>
               </div>
               <div className="p-4">
@@ -268,7 +267,7 @@ export default function EcommerceDemo() {
                   </div>
                   <button onClick={() => addToCart(p)}
                     className="w-9 h-9 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-all hover:scale-110 active:scale-90">
-                    <span className="material-symbols-outlined text-lg">add_shopping_cart</span>
+                    <ShoppingCart size={16} />
                   </button>
                 </div>
               </div>
@@ -280,10 +279,10 @@ export default function EcommerceDemo() {
       {/* Trust bar */}
       <section className="py-12 px-6 bg-white border-t border-gray-100">
         <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[{icon:'local_shipping',t:'Miễn phí vận chuyển',d:'Đơn từ 500K'},{icon:'replay',t:'Đổi trả 30 ngày',d:'Không cần lý do'},{icon:'security',t:'Bảo hành chính hãng',d:'1–2 năm'},{icon:'support_agent',t:'Hỗ trợ 24/7',d:'Chat & hotline'}].map(f=>(
+          {[{Icon: Truck,t:'Miễn phí vận chuyển',d:'Đơn từ 500K'},{Icon: RefreshCw,t:'Đổi trả 30 ngày',d:'Không cần lý do'},{Icon: Shield,t:'Bảo hành chính hãng',d:'1–2 năm'},{Icon: Headphones,t:'Hỗ trợ 24/7',d:'Chat & hotline'}].map(f=>(
             <div key={f.t} className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                <span className="material-symbols-outlined text-blue-600 text-xl">{f.icon}</span>
+                <f.Icon size={16} />
               </div>
               <div><p className="font-semibold text-sm">{f.t}</p><p className="text-xs text-gray-400">{f.d}</p></div>
             </div>

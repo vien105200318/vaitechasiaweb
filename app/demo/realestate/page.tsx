@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { ArrowLeft, Home, Search, X } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -30,7 +31,7 @@ export default function RealEstateDemo() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={()=>setSelected(null)}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"/>
           <div className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e=>e.stopPropagation()}>
-            <button onClick={()=>setSelected(null)} className="absolute top-4 right-4 z-10 w-8 h-8 bg-black/10 rounded-full flex items-center justify-center"><span className="material-symbols-outlined text-lg">close</span></button>
+            <button onClick={()=>setSelected(null)} className="absolute top-4 right-4 z-10 w-8 h-8 bg-black/10 rounded-full flex items-center justify-center"><X size={16} /></button>
             <div className="relative h-52 rounded-t-2xl overflow-hidden"><Image src={IMG} alt={selected.name} fill className="object-cover" unoptimized/></div>
             <div className="p-7">
               <div className="flex justify-between items-start mb-4">
@@ -38,8 +39,11 @@ export default function RealEstateDemo() {
                 <div className="text-right"><p className="text-2xl font-bold text-amber-700">{fmt(selected.price,selected.type)}</p><span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">{selected.type}</span></div>
               </div>
               <div className="grid grid-cols-4 gap-3 mb-6">
-                {[['square_foot',selected.area],['bed',selected.beds>0?`${selected.beds} PN`:'Thương mại'],['bathroom',`${selected.baths} WC`],['apartment',selected.floor]].map(([i,v])=>(
-                  <div key={v} className="bg-amber-50 rounded-xl p-3 text-center"><span className="material-symbols-outlined text-amber-600 text-xl block mb-1">{i as string}</span><p className="text-xs font-semibold">{v as string}</p></div>
+                {([['Diện tích',selected.area],['Phòng ngủ',selected.beds>0?`${selected.beds} PN`:'TM'],['Phòng tắm',`${selected.baths} WC`],['Tầng',selected.floor]] as [string,string][]).map(([label,val])=>(
+                  <div key={label} className="bg-amber-50 rounded-xl p-3 text-center">
+                    <p className="text-[10px] text-amber-700 font-semibold mb-0.5">{label}</p>
+                    <p className="text-xs font-semibold">{val}</p>
+                  </div>
                 ))}
               </div>
               {!contacted?(
@@ -67,14 +71,14 @@ export default function RealEstateDemo() {
 
       <div className="fixed top-4 right-4 z-40">
         <Link href="/templates" className="flex items-center gap-2 bg-[#1a1714]/80 backdrop-blur border border-white/20 text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#1a1714] transition-all">
-          <span className="material-symbols-outlined text-sm">arrow_back</span> Templates
+          <ArrowLeft size={16} /> Templates
         </Link>
       </div>
 
       <nav className="fixed top-0 w-full z-30 bg-white/95 backdrop-blur border-b border-[#1a1714]/8 shadow-sm">
         <div className="max-w-[1280px] mx-auto px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-700 flex items-center justify-center"><span className="material-symbols-outlined text-white text-base" style={{fontVariationSettings:"'FILL' 1"}}>home</span></div>
+            <div className="w-8 h-8 rounded-lg bg-amber-700 flex items-center justify-center"><Home size={16} /></div>
             <span className="font-bold text-lg tracking-tight">Premier<span className="text-amber-700">Homes</span></span>
           </div>
           <div className="hidden md:flex gap-7 text-sm text-[#1a1714]/60">{['Mua','Thuê','Dự Án','Định Giá','Tin Tức'].map(n=><a key={n} href="#" className="hover:text-amber-700 transition-colors">{n}</a>)}</div>
@@ -98,7 +102,7 @@ export default function RealEstateDemo() {
             </select>
             <input placeholder="Từ khoá: tên dự án, quận..." className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:border-amber-500 outline-none w-52 bg-white"/>
             <button className="bg-amber-700 hover:bg-amber-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors flex items-center gap-2">
-              <span className="material-symbols-outlined text-base">search</span>Tìm Kiếm
+              <Search size={16} />Tìm Kiếm
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { ShoppingBag, X } from 'lucide-react'
 import Image from 'next/image'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
 import { useToast, useLocalCart } from '@/hooks/useDemo'
@@ -88,7 +89,7 @@ export default function CafeDemo() {
             <div className="flex justify-between items-center px-6 py-4 border-b border-[#f5e6d0]/10">
               <h3 className="text-lg font-bold">Giỏ hàng ({totalItems})</h3>
               <button onClick={() => setCartOpen(false)} className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors">
-                <span className="material-symbols-outlined text-lg">close</span>
+                <X size={16} />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
@@ -130,7 +131,7 @@ export default function CafeDemo() {
       {/* Floating cart button */}
       <button onClick={() => setCartOpen(true)}
         className="fixed bottom-6 right-6 z-40 bg-[#d4a855] hover:bg-[#c49840] text-[#1a1008] rounded-full w-14 h-14 flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 font-sans">
-        <span className="material-symbols-outlined">shopping_bag</span>
+        <ShoppingBag size={16} />
         {totalItems > 0 && (
           <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-white text-[10px] font-black flex items-center justify-center animate-scale-in">
             {totalItems}

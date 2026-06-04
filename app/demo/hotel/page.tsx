@@ -1,4 +1,5 @@
 'use client'
+import { Dumbbell, Leaf, Star, Umbrella, UtensilsCrossed, Waves, Wine } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
@@ -13,12 +14,12 @@ const ROOMS = [
 ]
 
 const AMENITIES = [
-  { icon: 'pool', label: 'Hồ bơi vô cực', desc: '50m · Tầng thượng' },
-  { icon: 'spa', label: 'Spa & Wellness', desc: '2000m² · 12 phòng' },
-  { icon: 'restaurant', label: '5 Nhà hàng', desc: 'Fine dining · Buffet' },
-  { icon: 'fitness_center', label: 'Gym hiện đại', desc: 'Mở 24/7' },
-  { icon: 'beach_access', label: 'Bãi biển riêng', desc: '200m chiều dài' },
-  { icon: 'local_bar', label: 'Sky Bar', desc: 'Tầng 32 · View 360°' },
+  { Icon: Waves, label: 'Hồ bơi vô cực', desc: '50m · Tầng thượng' },
+  { Icon: Leaf, label: 'Spa & Wellness', desc: '2000m² · 12 phòng' },
+  { Icon: UtensilsCrossed, label: '5 Nhà hàng', desc: 'Fine dining · Buffet' },
+  { Icon: Dumbbell, label: 'Gym hiện đại', desc: 'Mở 24/7' },
+  { Icon: Umbrella, label: 'Bãi biển riêng', desc: '200m chiều dài' },
+  { Icon: Wine, label: 'Sky Bar', desc: 'Tầng 32 · View 360°' },
 ]
 
 export default function HotelDemo() {
@@ -136,7 +137,7 @@ export default function HotelDemo() {
         <div className="max-w-[1400px] mx-auto px-8 flex flex-wrap justify-center gap-10">
           {["Forbes 5 Stars 2026", "Condé Nast Top 50", "TripAdvisor Choice 2026"].map(a => (
             <div key={a} className="flex items-center gap-2 text-sm font-sans text-white/50">
-              <span className="material-symbols-outlined text-[#d4af6a] text-base" style={{fontVariationSettings:"'FILL' 1"}}>star</span>
+              <Star size={16} />
               {a}
             </div>
           ))}
@@ -157,7 +158,7 @@ export default function HotelDemo() {
             <Reveal key={a.label} delay={i * 60}
               className={`rounded-2xl p-6 text-center transition-all cursor-pointer group border ${activeAmenity === i ? 'border-[#d4af6a]/50 bg-[#d4af6a]/8' : 'border-white/8 bg-white/3 hover:border-[#d4af6a]/25'}`}
               onClick={() => setActiveAmenity(i)}>
-              <span className="material-symbols-outlined text-[#d4af6a] text-3xl mb-3 block group-hover:scale-110 transition-transform">{a.icon}</span>
+              <a.Icon size={16} />
               <p className="font-sans text-sm font-semibold mb-0.5">{a.label}</p>
               <p className="font-sans text-xs text-white/35">{a.desc}</p>
             </Reveal>

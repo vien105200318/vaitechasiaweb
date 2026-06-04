@@ -1,16 +1,17 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import { ArrowRight, BarChart2, Brain, CheckCircle2, ChevronDown, Code, Share2, ShieldCheck, Zap, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
 import { useToast, useTyped, useLocalCart } from '@/hooks/useDemo'
 
-const FEATURES = [
-  { icon: 'psychology', title: 'AI Tự Động Hóa', desc: 'Phân tích dữ liệu và ra quyết định thông minh 24/7.' },
-  { icon: 'hub', title: '200+ Tích Hợp', desc: 'Slack, Notion, Jira, Salesforce và hơn thế nữa.' },
-  { icon: 'speed', title: '<50ms Độ Trễ', desc: 'Xử lý 10 triệu request/giây trên toàn cầu.' },
-  { icon: 'shield_locked', title: 'SOC 2 Type II', desc: 'Mã hoá AES-256, zero-trust architecture.' },
-  { icon: 'analytics', title: 'Real-time Analytics', desc: '50+ metric có thể tuỳ chỉnh, alert thông minh.' },
-  { icon: 'code', title: 'API-first', desc: 'REST & GraphQL, SDK 12 ngôn ngữ, Webhooks.' },
+const FEATURES: { Icon: LucideIcon; title: string; desc: string }[] = [
+  { Icon: Brain, title: 'AI Tự Động Hóa', desc: 'Phân tích dữ liệu và ra quyết định thông minh 24/7.' },
+  { Icon: Share2, title: '200+ Tích Hợp', desc: 'Slack, Notion, Jira, Salesforce và hơn thế nữa.' },
+  { Icon: Zap, title: '<50ms Độ Trễ', desc: 'Xử lý 10 triệu request/giây trên toàn cầu.' },
+  { Icon: ShieldCheck, title: 'SOC 2 Type II', desc: 'Mã hoá AES-256, zero-trust architecture.' },
+  { Icon: BarChart2, title: 'Real-time Analytics', desc: '50+ metric có thể tuỳ chỉnh, alert thông minh.' },
+  { Icon: Code, title: 'API-first', desc: 'REST & GraphQL, SDK 12 ngôn ngữ, Webhooks.' },
 ]
 
 const PLANS = [
@@ -145,7 +146,7 @@ export default function SaasDemo() {
         <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-              <span className="material-symbols-outlined text-xs text-white font-black">bolt</span>
+              <Zap size={16} />
             </div>
             <span className="font-black text-lg">flow<span className="text-purple-400">AI</span></span>
           </div>
@@ -172,7 +173,7 @@ export default function SaasDemo() {
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/25 text-purple-300 text-xs font-semibold px-4 py-2 rounded-full mb-8">
             <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
             v3.0 mới ra mắt — AI Agent nhanh hơn 5x
-            <span className="material-symbols-outlined text-xs">arrow_forward</span>
+            <ArrowRight size={16} />
           </div>
         </Reveal>
         <Reveal delay={80}>
@@ -200,7 +201,7 @@ export default function SaasDemo() {
             </div>
           ) : (
             <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/25 text-green-300 px-6 py-3 rounded-xl mb-6 animate-scale-in">
-              <span className="material-symbols-outlined text-base" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+              <CheckCircle2 size={16} />
               Kiểm tra email để kích hoạt tài khoản!
             </div>
           )}
@@ -225,7 +226,7 @@ export default function SaasDemo() {
               className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/25 focus:border-purple-400 focus:bg-white/7 outline-none transition-all" />
             <button onClick={runDemo} disabled={demoLoading}
               className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 disabled:opacity-50 text-white font-bold px-6 py-3.5 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 active:scale-95">
-              {demoLoading ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg> : <span className="material-symbols-outlined text-base">psychology</span>}
+              {demoLoading ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg> : <Brain size={16} />}
               Phân tích AI
             </button>
           </div>
@@ -248,7 +249,7 @@ export default function SaasDemo() {
             <Reveal key={f.title} delay={i * 70}
               className="group bg-white/3 border border-white/8 hover:border-purple-500/40 rounded-2xl p-7 transition-all hover:-translate-y-1 duration-300 cursor-pointer">
               <div className="w-10 h-10 rounded-xl bg-purple-500/12 group-hover:bg-purple-500/20 flex items-center justify-center mb-5 transition-colors">
-                <span className="material-symbols-outlined text-xl text-purple-300">{f.icon}</span>
+                <f.Icon size={16} />
               </div>
               <h3 className="font-bold text-lg mb-2">{f.title}</h3>
               <p className="text-white/45 text-sm leading-relaxed">{f.desc}</p>
@@ -285,7 +286,7 @@ export default function SaasDemo() {
               <ul className="space-y-2.5 mb-7 flex-1">
                 {p.features.map(f => (
                   <li key={f} className="flex items-center gap-2 text-sm text-white/65">
-                    <span className="material-symbols-outlined text-purple-400 text-base" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>{f}
+                    <CheckCircle2 size={16} />{f}
                   </li>
                 ))}
               </ul>
@@ -309,8 +310,7 @@ export default function SaasDemo() {
                 className="w-full bg-white/3 border border-white/8 hover:border-purple-500/30 rounded-xl overflow-hidden transition-all">
                 <div className="flex justify-between items-center p-5 text-left">
                   <span className="font-semibold text-sm">{f.q}</span>
-                  <span className="material-symbols-outlined text-white/40 transition-transform flex-shrink-0 ml-3"
-                    style={{ transform: faqOpen === i ? 'rotate(180deg)' : '' }}>expand_more</span>
+                  <ChevronDown size={16} />
                 </div>
                 {faqOpen === i && (
                   <div className="px-5 pb-5 text-white/50 text-sm leading-relaxed border-t border-white/5 pt-3 animate-slide-in-up">

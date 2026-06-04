@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { Activity, BadgeCheck, BarChart3, CheckCircle2, Cloud, GitBranch, Mail, MapPin, Phone, PlayCircle, Shield, TrendingUp, Users, type LucideIcon } from 'lucide-react'
 import Image from 'next/image'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
 import { useToast } from '@/hooks/useDemo'
@@ -8,13 +9,13 @@ const HERO_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDO04BddMbS
 const WORK_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCskbDaVvG1TNcrbuTW9bHNbE5NEVIIZrnuf--MXLte0y2wHERNx2JnlC_5eSjVkrtuIJhD3mG-nSGZvT3VbK_f5BsD5LZcEOTkaHoqXv8oP3v6n2-tnVwX3uQfQ7ZBA62ve7Tukep7hKuRAbZbkSrFh0wLbaYCKzFw8MRqLC1mBb2QeTLv6TgSNyMOoz0MkXlelsYEX-qDA6zEjkMcN-ktpdvqB3AqDB6TkYDeiaIe2MS-fIKkL1H09RDo-T7iiiHjvHdoDzIcKxVl'
 const TECH_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIA27ThB3jLA-qXMeC1ArCwxN3AU9YWSxzLNOkDHAljhMkNu_M2gUho1i80PYCX5TfV6rbiByE2R5duq-b4StNtEnWZMFAHo2VsXmW1PGS6eaMgvukTw8IdB11hE5AMSljcaEOuhRrHM7897vT9iRMe4c1REruuBC53SnOMNJfuTs-N3mNxE7MVbnZSJDSdEJivVC3KoHRphq9e97Px_FTJ4edGXEix8PkkJXFSDowLKA-R1OnQwspyNjha-RYVFjaIkcgDD4cwL1Pe'
 
-const services = [
-  { icon: 'account_tree', title: 'Tư Vấn Chiến Lược', desc: 'Phân tích thị trường và xây dựng lộ trình phát triển bền vững.', tags: ['OKR', 'Roadmap', 'Market Research'] },
-  { icon: 'monitoring', title: 'Chuyển Đổi Số', desc: 'Hiện đại hóa quy trình vận hành với AI và tự động hóa.', tags: ['ERP', 'CRM', 'RPA'] },
-  { icon: 'groups', title: 'Đào Tạo Nhân Lực', desc: 'Nâng cao năng lực đội ngũ với chương trình đào tạo chuyên biệt.', tags: ['Workshop', 'E-learning', 'Mentoring'] },
-  { icon: 'bar_chart', title: 'Phân Tích Dữ Liệu', desc: 'Khai thác insight từ dữ liệu để ra quyết định chính xác.', tags: ['BI Dashboard', 'ML Models', 'Reporting'] },
-  { icon: 'security', title: 'Bảo Mật Enterprise', desc: 'Hệ thống bảo mật đa lớp theo chuẩn ISO 27001.', tags: ['Audit', 'SOC', 'Pen Test'] },
-  { icon: 'cloud_sync', title: 'Hạ Tầng Cloud', desc: 'Thiết kế và vận hành hạ tầng cloud hiệu suất cao.', tags: ['AWS', 'Azure', 'Kubernetes'] },
+const services: { Icon: LucideIcon; title: string; desc: string; tags: string[] }[] = [
+  { Icon: GitBranch, title: 'Tư Vấn Chiến Lược', desc: 'Phân tích thị trường và xây dựng lộ trình phát triển bền vững.', tags: ['OKR', 'Roadmap', 'Market Research'] },
+  { Icon: Activity, title: 'Chuyển Đổi Số', desc: 'Hiện đại hóa quy trình vận hành với AI và tự động hóa.', tags: ['ERP', 'CRM', 'RPA'] },
+  { Icon: Users, title: 'Đào Tạo Nhân Lực', desc: 'Nâng cao năng lực đội ngũ với chương trình đào tạo chuyên biệt.', tags: ['Workshop', 'E-learning', 'Mentoring'] },
+  { Icon: BarChart3, title: 'Phân Tích Dữ Liệu', desc: 'Khai thác insight từ dữ liệu để ra quyết định chính xác.', tags: ['BI Dashboard', 'ML Models', 'Reporting'] },
+  { Icon: Shield, title: 'Bảo Mật Enterprise', desc: 'Hệ thống bảo mật đa lớp theo chuẩn ISO 27001.', tags: ['Audit', 'SOC', 'Pen Test'] },
+  { Icon: Cloud, title: 'Hạ Tầng Cloud', desc: 'Thiết kế và vận hành hạ tầng cloud hiệu suất cao.', tags: ['AWS', 'Azure', 'Kubernetes'] },
 ]
 
 const cases = [
@@ -62,7 +63,7 @@ function ContactForm() {
   if (sent) return (
     <div className="h-full flex flex-col items-center justify-center py-12 text-center animate-scale-in">
       <div className="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-4 relative">
-        <span className="material-symbols-outlined text-blue-400 text-3xl" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+        <CheckCircle2 size={16} />
         <div className="absolute inset-0 rounded-2xl border-2 border-blue-400/40 animate-ping" />
       </div>
       <h3 className="text-xl font-bold mb-2 text-white">Gửi thành công!</h3>
@@ -199,14 +200,14 @@ export default function CorporateDemo() {
               Bắt Đầu Ngay
             </button>
             <button className="border border-white/20 hover:border-white/40 text-white font-semibold px-8 py-4 rounded-xl transition-all flex items-center gap-2 hover:bg-white/5">
-              <span className="material-symbols-outlined text-base">play_circle</span>Xem Case Study
+              <PlayCircle size={16} />Xem Case Study
             </button>
           </div>
           {/* Certs */}
           <div className="flex flex-wrap gap-4">
             {certs.map(c => (
               <div key={c} className="flex items-center gap-1.5 text-xs text-white/45">
-                <span className="material-symbols-outlined text-blue-400 text-sm" style={{fontVariationSettings:"'FILL' 1"}}>verified</span>
+                <BadgeCheck size={16} />
                 {c}
               </div>
             ))}
@@ -223,7 +224,7 @@ export default function CorporateDemo() {
               <p className="text-white/45 text-xs mb-1">Tăng trưởng Q1 2025</p>
               <p className="text-3xl font-black text-blue-400">+247%</p>
               <div className="flex items-center gap-1 mt-2 text-green-400 text-xs">
-                <span className="material-symbols-outlined text-xs">trending_up</span>So với năm trước
+                <TrendingUp size={16} />So với năm trước
               </div>
               <div className="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full" style={{width:'72%'}} />
@@ -283,7 +284,7 @@ export default function CorporateDemo() {
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 80} className="group bg-white/3 hover:bg-blue-600/15 border border-white/8 hover:border-blue-500/40 rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
               <div className="w-11 h-11 rounded-xl bg-blue-500/10 group-hover:bg-blue-500/20 flex items-center justify-center mb-5 transition-colors">
-                <span className="material-symbols-outlined text-xl text-blue-400">{s.icon}</span>
+                <s.Icon size={16} />
               </div>
               <h3 className="font-bold text-lg mb-2">{s.title}</h3>
               <p className="text-white/50 text-sm leading-relaxed mb-4">{s.desc}</p>
@@ -369,12 +370,12 @@ export default function CorporateDemo() {
               <p className="text-white/50 leading-relaxed mb-8">Điền thông tin để nhận tư vấn miễn phí từ chuyên gia trong vòng 24 giờ.</p>
               <div className="space-y-4">
                 {[
-                  { icon: 'email', v: 'vaistudio.world@gmail.com' },
-                  { icon: 'phone', v: '0796 716 811' },
-                  { icon: 'location_on', v: '29 Bùi Xuân Phái, Đà Nẵng' },
+                  { Icon: Mail, v: 'vaistudio.world@gmail.com' },
+                  { Icon: Phone, v: '0796 716 811' },
+                  { Icon: MapPin, v: '29 Bùi Xuân Phái, Đà Nẵng' },
                 ].map(c => (
                   <div key={c.v} className="flex items-center gap-3 text-white/55 text-sm">
-                    <span className="material-symbols-outlined text-blue-400 text-base">{c.icon}</span>{c.v}
+                    <c.Icon size={16} />{c.v}
                   </div>
                 ))}
               </div>

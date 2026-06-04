@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { CheckCircle2, Dumbbell } from 'lucide-react'
 import { DemoBackButton, Reveal, ToastContainer, CountUp } from '@/components/demo/DemoUI'
 import { useToast } from '@/hooks/useDemo'
 
@@ -114,7 +115,7 @@ export default function GymDemo() {
             <div key={row} className="flex gap-2 flex-1">
               {Array.from({length:4}).map((_,col)=>(
                 <div key={col} className="flex-1 bg-orange-900/20 rounded-xl border border-orange-500/8 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-4xl text-orange-500/30">fitness_center</span>
+                  <Dumbbell size={16} />
                 </div>
               ))}
             </div>
@@ -236,7 +237,7 @@ export default function GymDemo() {
                 <ul className="space-y-2.5 mb-6">
                   {p.features.map(f => (
                     <li key={f} className="flex items-center gap-2 text-sm text-white/65">
-                      <span className="material-symbols-outlined text-orange-400 text-base" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>{f}
+                      <CheckCircle2 size={16} />{f}
                     </li>
                   ))}
                 </ul>

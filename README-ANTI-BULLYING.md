@@ -1,12 +1,12 @@
-# An Toàn Học Đường — Nền Tảng Bảo Vệ Học Sinh
+# Em An — Nền Tảng Bảo Vệ Trẻ Em
 
-> Mỗi trẻ em đều xứng đáng được an toàn. Không ai nên phải chịu đựng một mình.
+> Mỗi tiếng nói đều quan trọng. Không ai nên phải chịu đựng một mình.
 
 ---
 
 ## 1. Tổng quan
 
-**An Toàn Học Đường** là nền tảng web báo cáo bạo lực học đường, cho phép học sinh gửi báo cáo ẩn danh một cách an toàn. Nền tảng được xây dựng bằng Next.js 16 + Firebase, thiết kế hướng đến triển khai production thực tế tại các trường học và sở Giáo dục & Đào tạo trên toàn quốc.
+**Em An** là nền tảng web báo cáo bạo lực học đường và bạo lực gia đình, cho phép trẻ em gửi báo cáo ẩn danh một cách an toàn. Nền tảng được xây dựng bằng Next.js 16 + Firebase, thiết kế hướng đến triển khai production thực tế tại các trường học, sở Giáo dục & Đào tạo và trung tâm bảo vệ trẻ em trên toàn quốc.
 
 ### Vấn đề
 

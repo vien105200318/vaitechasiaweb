@@ -132,6 +132,7 @@ const translations: Record<Lang, Record<string, string>> = {
     'tpl.cat.entertainment': 'Giải Trí',
     'tpl.cat.portfolio': 'Cá Nhân',
     'tpl.cat.gov': 'Nhà Nước',
+    'tpl.cat.social': 'Xã Hội',
 
     // Pricing
     'price.badge': 'BẢNG GIÁ',
@@ -518,6 +519,7 @@ const translations: Record<Lang, Record<string, string>> = {
     'tpl.cat.entertainment': 'Entertainment',
     'tpl.cat.portfolio': 'Portfolio',
     'tpl.cat.gov': 'Government',
+    'tpl.cat.social': 'Social',
 
     // Pricing
     'price.badge': 'PRICING',

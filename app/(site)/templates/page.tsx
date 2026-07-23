@@ -8,7 +8,7 @@ import {
   ChevronLeft, ChevronRight,
   Building2, Coffee, Layers, Bean, Hotel, UtensilsCrossed,
   Stethoscope, Home, Shirt, Dumbbell, Palette, ShoppingCart,
-  Dices, Gamepad2, Bus, Landmark, HeartPulse, BookOpen, CalendarDays, MessageCircleWarning,
+  Dices, Gamepad2, Bus, Landmark, HeartPulse, BookOpen, CalendarDays, MessageCircleWarning, ShieldAlert,
   type LucideIcon,
 } from 'lucide-react'
 import { useI18n } from '@/context/I18nContext'
@@ -44,6 +44,7 @@ const templates: {
   { id:17, category:'nha-nuoc', title:'Thư Viện Công Cộng', subtitle:'GOV / LIBRARY', desc:'Tra cứu & đặt chỗ sách trực tuyến — miễn phí thư viện công, serverless.', longDesc:'Hệ thống quản lý thư viện công cộng với tra cứu catalogue online, đặt chỗ sách, gia hạn sách, theo dõi lượt mượn. Barcode/QR scan khi mượn trả. Thống kê lượt đọc theo thể loại, tác giả, khu vực. Miễn phí triển khai serverless cho thư viện tỉnh/huyện.', tags:['Miễn phí nhà nước','Serverless','QR scan'], Icon:BookOpen, demoHref:'/demo/thuvien', accentColor:'#7c3aed', image:'' },
   { id:18, category:'nha-nuoc', title:'Đăng Ký Sự Kiện Cộng Đồng', subtitle:'GOV / EVENTS', desc:'Đăng ký sự kiện phường/xã — miễn phí, serverless, xác nhận qua SMS/Zalo.', longDesc:'Nền tảng đăng ký và quản lý sự kiện cộng đồng: hội thảo, lớp học miễn phí, ngày hội sức khỏe, tọa đàm dân phố. Người dân đăng ký online, nhận xác nhận qua SMS/Zalo, xem danh sách tham gia. Ban tổ chức quản lý đăng ký, check-in QR, đánh giá sự kiện. Miễn phí serverless cho UBND phường/xã.', tags:['Miễn phí nhà nước','Serverless','SMS/Zalo'], Icon:CalendarDays, demoHref:'/demo/sukien', accentColor:'#ea580c', image:'' },
   { id:19, category:'nha-nuoc', title:'Phản Hồi Ý Kiến Người Dân', subtitle:'GOV / FEEDBACK', desc:'Cổng tiếp nhận phản hồi & khiếu nại — miễn phí, serverless, tracking real-time.', longDesc:'Hệ thống tiếp nhận và xử lý phản hồi, kiến nghị, khiếu nại của người dân. Người dân gửi phản hồi qua form/web, đính kèm ảnh/video, chọn lĩnh vực (giao thông, môi trường, y tế...). Ban quản lý phân công xử lý, cập nhật trạng thái real-time, báo cáo thống kê theo khu vực/lĩnh vực. Miễn phí serverless cho UBND các cấp.', tags:['Miễn phí nhà nước','Serverless','Tracking'], Icon:MessageCircleWarning, demoHref:'/demo/phanhoi', accentColor:'#dc2626', image:'' },
+  { id:20, category:'xa-hoi', title:'An Toàn Học Đường', subtitle:'ANTI-BULLYING / SAFE SCHOOL', desc:'Báo cáo bạo lực học đường ẩn danh — hotline 111, tracking, tài liệu hỗ trợ.', longDesc:'Nền tảng báo cáo và xử lý bạo lực học đường. Học sinh có thể báo cáo ẩn danh qua form web, theo dõi trạng thái xử lý real-time. Hệ thống tích hợp hotline 111, tài liệu hỗ trợ tâm lý cho học sinh và phụ huynh, thống kê theo loại sự cố và khu vực. Bảo mật end-to-end, không lưu IP.', tags:['Ẩn danh','Hotline 111','Bảo mật E2E'], Icon:ShieldAlert, demoHref:'/demo/baoluc-hocduong', accentColor:'#a855f7', image:'' },
 ]
 
 function getCategories(t: (k: string) => string) {
@@ -61,6 +62,7 @@ function getCategories(t: (k: string) => string) {
     { key:'giai-tri', label: t('tpl.cat.entertainment') },
     { key:'ca-nhan', label: t('tpl.cat.portfolio') },
     { key:'nha-nuoc', label: t('tpl.cat.gov') },
+    { key:'xa-hoi', label: t('tpl.cat.social') },
   ]
 }
 
@@ -926,6 +928,31 @@ function TemplatePreview({ t, device }: { t: Template; device: DeviceType }) {
             {[['📝','Khiếu nại'],['📸','Đính kèm'],['⚡','Tracking']].map(([v,l])=>(
               <div key={l} className="bg-white border border-red-100 rounded-xl p-3 text-center shadow-sm"><div className="text-xl">{v}</div><div className="text-[9px] text-red-700/50">{l}</div></div>
             ))}
+          </div>
+        </div>
+      </div>
+    ),
+
+    /* ── 20 ANTI-BULLYING / SAFE SCHOOL ── bg #0f0a1a, purple accent */
+    20: (
+      <div className="w-full h-full bg-[#0f0a1a] text-white overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <nav className="h-6 flex items-center gap-2 px-2.5 border-b border-purple-500/10 bg-[#16102a]/90">
+          <div className="flex gap-1"><div className="w-1.5 h-1.5 rounded-full bg-red-500/70"/><div className="w-1.5 h-1.5 rounded-full bg-yellow-500/60"/><div className="w-1.5 h-1.5 rounded-full bg-green-500/60"/></div>
+          <div className="flex items-center gap-1 mr-auto">
+            <div className="w-3.5 h-3.5 bg-gradient-to-br from-purple-600 to-pink-600 rounded flex items-center justify-center text-[6px]">🛡️</div>
+            <span className="text-[8px] font-black text-purple-200">An Toàn<span className="text-purple-400">.VN</span></span>
+          </div>
+          <div className="hidden sm:flex gap-2 text-[5px] text-purple-300/40">{['Báo cáo','Theo dõi','Tài liệu'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-red-500/20 border border-red-500/30 text-red-300 text-[5px] font-bold px-1.5 py-0.5 rounded">111</div>
+        </nav>
+        <div className="px-3 pt-3">
+          <div className="inline-flex items-center gap-1 bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[5px] px-1.5 py-0.5 rounded-full mb-2"><span className="w-1 h-1 bg-purple-400 rounded-full"/>Nền tảng bảo vệ HS</div>
+          <div className="text-[11px] font-black leading-tight mb-1.5">Mỗi Trẻ Em<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Đáng Được</span><br/>An Toàn</div>
+          <div className="text-[5px] text-purple-300/40 mb-2">Báo cáo ẩn danh · Hotline 111 · 24/7</div>
+          <div className="flex gap-1"><div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[5px] font-bold px-2 py-0.5 rounded-lg">Báo cáo</div><div className="border border-purple-500/20 text-purple-300 text-[5px] px-2 py-0.5 rounded-lg">Tài liệu</div></div>
+          <div className="flex gap-2 mt-2">
+            <div className="bg-white/[0.03] border border-purple-500/10 rounded-lg p-1.5 w-16"><div className="text-[5px] text-purple-300/40">Báo cáo</div><div className="text-[9px] font-black text-purple-300">12,847</div></div>
+            <div className="bg-white/[0.03] border border-purple-500/10 rounded-lg p-1.5 w-16"><div className="text-[5px] text-purple-300/40">Giải quyết</div><div className="text-[9px] font-black text-green-400">94%</div></div>
           </div>
         </div>
       </div>

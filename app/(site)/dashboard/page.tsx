@@ -1,16 +1,25 @@
 'use client'
 
-import { useEffect } from 'react'
-import { ArrowRight, Award, Bookmark, Brain, FolderOpen, Globe, Headphones, LayoutGrid, LogIn, LogOut, PlusCircle, Receipt, Settings, Store } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowRight, Award, Bookmark, Brain, CheckCircle2, FolderOpen, Globe, Headphones, LayoutGrid, LogIn, LogOut, PlusCircle, Receipt, Settings, Store } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
+import { Avatar, Badge, Button, Card, Progress } from '@/components/ui'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 
 const quickActions = [
   { Icon: PlusCircle, label: 'Tạo dự án mới', href: '/templates' },
   { Icon: LayoutGrid, label: 'Xem mẫu website', href: '/templates' },
   { Icon: Headphones, label: 'Liên hệ hỗ trợ', href: '/contact' },
   { Icon: Settings, label: 'Cài đặt tài khoản', href: '#' },
+]
+
+const onboardingSteps = [
+  { label: 'Tạo tài khoản', done: true },
+  { label: 'Chọn mẫu website', done: false },
+  { label: 'Tùy chỉnh nội dung', done: false },
+  { label: 'Kết nối tên miền', done: false },
 ]
 
 const planLabel: Record<string, string> = {
@@ -21,17 +30,18 @@ const planLabel: Record<string, string> = {
   ultra: 'Ultra',
 }
 
-const planColor: Record<string, string> = {
-  free: 'text-[#909097]',
-  standard: 'text-blue-400',
-  lite: 'text-[#c2c6db]',
-  pro: 'text-amber-400',
-  ultra: 'text-purple-400',
+const planVariant: Record<string, 'default' | 'accent' | 'success' | 'warning'> = {
+  free: 'default',
+  standard: 'accent',
+  lite: 'accent',
+  pro: 'warning',
+  ultra: 'accent',
 }
 
 export default function DashboardPage() {
   const { user, profile, loading, logout } = useAuth()
   const router = useRouter()
+  const [dismissed, setDismissed] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) router.push('/login')
@@ -41,11 +51,11 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <svg className="animate-spin h-10 w-10 text-[#c2c6db]" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-          </svg>
-          <p className="text-[#c7c6cd] text-sm">Đang tải...</p>
+          <div className="relative w-12 h-12">
+            <div className="absolute inset-0 rounded-full border-2" style={{ borderColor: 'var(--border-subtle)' }} />
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#c2c6db] animate-spin" />
+          </div>
+          <p style={{ color: 'var(--text-secondary)' }} className="text-sm animate-pulse">Đang tải...</p>
         </div>
       </div>
     )
@@ -54,121 +64,173 @@ export default function DashboardPage() {
   if (!user) return null
 
   const displayName = profile?.displayName || user.displayName || user.email?.split('@')[0] || 'Người dùng'
-  const initials = displayName.slice(0, 2).toUpperCase()
   const plan = profile?.plan ?? 'free'
   const provider = profile?.provider === 'google.com' ? 'Google' : 'Email & Mật khẩu'
+  const completedSteps = onboardingSteps.filter(s => s.done).length
+  const progress = (completedSteps / onboardingSteps.length) * 100
 
   return (
     <div className="min-h-screen pt-28 pb-20 px-6 md:px-16 max-w-[1280px] mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-        <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-2xl bg-[#c2c6db]/10 border border-[#c2c6db]/20 flex items-center justify-center text-xl font-bold text-[#c2c6db] font-[family-name:var(--font-montserrat)] overflow-hidden">
-            {user.photoURL ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.photoURL} alt={displayName} className="w-full h-full object-cover" />
-            ) : initials}
-          </div>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <p className="text-xs tracking-widest uppercase text-[#c7c6cd] font-semibold">CHÀO MỪNG TRỞ LẠI</p>
-              <span className={`text-xs font-bold px-2 py-0.5 rounded-full bg-white/5 ${planColor[plan]}`}>
-                {planLabel[plan]}
-              </span>
+      <ScrollReveal>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+          <div className="flex items-center gap-5">
+            <Avatar
+              src={user.photoURL}
+              name={displayName}
+              size="xl"
+            />
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <p style={{ color: 'var(--text-secondary)' }} className="text-xs tracking-widest uppercase font-semibold">CHÀO MỪNG TRỞ LẠI</p>
+                <Badge variant={planVariant[plan]} dot>
+                  {planLabel[plan]}
+                </Badge>
+              </div>
+              <h1 className="text-3xl font-bold font-[family-name:var(--font-montserrat)]" style={{ color: 'var(--text-primary)' }}>
+                {displayName}
+              </h1>
             </div>
-            <h1 className="text-3xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5]">
-              {displayName}
-            </h1>
           </div>
+          <Button
+            variant="ghost"
+            onClick={logout}
+            icon={<LogOut size={16} />}
+          >
+            Đăng xuất
+          </Button>
         </div>
-        <button
-          onClick={logout}
-          className="flex items-center gap-2 border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300"
-        >
-          <LogOut size={16} />
-          Đăng xuất
-        </button>
-      </div>
+      </ScrollReveal>
+
+      {/* Onboarding */}
+      {plan === 'free' && !dismissed && (
+        <ScrollReveal delay={50}>
+          <Card className="mb-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-sm font-bold font-[family-name:var(--font-montserrat)]" style={{ color: 'var(--text-primary)' }}>
+                    Bước đầu sử dụng
+                  </h2>
+                  <button onClick={() => setDismissed(true)} className="text-xs transition-colors focus-visible:outline-none" style={{ color: 'var(--muted)' }}>
+                    Bỏ qua
+                  </button>
+                </div>
+                <Progress value={progress} className="mb-4" />
+                <div className="flex flex-wrap gap-3">
+                  {onboardingSteps.map((step, i) => (
+                    <div key={step.label} className="flex items-center gap-2">
+                      {step.done ? (
+                        <CheckCircle2 size={14} className="text-green-400" />
+                      ) : (
+                        <span className="w-3.5 h-3.5 rounded-full border flex items-center justify-center text-[10px]" style={{ borderColor: 'var(--border-subtle)', color: 'var(--muted)' }}>{i + 1}</span>
+                      )}
+                      <span className={`text-xs ${step.done ? 'line-through' : 'font-semibold'}`} style={{ color: step.done ? 'var(--muted)' : 'var(--text-primary)' }}>{step.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <Link href="/templates">
+                <Button size="sm" icon={<ArrowRight size={14} />}>
+                  Chọn mẫu ngay
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        </ScrollReveal>
+      )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        {[
-          { label: 'Dự án đang hoạt động', value: '0', Icon: FolderOpen },
-          { label: 'Mẫu đã lưu', value: '0', Icon: Bookmark },
-          { label: 'Gói dịch vụ', value: planLabel[plan], Icon: Award },
-          { label: 'Đăng nhập qua', value: provider, Icon: LogIn },
-        ].map((s) => (
-          <div key={s.label} className="glass-card p-6 rounded-xl">
-            <s.Icon size={16} />
-            <div className="text-xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-1 truncate">{s.value}</div>
-            <div className="text-xs text-[#c7c6cd]">{s.label}</div>
-          </div>
-        ))}
-      </div>
+      <ScrollReveal delay={100}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          {[
+            { label: 'Dự án đang hoạt động', value: '0', Icon: FolderOpen },
+            { label: 'Mẫu đã lưu', value: '0', Icon: Bookmark },
+            { label: 'Gói dịch vụ', value: planLabel[plan], Icon: Award },
+            { label: 'Đăng nhập qua', value: provider, Icon: LogIn },
+          ].map((s) => (
+            <Card key={s.label}>
+              <s.Icon size={16} className="mb-3" style={{ color: 'var(--accent)' }} />
+              <div className="text-xl font-bold font-[family-name:var(--font-montserrat)] mb-1 truncate" style={{ color: 'var(--text-primary)' }}>{s.value}</div>
+              <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+            </Card>
+          ))}
+        </div>
+      </ScrollReveal>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Thao tác nhanh */}
-        <div className="glass-card rounded-xl p-6">
-          <h2 className="text-lg font-semibold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-6">Thao tác nhanh</h2>
-          <div className="space-y-2">
-            {quickActions.map((action) => (
-              <Link key={action.label} href={action.href}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 text-[#c7c6cd] hover:text-[#e0e3e5] transition-all duration-300 group">
-                <action.Icon size={16} />
-                <span className="text-sm font-medium">{action.label}</span>
-                <ArrowRight size={16} />
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Gói dịch vụ */}
-        <div className="lg:col-span-2 glass-card rounded-xl p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-semibold font-[family-name:var(--font-montserrat)] text-[#e0e3e5]">Gói hiện tại</h2>
-            <Link href="/pricing" className="text-xs text-[#c2c6db] hover:underline font-semibold">Nâng cấp</Link>
-          </div>
-
-          <div className={`bg-[#1d2022] rounded-xl p-5 border mb-5 ${plan === 'free' ? 'border-white/8' : 'border-[#c2c6db]/20'}`}>
-            <div className="flex items-center justify-between mb-3">
-              <span className={`text-lg font-bold ${planColor[plan]}`}>{planLabel[plan]}</span>
-              {plan === 'free' && (
-                <Link href="/pricing" className="text-xs bg-[#c2c6db] text-[#2b3040] px-3 py-1 rounded-lg font-bold hover:opacity-90 transition-opacity">
-                  Nâng cấp ngay
+        {/* Quick actions */}
+        <ScrollReveal delay={200}>
+          <Card>
+            <h2 className="text-lg font-semibold font-[family-name:var(--font-montserrat)] mb-6" style={{ color: 'var(--text-primary)' }}>Thao tác nhanh</h2>
+            <div className="space-y-2">
+              {quickActions.map((action) => (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className="flex items-center gap-3 p-3 rounded-lg transition-all duration-300 group min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  <action.Icon size={16} className="shrink-0" style={{ color: 'var(--accent)' }} />
+                  <span className="text-sm font-medium flex-1">{action.label}</span>
+                  <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
-              )}
+              ))}
             </div>
-            <div className="grid grid-cols-2 gap-3 text-xs text-[#c7c6cd]">
+          </Card>
+        </ScrollReveal>
+
+        {/* Plan info */}
+        <ScrollReveal delay={300} className="lg:col-span-2">
+          <Card>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold font-[family-name:var(--font-montserrat)]" style={{ color: 'var(--text-primary)' }}>Gói hiện tại</h2>
+              <Link href="/pricing" className="text-xs hover:underline font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded" style={{ color: 'var(--accent)' }}>
+                Nâng cấp
+              </Link>
+            </div>
+
+            <div className="rounded-xl p-5 border mb-5" style={{ background: 'var(--surface-2)', borderColor: plan === 'free' ? 'var(--border-subtle)' : 'color-mix(in srgb, var(--accent) 20%, transparent)' }}>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-lg font-bold" style={{ color: 'var(--accent)' }}>{planLabel[plan]}</span>
+                {plan === 'free' && (
+                  <Link href="/pricing">
+                    <Button size="sm">Nâng cấp ngay</Button>
+                  </Link>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                {[
+                  { Icon: Brain, text: plan === 'free' ? 'AI Builder: 10 lần/ngày' : plan === 'standard' ? 'AI Builder: 30 lần/ngày' : plan === 'lite' ? 'AI Builder: 100 lần/ngày' : 'AI Builder: Không giới hạn' },
+                  { Icon: Globe, text: plan === 'pro' || plan === 'ultra' ? 'Tên miền tuỳ chỉnh' : 'Subdomain Vaitech' },
+                  { Icon: Store, text: plan === 'free' ? 'Không có cửa hàng' : plan === 'standard' ? '1 cửa hàng' : plan === 'ultra' ? 'Không giới hạn cửa hàng' : '5 cửa hàng' },
+                  { Icon: Receipt, text: plan === 'free' ? 'Hoá đơn: 1/tháng' : plan === 'standard' ? 'Hoá đơn: 3/tháng' : plan === 'lite' ? 'Hoá đơn: 10/tháng' : plan === 'pro' ? 'Hoá đơn: 50/tháng' : 'Hoá đơn: Không giới hạn' },
+                ].map(f => (
+                  <div key={f.text} className="flex items-center gap-2">
+                    <f.Icon size={16} className="shrink-0" style={{ color: 'var(--accent)' }} />
+                    <span>{f.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Account info */}
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Thông tin tài khoản</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
-                { Icon: Brain, text: plan === 'free' ? 'AI Builder: 10 lần/ngày' : plan === 'standard' ? 'AI Builder: 30 lần/ngày' : plan === 'lite' ? 'AI Builder: 100 lần/ngày' : 'AI Builder: Không giới hạn' },
-                { Icon: Globe, text: plan === 'pro' || plan === 'ultra' ? 'Tên miền tuỳ chỉnh' : 'Subdomain Vaitech' },
-                { Icon: Store, text: plan === 'free' ? 'Không có cửa hàng' : plan === 'standard' ? '1 cửa hàng' : plan === 'ultra' ? 'Không giới hạn cửa hàng' : '5 cửa hàng' },
-                { Icon: Receipt, text: plan === 'free' ? 'Hoá đơn: 1/tháng' : plan === 'standard' ? 'Hoá đơn: 3/tháng' : plan === 'lite' ? 'Hoá đơn: 10/tháng' : plan === 'pro' ? 'Hoá đơn: 50/tháng' : 'Hoá đơn: Không giới hạn' },
-              ].map(f => (
-                <div key={f.text} className="flex items-center gap-2">
-                  <f.Icon size={16} />
-                  {f.text}
+                { label: 'Email', value: user.email ?? '—' },
+                { label: 'Tên hiển thị', value: displayName },
+                { label: 'Đăng nhập qua', value: provider },
+                { label: 'UID', value: user.uid.slice(0, 12) + '...' },
+              ].map(item => (
+                <div key={item.label} className="rounded-lg p-3 border" style={{ background: 'var(--surface-2)', borderColor: 'var(--border-subtle)' }}>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--muted)' }}>{item.label}</p>
+                  <p className="text-sm truncate" style={{ color: 'var(--text-primary)' }}>{item.value}</p>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Thông tin tài khoản */}
-          <h3 className="text-sm font-semibold text-[#e0e3e5] mb-3">Thông tin tài khoản</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {[
-              { label: 'Email', value: user.email ?? '—' },
-              { label: 'Tên hiển thị', value: displayName },
-              { label: 'Đăng nhập qua', value: provider },
-              { label: 'UID', value: user.uid.slice(0, 12) + '...' },
-            ].map(item => (
-              <div key={item.label} className="bg-[#1d2022] rounded-lg p-3 border border-white/5">
-                <p className="text-[10px] text-[#909097] font-semibold uppercase tracking-wider mb-1">{item.label}</p>
-                <p className="text-sm text-[#e0e3e5] truncate">{item.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+          </Card>
+        </ScrollReveal>
       </div>
     </div>
   )

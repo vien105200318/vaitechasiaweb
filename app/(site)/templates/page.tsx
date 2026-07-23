@@ -8,9 +8,10 @@ import {
   ChevronLeft, ChevronRight,
   Building2, Coffee, Layers, Bean, Hotel, UtensilsCrossed,
   Stethoscope, Home, Shirt, Dumbbell, Palette, ShoppingCart,
-  Dices, Gamepad2,
+  Dices, Gamepad2, Bus, Landmark, HeartPulse, BookOpen, CalendarDays, MessageCircleWarning,
   type LucideIcon,
 } from 'lucide-react'
+import { useI18n } from '@/context/I18nContext'
 
 type DeviceType = 'desktop' | 'tablet' | 'mobile'
 const DEVICES: { key: DeviceType; label: string; Icon: typeof Monitor; maxW: string }[] = [
@@ -38,22 +39,30 @@ const templates: {
   { id:12, category:'thuong-mai', title:'Tech E-Commerce', subtitle:'E-COMMERCE / SHOP', desc:'Giỏ hàng đầy đủ luồng thanh toán 3 bước, filter, wishlist.', longDesc:'Flash sale banner, product grid 4 cột, cart sidebar với checkout 3 bước (địa chỉ → thanh toán → xác nhận), filter + sort.', tags:['Full checkout','Cart sidebar','Flash sale'], Icon:ShoppingCart, demoHref:'/demo/ecommerce', accentColor:'#2563eb', image:'https://lh3.googleusercontent.com/aida-public/AB6AXuDIA27ThB3jLA-qXMeC1ArCwxN3AU9YWSxzLNOkDHAljhMkNu_M2gUho1i80PYCX5TfV6rbiByE2R5duq-b4StNtEnWZMFAHo2VsXmW1PGS6eaMgvukTw8IdB11hE5AMSljcaEOuhRrHM7897vT9iRMe4c1REruuBC53SnOMNJfuTs-N3mNxE7MVbnZSJDSdEJivVC3KoHRphq9e97Px_FTJ4edGXEix8PkkJXFSDowLKA-R1OnQwspyNjha-RYVFjaIkcgDD4cwL1Pe' },
   { id:13, category:'giai-tri', title:'Billiards Club & Academy', subtitle:'BILLIARDS / SNOOKER', desc:'Sơ đồ bàn real-time, đặt bàn, đăng ký giải đấu, HLV.', longDesc:'8 bàn với trạng thái live (trống/đang chơi/đã đặt), form đặt bàn theo giờ, tab HLV + khoá học, giải đấu với đăng ký, thực đơn gọi đồ. Dark green ambient.', tags:['Đặt bàn real-time','Giải đấu','HLV & Khoá học'], Icon:Dices, demoHref:'/demo/billiards', accentColor:'#22c55e', image:'https://lh3.googleusercontent.com/aida-public/AB6AXuDIA27ThB3jLA-qXMeC1ArCwxN3AU9YWSxzLNOkDHAljhMkNu_M2gUho1i80PYCX5TfV6rbiByE2R5duq-b4StNtEnWZMFAHo2VsXmW1PGS6eaMgvukTw8IdB11hE5AMSljcaEOuhRrHM7897vT9iRMe4c1REruuBC53SnOMNJfuTs-N3mNxE7MVbnZSJDSdEJivVC3KoHRphq9e97Px_FTJ4edGXEix8PkkJXFSDowLKA-R1OnQwspyNjha-RYVFjaIkcgDD4cwL1Pe' },
   { id:14, category:'giai-tri', title:'Esports / Gaming Center', subtitle:'NET CAFE / ESPORTS', desc:'Sơ đồ máy live, đặt máy theo giờ, combo, giải đấu, gọi đồ.', longDesc:'12 PC RTX 4090 + 8 RTX 4080, booking máy với countdown, tab combo tiết kiệm, đăng ký giải game, gọi đồ ăn tận máy. Cyberpunk cyan.', tags:['PC booking','Esports','Gọi đồ tận nơi'], Icon:Gamepad2, demoHref:'/demo/netcafe', accentColor:'#06b6d4', image:'https://lh3.googleusercontent.com/aida-public/AB6AXuDIA27ThB3jLA-qXMeC1ArCwxN3AU9YWSxzLNOkDHAljhMkNu_M2gUho1i80PYCX5TfV6rbiByE2R5duq-b4StNtEnWZMFAHo2VsXmW1PGS6eaMgvukTw8IdB11hE5AMSljcaEOuhRrHM7897vT9iRMe4c1REruuBC53SnOMNJfuTs-N3mNxE7MVbnZSJDSdEJivVC3KoHRphq9e97Px_FTJ4edGXEix8PkkJXFSDowLKA-R1OnQwspyNjha-RYVFjaIkcgDD4cwL1Pe' },
+  { id:15, category:'nha-nuoc', title:'Đặt Vé Xe Công Cộng', subtitle:'GOV / TRANSPORT', desc:'Nền tảng đặt vé xe buýt & xe điện — miễn phí đơn vị nhà nước, serverless.', longDesc:'Hệ thống đặt vé xe buýt và xe điện dành cho các tỉnh/thành phố. Miễn phí triển khai trên nền tảng serverless cho các đơn vị nhà nước. App riêng biệt nếu nhà nước muốn hợp tác triển khai toàn diện — tích hợp GPS real-time, thanh toán không tiền mặt, báo cáo hành trình, quản lý bến bãi.', tags:['Miễn phí nhà nước','Serverless','GPS real-time'], Icon:Bus, demoHref:'/demo/vexe', accentColor:'#0ea5e9', image:'' },
+  { id:16, category:'nha-nuoc', title:'Đặt Lịch Khám Cộng Đồng', subtitle:'GOV / HEALTH', desc:'Đặt lịch khám miễn phí tại trạm y tế phường/xã — serverless, Zalo mini-app.', longDesc:'Hệ thống đặt lịch khám bệnh cho trạm y tế phường/xã và phòng khám công. Bệnh nhân đặt lịch qua QR code hoặc Zalo mini-app, chọn khung giờ, xem số thứ tự real-time. Quản lý hồ sơ khám bệnh, kê đơn thuốc điện tử, nhắc tái khám tự động. Miễn phí triển khai cho đơn vị nhà nước.', tags:['Miễn phí nhà nước','Serverless','BHYT'], Icon:HeartPulse, demoHref:'/demo/datlichkham', accentColor:'#16a34a', image:'' },
+  { id:17, category:'nha-nuoc', title:'Thư Viện Công Cộng', subtitle:'GOV / LIBRARY', desc:'Tra cứu & đặt chỗ sách trực tuyến — miễn phí thư viện công, serverless.', longDesc:'Hệ thống quản lý thư viện công cộng với tra cứu catalogue online, đặt chỗ sách, gia hạn sách, theo dõi lượt mượn. Barcode/QR scan khi mượn trả. Thống kê lượt đọc theo thể loại, tác giả, khu vực. Miễn phí triển khai serverless cho thư viện tỉnh/huyện.', tags:['Miễn phí nhà nước','Serverless','QR scan'], Icon:BookOpen, demoHref:'/demo/thuvien', accentColor:'#7c3aed', image:'' },
+  { id:18, category:'nha-nuoc', title:'Đăng Ký Sự Kiện Cộng Đồng', subtitle:'GOV / EVENTS', desc:'Đăng ký sự kiện phường/xã — miễn phí, serverless, xác nhận qua SMS/Zalo.', longDesc:'Nền tảng đăng ký và quản lý sự kiện cộng đồng: hội thảo, lớp học miễn phí, ngày hội sức khỏe, tọa đàm dân phố. Người dân đăng ký online, nhận xác nhận qua SMS/Zalo, xem danh sách tham gia. Ban tổ chức quản lý đăng ký, check-in QR, đánh giá sự kiện. Miễn phí serverless cho UBND phường/xã.', tags:['Miễn phí nhà nước','Serverless','SMS/Zalo'], Icon:CalendarDays, demoHref:'/demo/sukien', accentColor:'#ea580c', image:'' },
+  { id:19, category:'nha-nuoc', title:'Phản Hồi Ý Kiến Người Dân', subtitle:'GOV / FEEDBACK', desc:'Cổng tiếp nhận phản hồi & khiếu nại — miễn phí, serverless, tracking real-time.', longDesc:'Hệ thống tiếp nhận và xử lý phản hồi, kiến nghị, khiếu nại của người dân. Người dân gửi phản hồi qua form/web, đính kèm ảnh/video, chọn lĩnh vực (giao thông, môi trường, y tế...). Ban quản lý phân công xử lý, cập nhật trạng thái real-time, báo cáo thống kê theo khu vực/lĩnh vực. Miễn phí serverless cho UBND các cấp.', tags:['Miễn phí nhà nước','Serverless','Tracking'], Icon:MessageCircleWarning, demoHref:'/demo/phanhoi', accentColor:'#dc2626', image:'' },
 ]
 
-const categories = [
-  { key:'all', label:'Tất Cả', count: templates.length },
-  { key:'doanh-nghiep', label:'Doanh Nghiệp' },
-  { key:'quan-ca-phe', label:'Cà Phê' },
-  { key:'khach-san', label:'Khách Sạn' },
-  { key:'nha-hang', label:'Nhà Hàng' },
-  { key:'y-te', label:'Y Tế' },
-  { key:'bat-dong-san', label:'Bất Động Sản' },
-  { key:'thoi-trang', label:'Thời Trang' },
-  { key:'the-thao', label:'Thể Thao' },
-  { key:'thuong-mai', label:'Thương Mại' },
-  { key:'giai-tri', label:'Giải Trí' },
-  { key:'ca-nhan', label:'Cá Nhân' },
-]
+function getCategories(t: (k: string) => string) {
+  return [
+    { key:'all', label: t('tpl.all'), count: templates.length },
+    { key:'doanh-nghiep', label: t('tpl.cat.corp') },
+    { key:'quan-ca-phe', label: t('tpl.cat.cafe') },
+    { key:'khach-san', label: t('tpl.cat.hotel') },
+    { key:'nha-hang', label: t('tpl.cat.restaurant') },
+    { key:'y-te', label: t('tpl.cat.medical') },
+    { key:'bat-dong-san', label: t('tpl.cat.realestate') },
+    { key:'thoi-trang', label: t('tpl.cat.fashion') },
+    { key:'the-thao', label: t('tpl.cat.fitness') },
+    { key:'thuong-mai', label: t('tpl.cat.ecommerce') },
+    { key:'giai-tri', label: t('tpl.cat.entertainment') },
+    { key:'ca-nhan', label: t('tpl.cat.portfolio') },
+    { key:'nha-nuoc', label: t('tpl.cat.gov') },
+  ]
+}
 
 type Template = typeof templates[number]
 
@@ -445,6 +454,156 @@ function CardPreview({ t }: { t: Template }) {
         </div>
       </div>
     </div>,
+
+    /* ── 15 ĐẶT VÉ XE ── bg #f0f9ff, sky blue, gov style */
+    15: <div className="w-full h-full bg-[#f0f9ff] text-[#0c1a2e]" style={{fontFamily:'sans-serif'}}>
+      <nav className="h-6 flex items-center px-2.5 border-b border-sky-200/50 bg-white/90">
+        <div className="flex gap-1 mr-2"><NavDot/></div>
+        <div className="flex items-center gap-1 mr-auto">
+          <div className="w-3.5 h-3.5 rounded-lg bg-sky-600 flex items-center justify-center text-white text-[7px]">🚌</div>
+          <span className="text-[7px] font-bold text-sky-700">VéXe<span className="text-sky-400">.VN</span></span>
+        </div>
+        <div className="hidden sm:flex gap-1.5 text-[5px] text-sky-700/50 mr-1.5">{['Tuyến','Lịch','Đặt Vé'].map(n=><span key={n}>{n}</span>)}</div>
+        <div className="bg-sky-600 text-white text-[5px] font-bold px-1.5 py-0.5 rounded-lg">Đặt Vé</div>
+      </nav>
+      <div className="px-3 pt-2.5">
+        <div className="inline-flex items-center gap-1 bg-green-50 border border-green-200 text-green-700 text-[5px] px-1.5 py-0.5 rounded-full mb-1.5"><span className="w-1 h-1 bg-green-500 rounded-full"/>Miễn phí cho đơn vị nhà nước</div>
+        <div className="text-[13px] font-bold leading-tight mb-1.5">Đặt Vé Xe<br/><span className="text-sky-600">Buýt & Điện</span><br/>Toàn Quốc</div>
+        <div className="text-[5px] text-sky-700/60 mb-2">Serverless · GPS real-time · Thanh toán 0đ</div>
+        <div className="flex gap-1 mb-2">
+          <div className="bg-sky-600 text-white text-[6px] font-bold px-2 py-0.5 rounded-lg">🚌 Đặt Vé Ngay</div>
+          <div className="border border-sky-300 text-sky-700 text-[6px] px-2 py-0.5 rounded-lg">🏛️ Dành cho Nhà nước</div>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {[{i:'🚌',l:'120+ Tuyến'},{i:'📍',l:'GPS Live'},{i:'🆓',l:'Miễn phí'}].map(c=>
+            <div key={c.l} className="bg-white rounded-lg p-1.5 text-center border border-sky-100 shadow-sm">
+              <div className="text-sm">{c.i}</div>
+              <div className="text-[4px] font-semibold text-sky-700">{c.l}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+
+    /* ── 16 ĐẶT LỊCH KHÁM ── bg #f0fdf4, green gov */
+    16: <div className="w-full h-full bg-[#f0fdf4] text-[#0c2e1a]" style={{fontFamily:'sans-serif'}}>
+      <nav className="h-6 flex items-center px-2.5 border-b border-green-200/50 bg-white/90">
+        <div className="flex gap-1 mr-2"><NavDot/></div>
+        <div className="flex items-center gap-1 mr-auto">
+          <div className="w-3.5 h-3.5 rounded-lg bg-green-600 flex items-center justify-center text-white text-[7px]">+</div>
+          <span className="text-[7px] font-bold text-green-700">Khám<span className="text-green-400">Sức</span>.VN</span>
+        </div>
+        <div className="hidden sm:flex gap-1.5 text-[5px] text-green-700/50 mr-1.5">{['Đặt Lịch','Bác Sĩ','BHYT'].map(n=><span key={n}>{n}</span>)}</div>
+        <div className="bg-green-600 text-white text-[5px] font-bold px-1.5 py-0.5 rounded-lg">Đặt Lịch</div>
+      </nav>
+      <div className="px-3 pt-2.5">
+        <div className="inline-flex items-center gap-1 bg-green-50 border border-green-200 text-green-700 text-[5px] px-1.5 py-0.5 rounded-full mb-1.5"><span className="w-1 h-1 bg-green-500 rounded-full"/>Miễn phí trạm y tế</div>
+        <div className="text-[13px] font-bold leading-tight mb-1.5">Đặt Lịch<br/><span className="text-green-600">Khám Bệnh</span><br/>Pường/Xã</div>
+        <div className="text-[5px] text-green-700/60 mb-2">QR code · Zalo mini-app · Số thứ tự real-time</div>
+        <div className="flex gap-1 mb-2">
+          <div className="bg-green-600 text-white text-[6px] font-bold px-2 py-0.5 rounded-lg">+ Đặt Lịch</div>
+          <div className="border border-green-300 text-green-700 text-[6px] px-2 py-0.5 rounded-lg">🏥 Trạm Y Tế</div>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {[{i:'📋',l:'Đặt lịch'},{i:'📱',l:'QR / Zalo'},{i:'🏥',l:'120+ trạm'}].map(c=>
+            <div key={c.l} className="bg-white rounded-lg p-1.5 text-center border border-green-100 shadow-sm">
+              <div className="text-sm">{c.i}</div>
+              <div className="text-[4px] font-semibold text-green-700">{c.l}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+
+    /* ── 17 THƯ VIỆN ── bg #faf5ff, violet gov */
+    17: <div className="w-full h-full bg-[#faf5ff] text-[#1a0c2e]" style={{fontFamily:'sans-serif'}}>
+      <nav className="h-6 flex items-center px-2.5 border-b border-violet-200/50 bg-white/90">
+        <div className="flex gap-1 mr-2"><NavDot/></div>
+        <div className="flex items-center gap-1 mr-auto">
+          <div className="w-3.5 h-3.5 rounded-lg bg-violet-600 flex items-center justify-center text-white text-[7px]">📖</div>
+          <span className="text-[7px] font-bold text-violet-700">Thư Viện<span className="text-violet-400">.VN</span></span>
+        </div>
+        <div className="hidden sm:flex gap-1.5 text-[5px] text-violet-700/50 mr-1.5">{['Tra Cứu','Đặt Chỗ','Mượn Sách'].map(n=><span key={n}>{n}</span>)}</div>
+        <div className="bg-violet-600 text-white text-[5px] font-bold px-1.5 py-0.5 rounded-lg">Tra Cứu</div>
+      </nav>
+      <div className="px-3 pt-2.5">
+        <div className="inline-flex items-center gap-1 bg-violet-50 border border-violet-200 text-violet-700 text-[5px] px-1.5 py-0.5 rounded-full mb-1.5"><span className="w-1 h-1 bg-violet-500 rounded-full"/>Miễn phí thư viện công</div>
+        <div className="text-[13px] font-bold leading-tight mb-1.5">Thư Viện<br/><span className="text-violet-600">Công Cộng</span><br/>Trực Tuyến</div>
+        <div className="text-[5px] text-violet-700/60 mb-2">Catalogue online · QR scan · Gia hạn sách</div>
+        <div className="flex gap-1 mb-2">
+          <div className="bg-violet-600 text-white text-[6px] font-bold px-2 py-0.5 rounded-lg">📖 Tra Cứu</div>
+          <div className="border border-violet-300 text-violet-700 text-[6px] px-2 py-0.5 rounded-lg">📚 Đặt Chỗ</div>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {[{i:'📚',l:'50K+ đầu sách'},{i:'📱',l:'QR scan'},{i:'📊',l:'Thống kê'}].map(c=>
+            <div key={c.l} className="bg-white rounded-lg p-1.5 text-center border border-violet-100 shadow-sm">
+              <div className="text-sm">{c.i}</div>
+              <div className="text-[4px] font-semibold text-violet-700">{c.l}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+
+    /* ── 18 ĐĂNG KÝ SỰ KIỆN ── bg #fff7ed, orange gov */
+    18: <div className="w-full h-full bg-[#fff7ed] text-[#2e1a0c]" style={{fontFamily:'sans-serif'}}>
+      <nav className="h-6 flex items-center px-2.5 border-b border-orange-200/50 bg-white/90">
+        <div className="flex gap-1 mr-2"><NavDot/></div>
+        <div className="flex items-center gap-1 mr-auto">
+          <div className="w-3.5 h-3.5 rounded-lg bg-orange-600 flex items-center justify-center text-white text-[7px]">🎉</div>
+          <span className="text-[7px] font-bold text-orange-700">Sự Kiện<span className="text-orange-400">.VN</span></span>
+        </div>
+        <div className="hidden sm:flex gap-1.5 text-[5px] text-orange-700/50 mr-1.5">{['Sự kiện','Đăng ký','Lịch'].map(n=><span key={n}>{n}</span>)}</div>
+        <div className="bg-orange-600 text-white text-[5px] font-bold px-1.5 py-0.5 rounded-lg">Đăng Ký</div>
+      </nav>
+      <div className="px-3 pt-2.5">
+        <div className="inline-flex items-center gap-1 bg-orange-50 border border-orange-200 text-orange-700 text-[5px] px-1.5 py-0.5 rounded-full mb-1.5"><span className="w-1 h-1 bg-orange-500 rounded-full"/>Miễn phí UBND phường/xã</div>
+        <div className="text-[13px] font-bold leading-tight mb-1.5">Đăng Ký<br/><span className="text-orange-600">Sự Kiện</span><br/>Cộng Đồng</div>
+        <div className="text-[5px] text-orange-700/60 mb-2">SMS/Zalo xác nhận · Check-in QR · Đánh giá</div>
+        <div className="flex gap-1 mb-2">
+          <div className="bg-orange-600 text-white text-[6px] font-bold px-2 py-0.5 rounded-lg">🎉 Đăng Ký</div>
+          <div className="border border-orange-300 text-orange-700 text-[6px] px-2 py-0.5 rounded-lg">📅 Lịch Sự Kiện</div>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {[{i:'📅',l:'20+ sự kiện/tháng'},{i:'📱',l:'SMS/Zalo'},{i:'✅',l:'QR check-in'}].map(c=>
+            <div key={c.l} className="bg-white rounded-lg p-1.5 text-center border border-orange-100 shadow-sm">
+              <div className="text-sm">{c.i}</div>
+              <div className="text-[4px] font-semibold text-orange-700">{c.l}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+
+    /* ── 19 PHẢN HỒI Ý KIẾN ── bg #fef2f2, red gov */
+    19: <div className="w-full h-full bg-[#fef2f2] text-[#2e0c0c]" style={{fontFamily:'sans-serif'}}>
+      <nav className="h-6 flex items-center px-2.5 border-b border-red-200/50 bg-white/90">
+        <div className="flex gap-1 mr-2"><NavDot/></div>
+        <div className="flex items-center gap-1 mr-auto">
+          <div className="w-3.5 h-3.5 rounded-lg bg-red-600 flex items-center justify-center text-white text-[7px]">💬</div>
+          <span className="text-[7px] font-bold text-red-700">Phản Hồi<span className="text-red-400">.VN</span></span>
+        </div>
+        <div className="hidden sm:flex gap-1.5 text-[5px] text-red-700/50 mr-1.5">{['Gửi PH','Tra cứu','Thống kê'].map(n=><span key={n}>{n}</span>)}</div>
+        <div className="bg-red-600 text-white text-[5px] font-bold px-1.5 py-0.5 rounded-lg">Gửi PH</div>
+      </nav>
+      <div className="px-3 pt-2.5">
+        <div className="inline-flex items-center gap-1 bg-red-50 border border-red-200 text-red-700 text-[5px] px-1.5 py-0.5 rounded-full mb-1.5"><span className="w-1 h-1 bg-red-500 rounded-full"/>Miễn phí UBND các cấp</div>
+        <div className="text-[13px] font-bold leading-tight mb-1.5">Phản Hồi<br/><span className="text-red-600">Ý Kiến</span><br/>Người Dân</div>
+        <div className="text-[5px] text-red-700/60 mb-2">Form web · Ảnh/Video · Tracking real-time</div>
+        <div className="flex gap-1 mb-2">
+          <div className="bg-red-600 text-white text-[6px] font-bold px-2 py-0.5 rounded-lg">💬 Gửi Phản Hồi</div>
+          <div className="border border-red-300 text-red-700 text-[6px] px-2 py-0.5 rounded-lg">📊 Theo Dõi</div>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {[{i:'📝',l:'Khiếu nại'},{i:'📸',l:'Đính kèm'},{i:'⚡',l:'Tracking'}].map(c=>
+            <div key={c.l} className="bg-white rounded-lg p-1.5 text-center border border-red-100 shadow-sm">
+              <div className="text-sm">{c.i}</div>
+              <div className="text-[4px] font-semibold text-red-700">{c.l}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
   }
 
   const fallback = (
@@ -601,6 +760,176 @@ function TemplatePreview({ t, device }: { t: Template; device: DeviceType }) {
         </div>
       </div>
     ),
+    // Đặt Vé Xe — sky blue gov
+    15: (
+      <div className="w-full h-full bg-[#f0f9ff] text-[#0c1a2e] overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <div className="h-10 flex items-center px-6 border-b border-sky-200/50 bg-white/90">
+          <div className="flex items-center gap-2 mr-auto">
+            <div className="w-6 h-6 rounded-lg bg-sky-600 flex items-center justify-center text-white text-xs">🚌</div>
+            <span className="text-sm font-bold text-sky-700">VéXe<span className="text-sky-400">.VN</span></span>
+          </div>
+          <div className="hidden md:flex gap-5 text-[11px] text-sky-700/50 mr-6">{['Tuyến','Lịch','Đặt Vé','Liên hệ'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-sky-600 text-white text-[10px] font-bold px-3 py-1 rounded-lg">Đặt Vé</div>
+        </div>
+        <div className="px-8 pt-10">
+          <div className="inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1.5 h-1.5 bg-green-500 rounded-full"/>Miễn phí cho đơn vị nhà nước</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3 text-[#0c1a2e]">Đặt Vé Xe<br/><span className="text-sky-600">Buýt & Điện</span><br/>Toàn Quốc</h1>
+          <p className="text-sky-700/60 text-sm mb-5 max-w-xs">Nền tảng serverless miễn phí — GPS real-time, thanh toán không tiền mặt, hỗ trợ đa ngôn ngữ.</p>
+          <div className="flex gap-3 mb-8">
+            <div className="bg-sky-600 text-white text-xs font-bold px-5 py-2 rounded-lg">🚌 Đặt Vé Ngay</div>
+            <div className="border border-sky-300 text-sky-700 text-xs px-5 py-2 rounded-lg">🏛️ Dành cho Nhà nước</div>
+          </div>
+          <div className="inline-flex items-center gap-3 bg-sky-50 border border-sky-200 rounded-xl px-5 py-3 mb-6">
+            <Landmark size={16} className="text-sky-600" />
+            <div>
+              <p className="text-[11px] font-bold text-[#0c1a2e]">Đơn vị nhà nước muốn hợp tác?</p>
+              <p className="text-[10px] text-sky-700/60">App riêng theo yêu cầu — tích hợp GPS, quản lý bến bãi, báo cáo hành trình.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            {[['120+','Tuyến xe'],['GPS','Real-time'],['0đ','Miễn phí']].map(([v,l])=>(
+              <div key={l} className="bg-white border border-sky-100 rounded-xl p-3 text-center shadow-sm"><div className="text-xl font-black text-sky-600">{v}</div><div className="text-[9px] text-sky-700/50">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    // Đặt Lịch Khám — green gov
+    16: (
+      <div className="w-full h-full bg-[#f0fdf4] text-[#0c2e1a] overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <div className="h-10 flex items-center px-6 border-b border-green-200/50 bg-white/90">
+          <div className="flex items-center gap-2 mr-auto">
+            <div className="w-6 h-6 rounded-lg bg-green-600 flex items-center justify-center text-white text-xs">+</div>
+            <span className="text-sm font-bold text-green-700">Khám<span className="text-green-400">Sức</span>.VN</span>
+          </div>
+          <div className="hidden md:flex gap-5 text-[11px] text-green-700/50 mr-6">{['Đặt Lịch','Bác Sĩ','BHYT'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-green-600 text-white text-[10px] font-bold px-3 py-1 rounded-lg">Đặt Lịch</div>
+        </div>
+        <div className="px-8 pt-10">
+          <div className="inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1.5 h-1.5 bg-green-500 rounded-full"/>Miễn phí trạm y tế phường/xã</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3 text-[#0c2e1a]">Đặt Lịch<br/><span className="text-green-600">Khám Bệnh</span><br/>Tại Trạm Y Tế</h1>
+          <p className="text-green-700/60 text-sm mb-5 max-w-xs">Đặt lịch qua QR code hoặc Zalo mini-app — chọn khung giờ, xem số thứ tự real-time, quản lý hồ sơ khám bệnh.</p>
+          <div className="flex gap-3 mb-8">
+            <div className="bg-green-600 text-white text-xs font-bold px-5 py-2 rounded-lg">📋 Đặt Lịch Ngay</div>
+            <div className="border border-green-300 text-green-700 text-xs px-5 py-2 rounded-lg">🏥 Trạm Y Tế</div>
+          </div>
+          <div className="inline-flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-5 py-3 mb-6">
+            <HeartPulse size={16} className="text-green-600" />
+            <div>
+              <p className="text-[11px] font-bold text-[#0c2e1a]">Nhà nước muốn hợp tác?</p>
+              <p className="text-[10px] text-green-700/60">Tích hợp BHYT, hệ thống y tế quốc gia, nhắc tái khám tự động.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            {[['📋','Đặt lịch'],['📱','QR / Zalo'],['🏥','120+ trạm']].map(([v,l])=>(
+              <div key={l} className="bg-white border border-green-100 rounded-xl p-3 text-center shadow-sm"><div className="text-xl">{v}</div><div className="text-[9px] text-green-700/50">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    // Thư Viện — violet gov
+    17: (
+      <div className="w-full h-full bg-[#faf5ff] text-[#1a0c2e] overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <div className="h-10 flex items-center px-6 border-b border-violet-200/50 bg-white/90">
+          <div className="flex items-center gap-2 mr-auto">
+            <div className="w-6 h-6 rounded-lg bg-violet-600 flex items-center justify-center text-white text-xs">📖</div>
+            <span className="text-sm font-bold text-violet-700">Thư Viện<span className="text-violet-400">.VN</span></span>
+          </div>
+          <div className="hidden md:flex gap-5 text-[11px] text-violet-700/50 mr-6">{['Tra Cứu','Đặt Chỗ','Mượn Sách'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-violet-600 text-white text-[10px] font-bold px-3 py-1 rounded-lg">Tra Cứu</div>
+        </div>
+        <div className="px-8 pt-10">
+          <div className="inline-flex items-center gap-1.5 bg-violet-50 border border-violet-200 text-violet-700 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1.5 h-1.5 bg-violet-500 rounded-full"/>Miễn phí thư viện công</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3 text-[#1a0c2e]">Thư Viện<br/><span className="text-violet-600">Công Cộng</span><br/>Trực Tuyến</h1>
+          <p className="text-violet-700/60 text-sm mb-5 max-w-xs">Tra cứu catalogue online, đặt chỗ sách, barcode/QR scan khi mượn trả. Thống kê lượt đọc theo thể loại.</p>
+          <div className="flex gap-3 mb-8">
+            <div className="bg-violet-600 text-white text-xs font-bold px-5 py-2 rounded-lg">📖 Tra Cứu Sách</div>
+            <div className="border border-violet-300 text-violet-700 text-xs px-5 py-2 rounded-lg">📚 Đặt Chỗ Online</div>
+          </div>
+          <div className="inline-flex items-center gap-3 bg-violet-50 border border-violet-200 rounded-xl px-5 py-3 mb-6">
+            <BookOpen size={16} className="text-violet-600" />
+            <div>
+              <p className="text-[11px] font-bold text-[#1a0c2e]">Đơn vị nhà nước muốn hợp tác?</p>
+              <p className="text-[10px] text-violet-700/60">Tích hợp mạng lưới thư viện quốc gia, OCR tìm kiếm nội dung.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            {[['📚','50K+ đầu sách'],['📱','QR scan'],['📊','Thống kê']].map(([v,l])=>(
+              <div key={l} className="bg-white border border-violet-100 rounded-xl p-3 text-center shadow-sm"><div className="text-xl">{v}</div><div className="text-[9px] text-violet-700/50">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    // Đăng Ký Sự Kiện — orange gov
+    18: (
+      <div className="w-full h-full bg-[#fff7ed] text-[#2e1a0c] overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <div className="h-10 flex items-center px-6 border-b border-orange-200/50 bg-white/90">
+          <div className="flex items-center gap-2 mr-auto">
+            <div className="w-6 h-6 rounded-lg bg-orange-600 flex items-center justify-center text-white text-xs">🎉</div>
+            <span className="text-sm font-bold text-orange-700">Sự Kiện<span className="text-orange-400">.VN</span></span>
+          </div>
+          <div className="hidden md:flex gap-5 text-[11px] text-orange-700/50 mr-6">{['Sự kiện','Đăng ký','Lịch'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-orange-600 text-white text-[10px] font-bold px-3 py-1 rounded-lg">Đăng Ký</div>
+        </div>
+        <div className="px-8 pt-10">
+          <div className="inline-flex items-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1.5 h-1.5 bg-orange-500 rounded-full"/>Miễn phí UBND phường/xã</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3 text-[#2e1a0c]">Đăng Ký<br/><span className="text-orange-600">Sự Kiện</span><br/>Cộng Đồng</h1>
+          <p className="text-orange-700/60 text-sm mb-5 max-w-xs">Hội thảo, lớp học miễn phí, ngày hội sức khỏe. Xác nhận qua SMS/Zalo, check-in QR, đánh giá sự kiện.</p>
+          <div className="flex gap-3 mb-8">
+            <div className="bg-orange-600 text-white text-xs font-bold px-5 py-2 rounded-lg">🎉 Đăng Ký Ngay</div>
+            <div className="border border-orange-300 text-orange-700 text-xs px-5 py-2 rounded-lg">📅 Lịch Sự Kiện</div>
+          </div>
+          <div className="inline-flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-xl px-5 py-3 mb-6">
+            <CalendarDays size={16} className="text-orange-600" />
+            <div>
+              <p className="text-[11px] font-bold text-[#2e1a0c]">UBND phường/xã muốn hợp tác?</p>
+              <p className="text-[10px] text-orange-700/60">Tích hợp cổng thông tin điện tử tỉnh, quản lý sự kiện cộng đồng.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            {[['📅','20+ SK/tháng'],['📱','SMS/Zalo'],['✅','QR check-in']].map(([v,l])=>(
+              <div key={l} className="bg-white border border-orange-100 rounded-xl p-3 text-center shadow-sm"><div className="text-xl">{v}</div><div className="text-[9px] text-orange-700/50">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    // Phản Hồi Ý Kiến — red gov
+    19: (
+      <div className="w-full h-full bg-[#fef2f2] text-[#2e0c0c] overflow-hidden" style={{fontFamily:'sans-serif'}}>
+        <div className="h-10 flex items-center px-6 border-b border-red-200/50 bg-white/90">
+          <div className="flex items-center gap-2 mr-auto">
+            <div className="w-6 h-6 rounded-lg bg-red-600 flex items-center justify-center text-white text-xs">💬</div>
+            <span className="text-sm font-bold text-red-700">Phản Hồi<span className="text-red-400">.VN</span></span>
+          </div>
+          <div className="hidden md:flex gap-5 text-[11px] text-red-700/50 mr-6">{['Gửi PH','Tra cứu','Thống kê'].map(n=><span key={n}>{n}</span>)}</div>
+          <div className="bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-lg">Gửi PH</div>
+        </div>
+        <div className="px-8 pt-10">
+          <div className="inline-flex items-center gap-1.5 bg-red-50 border border-red-200 text-red-700 text-[10px] font-semibold px-3 py-1 rounded-full mb-4"><div className="w-1.5 h-1.5 bg-red-500 rounded-full"/>Miễn phí UBND các cấp</div>
+          <h1 className="text-3xl md:text-5xl font-black leading-tight mb-3 text-[#2e0c0c]">Phản Hồi<br/><span className="text-red-600">Ý Kiến</span><br/>Người Dân</h1>
+          <p className="text-red-700/60 text-sm mb-5 max-w-xs">Cổng tiếp nhận phản hồi, kiến nghị, khiếu nại — đính kèm ảnh/video, tracking real-time, báo cáo theo khu vực.</p>
+          <div className="flex gap-3 mb-8">
+            <div className="bg-red-600 text-white text-xs font-bold px-5 py-2 rounded-lg">💬 Gửi Phản Hồi</div>
+            <div className="border border-red-300 text-red-700 text-xs px-5 py-2 rounded-lg">📊 Theo Dõi Trạng Thái</div>
+          </div>
+          <div className="inline-flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-5 py-3 mb-6">
+            <MessageCircleWarning size={16} className="text-red-600" />
+            <div>
+              <p className="text-[11px] font-bold text-[#2e0c0c]">UBND muốn hợp tác?</p>
+              <p className="text-[10px] text-red-700/60">Tích hợp Cổng Dịch vụ Công Quốc gia, phân công xử lý tự động.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            {[['📝','Khiếu nại'],['📸','Đính kèm'],['⚡','Tracking']].map(([v,l])=>(
+              <div key={l} className="bg-white border border-red-100 rounded-xl p-3 text-center shadow-sm"><div className="text-xl">{v}</div><div className="text-[9px] text-red-700/50">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
   }
 
   const defaultPreview = (
@@ -645,13 +974,14 @@ function TemplatePreview({ t, device }: { t: Template; device: DeviceType }) {
   )
 }
 
-function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
+function TemplateModal({ t: tpl, onClose }: { t: Template; onClose: () => void }) {
+  const { t } = useI18n()
   const [device, setDevice] = useState<DeviceType>('desktop')
   const [loaded, setLoaded] = useState(false)
   const current = DEVICES.find(d => d.key === device)!
 
   // Khi đổi template reset loaded
-  const iframeKey = `${t.id}-${device}`
+  const iframeKey = `${tpl.id}-${device}`
 
   const deviceWidth: Record<DeviceType, string> = {
     desktop: '100%',
@@ -663,87 +993,109 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-6" onClick={onClose}>
       <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
       <div
-        className="relative z-10 w-full max-w-6xl max-h-[95vh] flex flex-col rounded-2xl border border-white/10 bg-[#0d1117] shadow-2xl overflow-hidden"
+        className="relative z-10 w-full max-w-6xl max-h-[95vh] flex flex-col rounded-2xl border overflow-hidden"
+        style={{ borderColor: 'var(--card-border)', background: 'var(--surface-2)' }}
         onClick={e => e.stopPropagation()}
       >
         {/* ── Top bar ── */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8 bg-[#0a0d12] flex-shrink-0">
+        <div className="flex items-center gap-3 px-4 py-3 border-b flex-shrink-0" style={{ borderColor: 'var(--border-subtle)', background: 'var(--surface-1)' }}>
           <div className="flex gap-1.5">
             <button onClick={onClose} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
             <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
             <div className="w-3 h-3 rounded-full bg-green-500/50" />
           </div>
-          <div className="flex-1 flex items-center gap-2 bg-white/6 border border-white/8 rounded-lg px-3 h-7 min-w-0">
-            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: t.accentColor }} />
-            <span className="text-[11px] text-white/40 truncate font-mono">vai-tech.asia{t.demoHref}</span>
+          <div className="flex-1 flex items-center gap-2 border rounded-lg px-3 h-7 min-w-0" style={{ background: 'var(--surface-2)', borderColor: 'var(--border-subtle)' }}>
+            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: tpl.accentColor }} />
+            <span className="text-[11px] truncate font-mono" style={{ color: 'var(--muted)' }}>vai-tech.asia{tpl.demoHref}</span>
           </div>
           {/* Device switcher */}
-          <div className="flex items-center gap-1 bg-white/5 border border-white/8 rounded-lg p-1">
+          <div className="flex items-center gap-1 border rounded-lg p-1" style={{ background: 'var(--surface-2)', borderColor: 'var(--border-subtle)' }}>
             {DEVICES.map(({ key, label, Icon }) => (
               <button key={key} onClick={() => { setDevice(key); setLoaded(false) }} title={label}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${device === key ? 'bg-white/15 text-white' : 'text-white/35 hover:text-white/70'}`}>
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${device === key ? 'bg-white/15 text-white' : 'hover:opacity-80'}`}
+                style={device === key ? { background: 'var(--accent)' + '26', color: 'var(--accent)' } : { color: 'var(--muted)' }}>
                 <Icon size={13} />
                 <span className="hidden sm:inline">{label}</span>
               </button>
             ))}
           </div>
-          <Link href={t.demoHref} target="_blank"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#2b3040] transition-all hover:scale-105 flex-shrink-0"
-            style={{ background: t.accentColor }}>
+          <Link href={tpl.demoHref} target="_blank"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:scale-105 flex-shrink-0"
+            style={{ background: tpl.accentColor, color: '#fff' }}>
             <ExternalLink size={12} />
-            <span className="hidden sm:inline">Mở tab mới</span>
+            <span className="hidden sm:inline">{t('tpl.openTab')}</span>
           </Link>
+          {tpl.category === 'nha-nuoc' && (
+            <Link href="/contact" target="_blank"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-green-500 text-white transition-all hover:scale-105 flex-shrink-0">
+              <Landmark size={12} />
+              <span className="hidden sm:inline">{t('tpl.contact')}</span>
+            </Link>
+          )}
         </div>
 
         {/* ── iframe Preview ── */}
-        <div className="flex-1 min-h-0 bg-[#161b22] flex items-start justify-center overflow-auto p-3" style={{ height: '560px' }}>
+        <div className="flex-1 min-h-0 flex items-start justify-center overflow-auto p-3" style={{ height: '560px', background: 'var(--background)' }}>
           <div
-            className="relative transition-all duration-400 ease-out rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-white flex-shrink-0"
-            style={{ width: deviceWidth[device], maxWidth: '100%', height: '100%', minHeight: '500px' }}
+            className="relative transition-all duration-400 ease-out rounded-xl overflow-hidden border shadow-2xl bg-white flex-shrink-0"
+            style={{ width: deviceWidth[device], maxWidth: '100%', height: '100%', minHeight: '500px', borderColor: 'var(--card-border)' }}
           >
-            {/* Loading skeleton */}
             {!loaded && (
-              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0d1117]">
-                <div className="w-8 h-8 border-2 border-white/15 border-t-white/60 rounded-full animate-spin" />
-                <p className="text-white/35 text-xs">Đang tải {current.label} preview...</p>
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3" style={{ background: 'var(--surface-2)' }}>
+                <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--border-subtle)', borderTopColor: 'var(--accent)' }} />
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>{t('tpl.loading')} {current.label} preview...</p>
               </div>
             )}
             <iframe
               key={iframeKey}
-              src={t.demoHref}
+              src={tpl.demoHref}
               className="w-full h-full border-0"
               style={{ minHeight: '500px' }}
               onLoad={() => setLoaded(true)}
-              title={`${t.title} preview`}
+              title={`${tpl.title} preview`}
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
             />
           </div>
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="flex items-center justify-between gap-4 px-5 py-3 border-t border-white/8 bg-[#0a0d12] flex-shrink-0">
+        <div className="flex items-center justify-between gap-4 px-5 py-3 border-t flex-shrink-0" style={{ borderColor: 'var(--border-subtle)', background: 'var(--surface-1)' }}>
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${t.accentColor}20` }}>
-              <t.Icon size={14} style={{ color: t.accentColor }} />
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${tpl.accentColor}20` }}>
+              <tpl.Icon size={14} style={{ color: tpl.accentColor }} />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-[#e0e3e5] truncate">{t.title}</p>
-              <p className="text-[10px] text-[#909097]">{t.subtitle}</p>
+              <p className="text-xs font-bold truncate" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{tpl.title}</p>
+              <p className="text-[10px]" style={{ color: 'var(--muted)' }}>{tpl.subtitle}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="hidden md:flex gap-1.5">
-              {t.tags.slice(0, 2).map(tag => (
+              {tpl.tags.slice(0, 2).map(tag => (
                 <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full border font-semibold"
-                  style={{ borderColor: `${t.accentColor}35`, color: t.accentColor, background: `${t.accentColor}10` }}>
+                  style={{ borderColor: `${tpl.accentColor}35`, color: tpl.accentColor, background: `${tpl.accentColor}10` }}>
                   {tag}
                 </span>
               ))}
             </div>
-            <Link href="/register"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-xs border border-[#46464c] text-[#c7c6cd] hover:border-[#c2c6db] hover:text-[#c2c6db] transition-all whitespace-nowrap">
-              <Rocket size={12} />Dùng mẫu này
+            <Link href={tpl.demoHref} target="_blank"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-xs border transition-all whitespace-nowrap"
+              style={{ borderColor: 'var(--card-border)', color: 'var(--text-secondary)' }}>
+              <ExternalLink size={12} />{t('tpl.openTab')}
             </Link>
+            {tpl.category === 'nha-nuoc' ? (
+              <Link href="/contact" target="_blank"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-xs transition-all whitespace-nowrap"
+                style={{ background: tpl.accentColor, color: '#fff' }}>
+                <Landmark size={12} />{t('tpl.contact')}
+              </Link>
+            ) : (
+              <Link href="/register"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold text-xs transition-all whitespace-nowrap"
+                style={{ background: tpl.accentColor, color: '#fff' }}>
+                <Rocket size={12} />{t('tpl.useTpl')}
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -751,11 +1103,13 @@ function TemplateModal({ t, onClose }: { t: Template; onClose: () => void }) {
   )
 }
 export default function TemplatesPage() {
+  const { t } = useI18n()
   const [active, setActive] = useState('all')
   const [selected, setSelected] = useState<Template | null>(null)
   const [hovered, setHovered] = useState<number | null>(null)
   const filterRef = useRef<HTMLDivElement>(null)
 
+  const categories = getCategories(t)
   const filtered = active === 'all' ? templates : templates.filter(t => t.category === active)
 
   const scroll = (dir: 'left' | 'right') => {
@@ -767,15 +1121,15 @@ export default function TemplatesPage() {
       <div className="pt-32 pb-[120px] px-6 md:px-16 max-w-[1280px] mx-auto">
         {/* Header */}
         <header className="mb-16 max-w-3xl">
-          <div className="inline-block px-3 py-1 mb-6 border border-[#c2c6db]/20 bg-[#c2c6db]/5 rounded-full">
-            <span className="text-xs tracking-widest uppercase text-[#c2c6db] font-semibold">HỆ SINH THÁI THIẾT KẾ CAO CẤP</span>
+          <div className="inline-block px-3 py-1 mb-6 border rounded-full" style={{ borderColor: 'var(--accent)' + '33', background: 'var(--accent)' + '0d' }}>
+            <span className="text-xs tracking-widest uppercase font-semibold" style={{ color: 'var(--accent)' }}>{t('tpl.badge')}</span>
           </div>
-          <h1 className="text-[clamp(36px,5vw,64px)] font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-5 leading-tight tracking-[-0.02em]">
-            Hàng Loạt Mẫu Thiết Kế{' '}
-            <span className="text-[#c2c6db]/60">Đỉnh Cao</span>.
+          <h1 className="text-[clamp(36px,5vw,64px)] font-bold mb-5 leading-tight tracking-[-0.02em]" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>
+            {t('tpl.title1')}{' '}
+            <span style={{ color: 'var(--accent)', opacity: 0.6 }}>{t('tpl.title2')}</span>.
           </h1>
-          <p className="text-lg text-[#c7c6cd] leading-relaxed">
-            Mỗi mẫu là một sản phẩm hoàn chỉnh — đầy đủ chức năng, sẵn sàng ra mắt. Nhấn để xem demo thực tế.
+          <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            {t('tpl.desc')}
           </p>
         </header>
 
@@ -783,84 +1137,88 @@ export default function TemplatesPage() {
         <div className="relative flex items-center gap-2 mb-12">
           {/* Arrow trái */}
           <button onClick={() => scroll('left')}
-            className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1d2022] border border-white/10 hover:border-[#c2c6db]/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95">
-            <ChevronLeft size={14} className="text-[#c7c6cd]" />
+            className="flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
+            <ChevronLeft size={14} style={{ color: 'var(--text-secondary)' }} />
           </button>
 
           {/* Filter row */}
           <div ref={filterRef} className="flex gap-2 overflow-x-auto pb-0 scrollbar-hide flex-1">
             {categories.map(cat => (
               <button key={cat.key} onClick={() => setActive(cat.key)}
-                className={`flex-shrink-0 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest border transition-all duration-200 ${
-                  active === cat.key
-                    ? 'bg-[#1d2022] text-[#c2c6db] border-[#c2c6db]/40 shadow-[0_0_20px_0_rgba(194,198,219,0.1)]'
-                    : 'bg-transparent text-[#c7c6cd] border-white/10 hover:border-[#c2c6db]/20 hover:text-[#e0e3e5] whitespace-nowrap'
-                }`}>
+                className="flex-shrink-0 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest border transition-all duration-200"
+                style={active === cat.key
+                  ? { background: 'var(--surface-1)', color: 'var(--accent)', borderColor: 'var(--accent)' + '66' }
+                  : { background: 'transparent', color: 'var(--text-secondary)', borderColor: 'var(--card-border)' }}>
                 {cat.label}
-                {cat.key === 'all' && <span className="ml-1.5 text-[#909097]">{templates.length}</span>}
+                {cat.key === 'all' && <span className="ml-1.5" style={{ color: 'var(--muted)' }}>{templates.length}</span>}
               </button>
             ))}
           </div>
 
           {/* Arrow phải */}
           <button onClick={() => scroll('right')}
-            className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1d2022] border border-white/10 hover:border-[#c2c6db]/40 flex items-center justify-center transition-all hover:scale-110 active:scale-95">
-            <ChevronRight size={14} className="text-[#c7c6cd]" />
+            className="flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
+            <ChevronRight size={14} style={{ color: 'var(--text-secondary)' }} />
           </button>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-          {filtered.map(t => (
-            <div key={t.id}
-              className="group relative rounded-2xl overflow-hidden border border-white/8 bg-[#0d1117] cursor-pointer transition-all duration-300 hover:border-white/20 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
-              onMouseEnter={() => setHovered(t.id)} onMouseLeave={() => setHovered(null)}
-              onClick={() => setSelected(t)}>
+          {filtered.map(tpl => (
+            <div key={tpl.id}
+              className="group relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-1"
+              style={{ background: 'var(--surface-2)', borderColor: 'var(--card-border)' }}
+              onMouseEnter={() => setHovered(tpl.id)} onMouseLeave={() => setHovered(null)}
+              onClick={() => setSelected(tpl)}>
 
               {/* Thumbnail — mini preview render trực tiếp */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 {/* Browser chrome */}
-                <div className="absolute top-0 left-0 right-0 h-6 bg-[#0a0d12]/95 flex items-center gap-1.5 px-2.5 z-10">
+                <div className="absolute top-0 left-0 right-0 h-6 flex items-center gap-1.5 px-2.5 z-10" style={{ background: 'var(--surface-1)' + 'ee' }}>
                   <div className="w-1.5 h-1.5 rounded-full bg-red-500/70" />
                   <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/60" />
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500/60" />
-                  <div className="flex-1 mx-2 h-2.5 bg-white/8 rounded-sm text-[8px] text-white/25 flex items-center px-1.5 font-mono overflow-hidden">
-                    vai-tech.asia{t.demoHref}
+                  <div className="flex-1 mx-2 h-2.5 rounded-sm text-[8px] flex items-center px-1.5 font-mono overflow-hidden"
+                    style={{ background: 'var(--border-subtle)', color: 'var(--muted)' }}>
+                    vai-tech.asia{tpl.demoHref}
                   </div>
                 </div>
 
                 {/* Mini preview content */}
                 <div className="absolute inset-0 pt-6 overflow-hidden">
-                  <CardPreview t={t} />
+                  <CardPreview t={tpl} />
                 </div>
 
                 {/* Hover overlay */}
-                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 z-20 ${hovered === t.id ? 'opacity-100 bg-black/50' : 'opacity-0'}`}>
-                  <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm shadow-xl" style={{ background: t.accentColor, color: '#fff' }}>
-                    <Eye size={14} />Xem chi tiết
+                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 z-20 ${hovered === tpl.id ? 'opacity-100' : 'opacity-0'}`}
+                  style={{ background: 'rgba(0,0,0,0.5)' }}>
+                  <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm shadow-xl" style={{ background: tpl.accentColor, color: '#fff' }}>
+                    <Eye size={14} />{t('tpl.viewDetail')}
                   </div>
                 </div>
 
                 {/* Accent line */}
-                <div className="absolute top-6 left-0 right-0 h-px z-10" style={{ background: `linear-gradient(90deg, transparent, ${t.accentColor}50, transparent)` }} />
+                <div className="absolute top-6 left-0 right-0 h-px z-10" style={{ background: `linear-gradient(90deg, transparent, ${tpl.accentColor}50, transparent)` }} />
               </div>
 
               {/* Card info */}
               <div className="p-5 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest block mb-1" style={{ color: t.accentColor }}>{t.subtitle}</span>
-                  <h3 className="font-bold text-[#e0e3e5] font-[family-name:var(--font-montserrat)] text-base leading-tight">{t.title}</h3>
-                  <p className="text-xs text-[#909097] mt-1 line-clamp-1">{t.desc}</p>
+                  <span className="text-[10px] font-bold uppercase tracking-widest block mb-1" style={{ color: tpl.accentColor }}>{tpl.subtitle}</span>
+                  <h3 className="font-bold text-base leading-tight" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{tpl.title}</h3>
+                  <p className="text-xs mt-1 line-clamp-1" style={{ color: 'var(--muted)' }}>{tpl.desc}</p>
                 </div>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ml-3 transition-transform group-hover:scale-110 duration-300" style={{ background: `${t.accentColor}20` }}>
-                  <t.Icon size={18} style={{ color: t.accentColor }} />
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ml-3 transition-transform group-hover:scale-110 duration-300" style={{ background: `${tpl.accentColor}20` }}>
+                  <tpl.Icon size={18} style={{ color: tpl.accentColor }} />
                 </div>
               </div>
 
               {/* Tags */}
               <div className="px-5 pb-5 flex flex-wrap gap-1.5">
-                {t.tags.map(tag => (
-                  <span key={tag} className="text-[10px] px-2 py-1 rounded bg-white/5 text-[#909097] border border-white/5">{tag}</span>
+                {tpl.tags.map(tag => (
+                  <span key={tag} className="text-[10px] px-2 py-1 rounded border" style={{ background: 'var(--surface-1)', color: 'var(--muted)', borderColor: 'var(--border-subtle)' }}>{tag}</span>
                 ))}
               </div>
             </div>
@@ -869,12 +1227,13 @@ export default function TemplatesPage() {
 
         {/* Bottom CTA */}
         <div className="mt-20 glass-card rounded-3xl p-10 text-center relative overflow-hidden">
-          <div className="absolute -top-16 -left-16 w-48 h-48 bg-[#c2c6db]/8 blur-[80px] rounded-full" />
-          <div className="absolute -bottom-16 -right-16 w-48 h-48 bg-[#c2c6db]/8 blur-[80px] rounded-full" />
-          <h2 className="text-3xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">Không tìm thấy mẫu phù hợp?</h2>
-          <p className="text-[#c7c6cd] mb-6">Vaitech nhận thiết kế custom theo yêu cầu — từ landing page đến hệ thống web phức tạp.</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#c2c6db] text-[#2b3040] px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all duration-300">
-            <Paintbrush size={16} />Yêu cầu thiết kế custom
+          <div className="absolute -top-16 -left-16 w-48 h-80 rounded-full blur-[80px] opacity-20" style={{ background: 'var(--accent)' }} />
+          <div className="absolute -bottom-16 -right-16 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: 'var(--accent)' }} />
+          <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{t('tpl.noMatch')}</h2>
+          <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>{t('tpl.ctaDesc')}</p>
+          <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 border"
+            style={{ background: 'var(--accent)', color: 'var(--accent-dim)', borderColor: 'var(--accent)' }}>
+            <Paintbrush size={16} />{t('tpl.ctaBtn')}
           </Link>
         </div>
       </div>

@@ -1,31 +1,30 @@
+'use client'
+import { useEffect, useState, useRef } from 'react'
 import { notFound } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import { posts } from '@/lib/blog-data'
-
-export async function generateStaticParams() {
-  return posts.map(p => ({ slug: p.slug }))
-}
+import { Badge, Avatar, Button } from '@/components/ui'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 
 function renderBody(body: string) {
   return body.split('\n\n').map((block, i) => {
     if (block.startsWith('## ')) {
       return (
-        <h2 key={i} className="text-xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mt-10 mb-4">
+        <h2 key={i} className="text-xl font-bold font-[family-name:var(--font-montserrat)] mt-10 mb-4" style={{ color: 'var(--text-primary)' }} id={`section-${i}`}>
           {block.replace('## ', '')}
         </h2>
       )
     }
     if (block.startsWith('**') && block.endsWith('**') && !block.slice(2).includes('**')) {
-      return <h3 key={i} className="text-base font-bold text-[#e0e3e5] mt-6 mb-2">{block.replace(/\*\*/g, '')}</h3>
+      return <h3 key={i} className="text-base font-bold mt-6 mb-2" style={{ color: 'var(--text-primary)' }}>{block.replace(/\*\*/g, '')}</h3>
     }
-    // inline bold
     const parts = block.split(/(\*\*.*?\*\*)/g)
     return (
-      <p key={i} className="text-[#c7c6cd] leading-relaxed mb-5 text-base">
+      <p key={i} className="leading-relaxed mb-5 text-base" style={{ color: 'var(--text-secondary)' }}>
         {parts.map((part, j) =>
           part.startsWith('**') && part.endsWith('**')
-            ? <strong key={j} className="text-[#e0e3e5] font-semibold">{part.replace(/\*\*/g, '')}</strong>
+            ? <strong key={j} className="font-semibold" style={{ color: 'var(--text-primary)' }}>{part.replace(/\*\*/g, '')}</strong>
             : part
         )}
       </p>
@@ -33,110 +32,209 @@ function renderBody(body: string) {
   })
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+function ReadingProgress({ target }: { target: React.RefObject<HTMLElement | null> }) {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const el = target.current
+    if (!el) return
+
+    const handleScroll = () => {
+      const rect = el.getBoundingClientRect()
+      const total = el.scrollHeight
+      const scrolled = Math.max(0, -rect.top)
+      setProgress(Math.min(100, (scrolled / (total - window.innerHeight)) * 100))
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [target])
+
+  return (
+    <div className="fixed top-0 left-0 right-0 z-50 h-0.5" style={{ background: 'var(--surface-2)' }}>
+      <div
+        className="h-full transition-[width] duration-150 ease-out" style={{ background: 'var(--accent)', width: `${progress}%` }}
+        role="progressbar"
+        aria-valuenow={Math.round(progress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Tiến trình đọc"
+      />
+    </div>
+  )
+}
+
+function TableOfContents({ headings }: { headings: string[] }) {
+  if (headings.length < 2) return null
+
+  return (
+    <nav className="hidden xl:block sticky top-28 max-w-[200px]" aria-label="Mục lục">
+      <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted)' }}>Mục lục</p>
+      <ul className="space-y-2">
+        {headings.map((h, i) => (
+          <li key={i}>
+            <a href={`#section-${i}`} className="text-xs transition-colors leading-relaxed block py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded" style={{ color: 'var(--text-secondary)' }}>
+              {h}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const [slug, setSlug] = useState<string | null>(null)
+  const articleRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    params.then(p => setSlug(p.slug))
+  }, [params])
+
+  if (!slug) return null
+
   const post = posts.find(p => p.slug === slug)
   if (!post) notFound()
 
   const related = posts.filter(p => p.cat === post.cat && p.slug !== post.slug).slice(0, 3)
+  const headings = post.body
+    ? post.body.split('\n\n').filter(b => b.startsWith('## ')).map(b => b.replace('## ', ''))
+    : []
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({ title: post.title, url: window.location.href })
+    } else {
+      navigator.clipboard.writeText(window.location.href)
+    }
+  }
 
   return (
-    <div className="pt-28 pb-20">
-      {/* Back */}
-      <div className="px-6 md:px-16 max-w-[1280px] mx-auto mb-8">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-[#c7c6cd] hover:text-[#c2c6db] transition-colors text-sm">
-          <ArrowLeft size={16} />
-          Tất cả bài viết
-        </Link>
-      </div>
+    <>
+      <ReadingProgress target={articleRef} />
 
-      <article className="px-6 md:px-16 max-w-[800px] mx-auto">
-        {/* Category + meta */}
-        <div className="flex flex-wrap items-center gap-3 mb-6">
-          <span className="text-xs bg-[#c2c6db]/10 text-[#c2c6db] px-3 py-1 rounded-full font-semibold border border-[#c2c6db]/20">
-            {post.cat}
-          </span>
-          <span className="text-xs text-[#909097]">{post.date}</span>
-          <span className="text-xs text-[#909097]">·</span>
-          <span className="text-xs text-[#909097]">{post.read} đọc</span>
-        </div>
-
-        {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-6 leading-tight">
-          {post.title}
-        </h1>
-
-        {/* Author */}
-        <div className="flex items-center gap-3 mb-8 pb-8 border-b border-white/8">
-          <div className="w-10 h-10 rounded-full bg-[#c2c6db]/20 flex items-center justify-center text-sm font-bold text-[#c2c6db]">
-            {post.author[0]}
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-[#e0e3e5]">{post.author}</p>
-            <p className="text-xs text-[#909097]">{post.role}</p>
-          </div>
-        </div>
-
-        {/* Hero image */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={post.img}
-          alt={post.title}
-          className="w-full aspect-[16/9] object-cover rounded-2xl mb-10"
-        />
-
-        {/* Excerpt highlight */}
-        <div className="border-l-4 border-[#c2c6db] pl-5 mb-8">
-          <p className="text-[#c7c6cd] italic leading-relaxed">{post.excerpt}</p>
-        </div>
-
-        {/* Body */}
-        <div className="prose-custom">
-          {post.body
-            ? renderBody(post.body)
-            : <p className="text-[#c7c6cd] leading-relaxed">{post.excerpt}</p>
-          }
-        </div>
-
-        {/* Tags + share */}
-        <div className="mt-12 pt-8 border-t border-white/8 flex flex-wrap justify-between items-center gap-4">
-          <div className="flex flex-wrap gap-2">
-            {[post.cat, 'Vaitech Blog', 'Kinh nghiệm thực tế'].map(tag => (
-              <span key={tag} className="text-xs bg-[#1d2022] border border-white/8 text-[#c7c6cd] px-3 py-1.5 rounded-full">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <Link href="/register" className="text-sm bg-[#c2c6db] text-[#2b3040] px-5 py-2.5 rounded-xl font-bold hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all">
-            Bắt đầu với Vaitech →
+      <div className="pt-28 pb-20">
+        {/* Back */}
+        <div className="px-6 md:px-16 max-w-[1280px] mx-auto mb-8">
+          <Link href="/blog" className="inline-flex items-center gap-2 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded" style={{ color: 'var(--text-secondary)' }}>
+            <ArrowLeft size={16} />
+            Tất cả bài viết
           </Link>
         </div>
-      </article>
 
-      {/* Related */}
-      {related.length > 0 && (
-        <div className="px-6 md:px-16 max-w-[1280px] mx-auto mt-20">
-          <h2 className="text-2xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-8">
-            Bài viết liên quan
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {related.map(p => (
-              <Link key={p.slug} href={`/blog/${p.slug}`}
-                className="glass-card rounded-2xl overflow-hidden hover:border-[#c2c6db]/20 transition-all hover:-translate-y-1 duration-300 group">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.img} alt={p.title} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="p-5">
-                  <span className="text-[10px] bg-[#c2c6db]/10 text-[#c2c6db] px-2 py-0.5 rounded-full font-semibold">{p.cat}</span>
-                  <h3 className="font-bold text-[#e0e3e5] text-sm mt-2 mb-1 leading-tight line-clamp-2 group-hover:text-[#c2c6db] transition-colors">
-                    {p.title}
-                  </h3>
-                  <p className="text-xs text-[#909097]">{p.date} · {p.read}</p>
+        <div className="px-6 md:px-16 max-w-[1280px] mx-auto flex gap-12">
+          {/* TOC */}
+          <TableOfContents headings={headings} />
+
+          <article ref={articleRef} className="flex-1 max-w-[800px]">
+            {/* Category + meta */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <Badge variant="accent">{post.cat}</Badge>
+              <span className="text-xs flex items-center gap-1" style={{ color: 'var(--muted)' }}><Clock size={12} />{post.date}</span>
+              <span className="text-xs flex items-center gap-1" style={{ color: 'var(--muted)' }}><BookOpen size={12} />{post.read}</span>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl font-bold font-[family-name:var(--font-montserrat)] mb-6 leading-tight" style={{ color: 'var(--text-primary)' }}>
+              {post.title}
+            </h1>
+
+            {/* Author + share */}
+            <div className="flex items-center justify-between mb-8 pb-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+              <div className="flex items-center gap-3">
+                <Avatar name={post.author} size="md" />
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{post.author}</p>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>{post.role}</p>
                 </div>
+              </div>
+              <Button variant="ghost" size="sm" onClick={handleShare} icon={<Share2 size={14} />}>
+                Chia sẻ
+              </Button>
+            </div>
+
+            {/* Hero image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.img}
+              alt={post.title}
+              className="w-full aspect-[16/9] object-cover rounded-2xl mb-10"
+            />
+
+            {/* Excerpt highlight */}
+            <div className="pl-5 mb-8" style={{ borderLeft: '4px solid var(--accent)' }}>
+              <p className="italic leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{post.excerpt}</p>
+            </div>
+
+            {/* Body */}
+            <div className="prose-custom">
+              {post.body
+                ? renderBody(post.body)
+                : <p className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{post.excerpt}</p>
+              }
+            </div>
+
+            {/* Tags + CTA */}
+            <div className="mt-12 pt-8 flex flex-wrap justify-between items-center gap-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+              <div className="flex flex-wrap gap-2">
+                {[post.cat, 'Vaitech Blog', 'Kinh nghiệm thực tế'].map(tag => (
+                  <Badge key={tag}>{tag}</Badge>
+                ))}
+              </div>
+              <Link href="/register">
+                <Button>Bắt đầu với Vaitech →</Button>
               </Link>
-            ))}
-          </div>
+            </div>
+
+            {/* Newsletter CTA */}
+            <ScrollReveal>
+              <div className="mt-12 glass-card rounded-2xl p-8 text-center">
+                <h3 className="text-lg font-bold font-[family-name:var(--font-montserrat)] mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Nhận bài viết mới qua email
+                </h3>
+                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>Không spam. Chỉ kinh nghiệm thực tế từ đội ngũ Vaitech.</p>
+                <div className="flex gap-2 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    placeholder="Email của bạn"
+                    className="flex-1 rounded-lg px-4 py-2.5 text-sm outline-none transition-all"
+                    style={{ background: 'var(--surface-2)', border: '1px solid var(--border-subtle)', color: 'var(--text-primary)' }}
+                    aria-label="Email đăng ký blog"
+                  />
+                  <Button size="sm">Đăng ký</Button>
+                </div>
+              </div>
+            </ScrollReveal>
+          </article>
         </div>
-      )}
-    </div>
+
+        {/* Related */}
+        {related.length > 0 && (
+          <div className="px-6 md:px-16 max-w-[1280px] mx-auto mt-20">
+            <h2 className="text-2xl font-bold font-[family-name:var(--font-montserrat)] mb-8" style={{ color: 'var(--text-primary)' }}>
+              Bài viết liên quan
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {related.map((p, i) => (
+                <ScrollReveal key={p.slug} delay={i * 80}>
+                  <Link href={`/blog/${p.slug}`}
+                    className="glass-card rounded-2xl overflow-hidden transition-all hover:-translate-y-1 duration-300 group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] h-full">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.img} alt={p.title} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="p-5">
+                      <Badge>{p.cat}</Badge>
+                      <h3 className="font-bold text-sm mt-2 mb-1 leading-tight line-clamp-2 transition-colors" style={{ color: 'var(--text-primary)' }}>
+                        {p.title}
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>{p.date} · {p.read}</p>
+                    </div>
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   )
 }

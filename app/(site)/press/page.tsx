@@ -1,6 +1,11 @@
+'use client'
+
 import Link from 'next/link'
-import { ArrowRight, Download, FileText, ImageIcon, Images, User, type LucideIcon } from 'lucide-react'
+import { ArrowRight, Download, FileText, ImageIcon, Images, User } from 'lucide-react'
 import { PageHeader, Section, CtaBanner } from '@/components/ui/PageComponents'
+import { Badge, Button, Card } from '@/components/ui'
+import ScrollReveal from '@/components/ui/ScrollReveal'
+import { useI18n } from '@/context/I18nContext'
 
 const news = [
   {
@@ -34,32 +39,36 @@ const mediaKitItems = [
 ]
 
 export default function PressPage() {
+  const { t } = useI18n()
+
   return (
     <>
       <PageHeader
-        badge="BÁO CHÍ & TRUYỀN THÔNG"
-        title="Tin tức mới nhất"
-        accent="từ Vaitech"
-        desc="Cập nhật những thông tin mới nhất về Vaitech — từ ra mắt sản phẩm, giải thưởng đến các cột mốc quan trọng."
+        badge={t('press.badge')}
+        title={t('press.title1')}
+        accent={t('press.title2')}
+        desc={t('press.desc')}
       />
 
       {/* News */}
       <Section>
         <div className="space-y-6">
-          {news.map((item) => (
-            <div key={item.title} className="glass-card rounded-xl p-8 hover:border-[#c2c6db]/30 transition-all duration-300">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span className="text-xs bg-[#c2c6db]/10 text-[#c2c6db] px-3 py-1 rounded-full font-semibold">{item.tag}</span>
-                <span className="text-xs text-[#909097]">{item.date}</span>
-                <span className="text-xs text-[#909097]">·</span>
-                <span className="text-xs text-[#909097]">{item.category}</span>
+          {news.map((item, i) => (
+            <ScrollReveal key={item.title} delay={i * 100}>
+              <div className="glass-card rounded-xl p-8 transition-all duration-300" style={{ '--hover-border': 'var(--accent)' } as React.CSSProperties} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(194, 198, 219, 0.3)' }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = '' }}>
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <Badge variant="accent">{item.tag}</Badge>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>{item.date}</span>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>·</span>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>{item.category}</span>
+                </div>
+                <h3 className="text-xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{item.title}</h3>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
+                <Link href="#" className="text-sm font-semibold hover:underline flex items-center gap-1" style={{ color: 'var(--accent)' }}>
+                  {t('press.readMore')} <ArrowRight size={16} />
+                </Link>
               </div>
-              <h3 className="text-xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">{item.title}</h3>
-              <p className="text-sm text-[#c7c6cd] leading-relaxed mb-4">{item.desc}</p>
-              <Link href="#" className="text-sm text-[#c2c6db] font-semibold hover:underline flex items-center gap-1">
-                Đọc thêm <ArrowRight size={16} />
-              </Link>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </Section>
@@ -67,28 +76,31 @@ export default function PressPage() {
       {/* Media Kit */}
       <Section>
         <div className="glass-card rounded-2xl p-10">
-          <h2 className="text-2xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">Media Kit</h2>
-          <p className="text-[#c7c6cd] mb-8">Tải xuống bộ tài nguyên truyền thông chính thức của Vaitech.</p>
+          <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{t('press.mediaKitTitle')}</h2>
+          <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>{t('press.mediaKitDesc')}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {mediaKitItems.map((item) => (
-              <div key={item.title} className="bg-[#1d2022] rounded-xl p-5 border border-white/5">
-                <item.Icon size={16} />
-                <h3 className="font-semibold text-[#e0e3e5] text-sm mb-1">{item.title}</h3>
-                <p className="text-xs text-[#c7c6cd]">{item.desc}</p>
-              </div>
+            {mediaKitItems.map((item, i) => (
+              <ScrollReveal key={item.title} delay={i * 60}>
+                <Card>
+                  <item.Icon size={16} className="mb-3" style={{ color: 'var(--accent)' }} />
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{item.title}</h3>
+                  <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
+                </Card>
+              </ScrollReveal>
             ))}
           </div>
-          <Link href="#" className="inline-flex items-center gap-2 bg-[#c2c6db] text-[#2b3040] px-8 py-3 rounded-lg font-bold text-sm hover:bg-transparent hover:text-[#c2c6db] border border-[#c2c6db] transition-all duration-300">
-            <Download size={16} />
-            Tải Media Kit (.zip)
+          <Link href="#" className="inline-flex">
+            <Button icon={<Download size={16} />}>
+              {t('press.downloadKit')}
+            </Button>
           </Link>
         </div>
       </Section>
 
       <CtaBanner
-        title="Liên hệ phòng truyền thông"
-        desc="Dành cho nhà báo và đối tác truyền thông muốn phỏng vấn hoặc hợp tác."
-        btnLabel="Liên hệ ngay"
+        title={t('press.contactTitle')}
+        desc={t('press.contactDesc')}
+        btnLabel={t('press.contactBtn')}
         btnHref="/contact"
       />
     </>

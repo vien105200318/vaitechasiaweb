@@ -1,83 +1,99 @@
+'use client'
+
 import Link from 'next/link'
 import { Award, BookOpen, Clock, Laptop, MapPin, Plane, ShieldPlus } from 'lucide-react'
-import { PageHeader, Section, GlassCard, CtaBanner } from '@/components/ui/PageComponents'
+import { PageHeader, Section, CtaBanner } from '@/components/ui/PageComponents'
+import { Card, Badge, Button } from '@/components/ui'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 import type { LucideIcon } from 'lucide-react'
-
-const openings = [
-  { dept: 'Kỹ thuật', title: 'Senior Frontend Engineer', type: 'Toàn thời gian', location: 'Hà Nội / Remote', tags: ['React', 'Next.js', 'TypeScript'] },
-  { dept: 'Kỹ thuật', title: 'Backend Engineer (Node.js)', type: 'Toàn thời gian', location: 'Hà Nội / Remote', tags: ['Node.js', 'PostgreSQL', 'AWS'] },
-  { dept: 'Thiết kế', title: 'UI/UX Designer', type: 'Toàn thời gian', location: 'Hà Nội', tags: ['Figma', 'Motion Design', 'Design System'] },
-  { dept: 'Thiết kế', title: 'Brand Designer', type: 'Bán thời gian', location: 'Remote', tags: ['Branding', 'Illustration', 'Adobe CC'] },
-  { dept: 'Kinh doanh', title: 'Business Development Manager', type: 'Toàn thời gian', location: 'TP. HCM', tags: ['B2B Sales', 'CRM', 'Tiếng Anh'] },
-  { dept: 'Marketing', title: 'Content & SEO Specialist', type: 'Toàn thời gian', location: 'Remote', tags: ['SEO', 'Copywriting', 'Analytics'] },
-]
-
-const perks: { Icon: LucideIcon; title: string; desc: string }[] = [
-  { Icon: Award, title: 'Lương cạnh tranh', desc: 'Mức lương top 20% thị trường, review 2 lần/năm' },
-  { Icon: Plane, title: 'Team building quốc tế', desc: 'Chuyến đi team building trong và ngoài nước hàng năm' },
-  { Icon: BookOpen, title: 'Đào tạo & phát triển', desc: 'Ngân sách học tập 5 triệu/năm và mentor 1-1 hàng tuần' },
-  { Icon: ShieldPlus, title: 'Bảo hiểm sức khỏe', desc: 'Bảo hiểm sức khỏe cao cấp cho cả gia đình' },
-  { Icon: Clock, title: 'Giờ làm linh hoạt', desc: 'Tự chọn giờ làm, remote 3 ngày/tuần' },
-  { Icon: Laptop, title: 'Thiết bị cao cấp', desc: 'MacBook Pro và màn hình 4K cho tất cả nhân viên' },
-]
+import { useI18n } from '@/context/I18nContext'
 
 export default function CareersPage() {
+  const { t } = useI18n()
+
+  const openings = [
+    { dept: t('careers.dept.tech'), title: 'Senior Frontend Engineer', type: t('careers.type.full'), location: t('careers.location.hanoi'), tags: ['React', 'Next.js', 'TypeScript'] },
+    { dept: t('careers.dept.tech'), title: 'Backend Engineer (Node.js)', type: t('careers.type.full'), location: t('careers.location.remote'), tags: ['Node.js', 'PostgreSQL', 'AWS'] },
+    { dept: t('careers.dept.design'), title: 'UI/UX Designer', type: t('careers.type.full'), location: t('careers.location.hanoi'), tags: ['Figma', 'Motion Design', 'Design System'] },
+    { dept: t('careers.dept.design'), title: 'Brand Designer', type: t('careers.type.part'), location: t('careers.location.remote'), tags: ['Branding', 'Illustration', 'Adobe CC'] },
+    { dept: t('careers.dept.sales'), title: 'Business Development Manager', type: t('careers.type.full'), location: t('careers.location.hcm'), tags: ['B2B Sales', 'CRM', 'Tiếng Anh'] },
+    { dept: t('careers.dept.marketing'), title: 'Content & SEO Specialist', type: t('careers.type.full'), location: t('careers.location.remote'), tags: ['SEO', 'Copywriting', 'Analytics'] },
+  ]
+
+  const perks: { Icon: LucideIcon; title: string; desc: string }[] = [
+    { Icon: Award, title: t('careers.perk1t'), desc: t('careers.perk1d') },
+    { Icon: Plane, title: t('careers.perk2t'), desc: t('careers.perk2d') },
+    { Icon: BookOpen, title: t('careers.perk3t'), desc: t('careers.perk3d') },
+    { Icon: ShieldPlus, title: t('careers.perk4t'), desc: t('careers.perk4d') },
+    { Icon: Clock, title: t('careers.perk5t'), desc: t('careers.perk5d') },
+    { Icon: Laptop, title: t('careers.perk6t'), desc: t('careers.perk6d') },
+  ]
+
   return (
     <>
       <PageHeader
-        badge="TUYỂN DỤNG"
-        title="Xây dựng tương lai"
-        accent="cùng Vaitech"
-        desc="Chúng tôi đang tìm kiếm những người tài năng, đam mê và muốn tạo ra sản phẩm kỹ thuật số tốt nhất Việt Nam."
+        badge={t('careers.badge')}
+        title={t('careers.title1')}
+        accent={t('careers.title2')}
+        desc={t('careers.desc')}
       />
 
       {/* Perks */}
       <Section>
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-8">Tại sao chọn Vaitech?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {perks.map((p) => (
-            <GlassCard key={p.title} className="flex gap-4 !p-6">
-              <p.Icon size={16} />
-              <div>
-                <h3 className="font-semibold text-[#e0e3e5] mb-1 text-sm">{p.title}</h3>
-                <p className="text-xs text-[#c7c6cd] leading-relaxed">{p.desc}</p>
-              </div>
-            </GlassCard>
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--text-primary)' }}>{t('careers.whyTitle')}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          {perks.map((p, i) => (
+            <ScrollReveal key={p.title} delay={i * 80}>
+              <Card className="flex gap-4">
+                <p.Icon size={16} className="mt-0.5 shrink-0" style={{ color: 'var(--accent)' }} />
+                <div>
+                  <h3 className="font-semibold mb-1 text-sm" style={{ color: 'var(--text-primary)' }}>{p.title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{p.desc}</p>
+                </div>
+              </Card>
+            </ScrollReveal>
           ))}
         </div>
       </Section>
 
       {/* Job listings */}
       <Section>
-        <h2 className="text-2xl font-bold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-8">Vị trí đang tuyển</h2>
-        <div className="space-y-4">
-          {openings.map((job) => (
-            <div key={job.title} className="glass-card rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-[#c2c6db]/30 transition-all duration-300">
-              <div>
-                <span className="text-xs text-[#c2c6db] font-semibold uppercase tracking-wider mb-2 block">{job.dept}</span>
-                <h3 className="text-lg font-semibold text-[#e0e3e5] mb-2">{job.title}</h3>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {job.tags.map((tag) => (
-                    <span key={tag} className="text-xs bg-[#1d2022] border border-white/5 text-[#c7c6cd] px-3 py-1 rounded-full">{tag}</span>
-                  ))}
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--text-primary)' }}>{t('careers.openingsTitle')}</h2>
+        <div className="space-y-4 mt-8">
+          {openings.map((job, i) => (
+            <ScrollReveal key={job.title} delay={i * 60}>
+              <div
+                className="glass-card rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300"
+                style={{ '--tw-border-opacity': '1', borderColor: 'transparent' } as React.CSSProperties}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--accent)4d')}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'transparent')}
+              >
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider mb-2 block" style={{ color: 'var(--accent)' }}>{job.dept}</span>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>{job.title}</h3>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {job.tags.map((tag) => (
+                      <Badge key={tag}>{tag}</Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-4 text-xs" style={{ color: 'var(--muted)' }}>
+                    <span className="flex items-center gap-1"><Clock size={14} />{job.type}</span>
+                    <span className="flex items-center gap-1"><MapPin size={14} />{job.location}</span>
+                  </div>
                 </div>
-                <div className="flex gap-4 text-xs text-[#909097]">
-                  <span className="flex items-center gap-1"><Clock size={16} />{job.type}</span>
-                  <span className="flex items-center gap-1"><MapPin size={16} />{job.location}</span>
-                </div>
+                <Link href="/contact" className="flex-shrink-0">
+                  <Button variant="outline" size="sm">{t('careers.apply')}</Button>
+                </Link>
               </div>
-              <Link href="/contact" className="flex-shrink-0 px-6 py-2.5 border border-[#c2c6db]/40 text-[#c2c6db] rounded-lg text-sm font-semibold hover:bg-[#c2c6db] hover:text-[#2b3040] transition-all duration-300">
-                Ứng tuyển
-              </Link>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </Section>
 
       <CtaBanner
-        title="Không thấy vị trí phù hợp?"
-        desc="Gửi CV của bạn — chúng tôi luôn chào đón nhân tài xuất sắc."
-        btnLabel="Gửi CV ngay"
+        title={t('careers.noMatch')}
+        desc={t('careers.noMatchDesc')}
+        btnLabel={t('careers.sendCv')}
         btnHref="/contact"
       />
     </>

@@ -1,48 +1,64 @@
-import { BarChart2, Brain, Globe, Headphones, Monitor, Puzzle, Shield, Sparkles, Zap } from 'lucide-react'
-import { PageHeader, Section, GlassCard, CtaBanner } from '@/components/ui/PageComponents'
+'use client'
 
-const features = [
-  { Icon: Brain, title: 'Xây Dựng Bằng AI', desc: 'Tự động sinh code, layout và nội dung từ mô tả ngắn. Tiết kiệm 80% thời gian phát triển.' },
-  { Icon: Sparkles, title: 'Hiệu Ứng Thị Giác 3D', desc: 'Thư viện animation và hiệu ứng glassmorphism cao cấp, sẵn sàng dùng ngay.' },
-  { Icon: Zap, title: 'Tốc Độ Tải Dưới 1 Giây', desc: 'Tối ưu hóa Core Web Vitals tự động — đảm bảo trải nghiệm người dùng hoàn hảo.' },
-  { Icon: Shield, title: 'Bảo Mật Đa Lớp', desc: 'Mã hóa end-to-end, xác thực 2 yếu tố và giám sát bảo mật 24/7.' },
-  { Icon: Monitor, title: 'Responsive Hoàn Toàn', desc: 'Tự động thích nghi với mọi kích thước màn hình từ mobile đến 4K.' },
-  { Icon: BarChart2, title: 'Phân Tích Chuyên Sâu', desc: 'Dashboard thống kê thời gian thực — lượt xem, chuyển đổi và hành vi người dùng.' },
-  { Icon: Globe, title: 'Đa Ngôn Ngữ', desc: 'Hỗ trợ tự động dịch sang 30+ ngôn ngữ với bản địa hóa nội dung thông minh.' },
-  { Icon: Puzzle, title: 'Tích Hợp Dễ Dàng', desc: 'Kết nối với 100+ công cụ phổ biến: CRM, thanh toán, email marketing và hơn thế nữa.' },
-  { Icon: Headphones, title: 'Hỗ Trợ 24/7', desc: 'Đội ngũ kỹ thuật chuyên nghiệp sẵn sàng hỗ trợ bất cứ lúc nào bạn cần.' },
-]
+import { BarChart2, Brain, Globe, Headphones, Monitor, Puzzle, Shield, Sparkles, Zap } from 'lucide-react'
+import { useI18n } from '@/context/I18nContext'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 
 export default function FeaturesPage() {
+  const { t } = useI18n()
+
+  const features = [
+    { Icon: Brain, title: t('feat.f1t'), desc: t('feat.f1d') },
+    { Icon: Sparkles, title: t('feat.f2t'), desc: t('feat.f2d') },
+    { Icon: Zap, title: t('feat.f3t'), desc: t('feat.f3d') },
+    { Icon: Shield, title: t('feat.f4t'), desc: t('feat.f4d') },
+    { Icon: Monitor, title: t('feat.f5t'), desc: t('feat.f5d') },
+    { Icon: BarChart2, title: t('feat.f6t'), desc: t('feat.f6d') },
+    { Icon: Globe, title: t('feat.f7t'), desc: t('feat.f7d') },
+    { Icon: Puzzle, title: t('feat.f8t'), desc: t('feat.f8d') },
+    { Icon: Headphones, title: t('feat.f9t'), desc: t('feat.f9d') },
+  ]
+
   return (
     <>
-      <PageHeader
-        badge="TÍNH NĂNG NỔI BẬT"
-        title="Mọi thứ bạn cần để"
-        accent="thống lĩnh kỹ thuật số"
-        desc="Bộ công cụ toàn diện giúp bạn xây dựng, triển khai và tăng trưởng thương hiệu số nhanh hơn bao giờ hết."
-      />
+      {/* Header */}
+      <section className="pt-32 pb-16 px-5 md:px-16 max-w-[1280px] mx-auto text-center">
+        <span className="text-xs font-semibold mb-4 block tracking-widest uppercase" style={{ color: 'var(--accent)' }}>{t('feat.badge')}</span>
+        <h1 className="text-4xl md:text-6xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>
+          {t('feat.title1')}{' '}
+          <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, var(--accent), #7c3aed)' }}>{t('feat.title2')}</span>
+        </h1>
+        <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--muted)' }}>{t('feat.desc')}</p>
+      </section>
 
-      <Section>
+      {/* Features grid */}
+      <section className="pb-20 px-5 md:px-16 max-w-[1280px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f) => (
-            <GlassCard key={f.title}>
-              <div className="w-12 h-12 rounded-lg bg-[#0a0f1e] flex items-center justify-center text-[#c2c6db] mb-6">
-                <f.Icon size={16} />
+          {features.map((f, i) => (
+            <ScrollReveal key={i} delay={i * 60}>
+              <div className="glass-card p-8 rounded-2xl h-full">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6" style={{ background: 'var(--surface-1)', color: 'var(--accent)' }}>
+                  <f.Icon size={16} />
+                </div>
+                <h3 className="text-lg font-semibold mb-3" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{f.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{f.desc}</p>
               </div>
-              <h3 className="text-lg font-semibold font-[family-name:var(--font-montserrat)] text-[#e0e3e5] mb-3">{f.title}</h3>
-              <p className="text-sm text-[#c7c6cd] leading-relaxed">{f.desc}</p>
-            </GlassCard>
+            </ScrollReveal>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <CtaBanner
-        title="Sẵn sàng trải nghiệm?"
-        desc="Bắt đầu miễn phí ngay hôm nay — không cần thẻ tín dụng."
-        btnLabel="Dùng thử miễn phí"
-        btnHref="/register"
-      />
+      {/* CTA */}
+      <section className="pb-20 px-5 md:px-16 max-w-[1280px] mx-auto text-center">
+        <div className="glass-card py-16 px-8 rounded-3xl">
+          <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>{t('feat.ctaTitle')}</h2>
+          <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>{t('feat.ctaDesc')}</p>
+          <a href="/register" className="inline-flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold transition-all active:scale-95"
+            style={{ background: 'var(--accent)', color: 'var(--accent-dim)' }}>
+            {t('feat.ctaBtn')}
+          </a>
+        </div>
+      </section>
     </>
   )
 }
